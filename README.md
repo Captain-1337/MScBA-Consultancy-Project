@@ -9,7 +9,7 @@ emotional content in text documents, by researching:<br/>
     (iii) corpora for emotion detection. <br/>
     
 Project roadmap:
-1.  A comprehensive literature review should provide an overview of relevant lexicons, gold standard corpora and methods.<br/>
+1.  A comprehensive literature review should provide an overview of relevant lexicons, gold standard corpora and methods.<br/><br/>
 2.  Based on the literature review the students extend/create an English and/or German evaluation corpus <br/>
     used for training and evaluating  their emotion detection method.<br/><br/>
 3.  The following approaches for detecting emotional content are implemented:<br/>
