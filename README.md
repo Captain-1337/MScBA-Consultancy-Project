@@ -13,7 +13,7 @@ emotional content in text documents, by researching:<br/>
 2.  Based on the literature review the students extend/create an English and/or German evaluation corpus <br/>
     used for training and evaluating  their emotion detection method.<br/><br/>
 3.  The following approaches for detecting emotional content are implemented:<br/>
-    a lexicon-based method that detects the mentioned emotions in text messages considering the grammatical <br/> structure provided by a third-party tool. <br/><br/>
+    a lexicon-based method that detects the mentioned emotions in text messages considering the grammatical <br/> structure provided by a third-party tool. <br/>
     a deep-learning-based approach that uses embeddings (see literature) <br/>
     rather than emotion lexicons for identifying emotional content.<br/><br/>
 4.  Evaluate the created classifier based on the evaluation corpora from step (2) <br/>
