@@ -1,4 +1,6 @@
 # Project exclude paths
 /venv/
 /venv2/
+/testscripts/
+/testnotebooks/
 /.idea/
