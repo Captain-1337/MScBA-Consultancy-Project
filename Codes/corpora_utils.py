@@ -3,7 +3,7 @@ from enum import Enum
 
 class CorporaHelper():
     """
-        This class is providing some functions....
+        This class is providing some functions for corpara management....
     """
 
     # Datamatrix of the annodated corpora
