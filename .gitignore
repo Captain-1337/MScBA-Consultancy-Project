@@ -4,3 +4,6 @@
 /testscripts/
 /testnotebooks/
 /.idea/
+/corpora/
+/.vscode/
+Codes/__pycache__
