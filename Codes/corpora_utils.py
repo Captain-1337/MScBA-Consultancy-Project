@@ -1,6 +1,8 @@
 import pandas as pd
 from enum import Enum
 
+
+
 class CorporaHelper():
     """
         This class is providing some functions for corpara management....
