@@ -9,6 +9,9 @@ class SenticNetHelper():
         None
 
     def get_emotion(self, concept):
+        """
+        Gets from a word or word concept an EmtotionResult vector
+        """
 
         if concept in self._sn.data:
             sentics = self._sn.sentics(concept)        
@@ -19,6 +22,8 @@ class SenticNetHelper():
 
     def _get_emotion_from_sentics(self, sentics):
         """
+        Gets an EmotionResult and translates a sentics vector into an emotion vector
+
         'pleasantness_value', 
             => +:joy  -:sadness
         'attention_value'
