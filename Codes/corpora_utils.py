@@ -18,6 +18,8 @@ class CorporaHelper():
     def load_corpora_from_csv(self,file, sep=';'):
         """
             Load a corpora from a csv file into the helper 
+            file: filename include the path
+            sep: separator of the fields in the csv
         """
         self._data = pd.read_table(file, sep=sep)
         # TODO transform in Data structure
@@ -59,19 +61,6 @@ class CorporaHelper():
         # TODO   I'm => I am   He's => He is    John's => John  don't .... 
         # @see nltk contractions pos
         None
-"""
-move to emotion_analyzer.py when ready
-"""
-
-    def intensity_capital(self):
-        # TODO VERY => intensity increased compared to very
-        None
-
-    def intensity_punctuation(self):
-        # TODO !!! => intensity increased compared to single !
-        None
-
-
 
 
 class CorporaDomains(Enum):
