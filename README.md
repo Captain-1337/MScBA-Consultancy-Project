@@ -1,7 +1,7 @@
 # MScBA-Consultancy-Project
 Deep Learning for the automatic detection of emotional content in text documents.
 
-##Objectives:
+## Objectives:
 
 The proposed consultancy project aims at creating components capable of automatically identifying
 emotional content in text documents, by researching:
@@ -9,7 +9,7 @@ emotional content in text documents, by researching:
     (ii) existing systems,
     (iii) corpora for emotion detection. 
     
-##Project roadmap:
+## Project roadmap:
 
 1.  A comprehensive literature review should provide an overview of relevant lexicons, gold standard corpora and methods.
 2.  Based on the literature review the students extend/create an English and/or German evaluation corpus 
@@ -21,7 +21,13 @@ emotional content in text documents, by researching:
 4.  Evaluate the created classifier based on the evaluation corpora from step (2) 
     using standard evaluation metrics (precision, recall, F1).
     
-##Project structur
+## Project structur
 ### Codes
-    Folder for the coding :)
+    Folder for the coding :) 🤩
+
+
+## Corpora
+For our emotion detection we are using primary the multigenre corpra from https://github.com/shabnamt/jointMultitaskEmo/tree/master/data/emo_multigenre
+
+-Multigenre Corpus with Joint Multi-Task Deep Learning by Shabnam Tafreshi and Mona Diab, LREC 2018
   
