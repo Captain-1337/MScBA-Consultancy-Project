@@ -59,7 +59,18 @@ class CorporaHelper():
         # TODO   I'm => I am   He's => He is    John's => John  don't .... 
         # @see nltk contractions pos
         None
-    
+"""
+move to emotion_analyzer.py when ready
+"""
+
+    def intensity_capital(self):
+        # TODO VERY => intensity increased compared to very
+        None
+
+    def intensity_punctuation(self):
+        # TODO !!! => intensity increased compared to single !
+        None
+
 
 
 
