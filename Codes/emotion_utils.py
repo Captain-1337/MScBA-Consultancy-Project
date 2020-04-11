@@ -3,16 +3,19 @@ from enum import Enum
 class EmotionResult():
 
     @staticmethod
-    def create_emotion():
+    def create_emotion(anger = 0, fear = 0, sadness = 0, disgust = 0, joy = 0, anticipation = 0, surprise = 0, neutral = 0):
+        """
+        Creates an EmotionResult vector
+        """
         emotion = {
-           Emotions.ANGER.value: 0,
-           Emotions.FEAR.value: 0,
-           Emotions.SADNESS.value: 0,
-           Emotions.DISGUST.value: 0,
-           Emotions.JOY.value: 0,
-           Emotions.ANTICIPATION.value:0,  
-           Emotions.SURPRISE.value:0,
-           Emotions.NEUTRAL.value:0
+           Emotions.ANGER.value: anger,
+           Emotions.FEAR.value: fear,
+           Emotions.SADNESS.value: sadness,
+           Emotions.DISGUST.value: disgust,
+           Emotions.JOY.value: joy,
+           Emotions.ANTICIPATION.value:anticipation,  
+           Emotions.SURPRISE.value:surprise,
+           Emotions.NEUTRAL.value:neutral
         }
         return emotion
 
