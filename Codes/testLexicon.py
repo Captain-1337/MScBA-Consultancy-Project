@@ -10,8 +10,11 @@ print(CorporaDomains.BLOG.value)
 print(blog_corpora)
 
 """
-
+print('==============================')
+print('Start script output')
+print('==============================')
 snh = SenticNetHelper()
-emotion = snh.get_emotion('roger')
+emotion = snh.get_emotion('love_you')
 
 print(emotion)
+print('==============================')
