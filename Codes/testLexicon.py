@@ -27,7 +27,7 @@ analyzer = EmotionAnalyzer('love', mockup=True)
 print("Mockup emotionanalyzer: ",analyzer.get_emotion())
 print("primary emotion: ",EmotionResult.get_primary_emotion(analyzer.get_emotion()))
 print('==============================')
-corpus = 'love'
+corpus = 'This delicately observed story , deeply felt and masterfully stylized , is a triumph for its maverick director .'
 print("Analyze: ", corpus)
 analyzer = EmotionAnalyzer(corpus, mockup=False)
 print("emotionanalyzer: ",analyzer.get_emotion())

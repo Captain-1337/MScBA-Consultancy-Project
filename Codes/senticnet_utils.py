@@ -12,7 +12,6 @@ class SenticNetHelper():
         """
         Gets from a word or word concept an EmtotionResult vector
         """
-
         if concept in self._sn.data:
             sentics = self._sn.sentics(concept)        
             emotion = self._get_emotion_from_sentics(sentics)

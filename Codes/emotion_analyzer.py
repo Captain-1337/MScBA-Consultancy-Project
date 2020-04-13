@@ -16,7 +16,7 @@ class EmotionAnalyzer:
         self._emotions = []
         self._mockup = mockup
 
-    def get_emotion(self, corpus=None):
+    def get_emotion(self, corpus=None, method ='simple'):
         """
         Gets a EmotionResult frorm the corpora
         """ 
@@ -27,12 +27,28 @@ class EmotionAnalyzer:
         
         # get emotion of each concept or word in the corpus 
         if self._mockup:
-            # Creating some mockup emotions
+            # Creating some random mockup emotions for testing
             for x in range(20):
                 self._emotions.append(EmotionResult.create_random_emotion())
         else:
-            # TODO implement concept etraction
-            self._emotions.append(self._snh.get_emotion(self._corpus))
+            # TODO implement concept/phrase extraction
+            # 1. Split in sentences
+            # 2. Ex
+            # 
+            if method == 'simple':
+                """
+                    Simple lookup for each word token in the lexicon
+                """
+                from nltk.tokenize import word_tokenize
+                tokens = word_tokenize(self._corpus)
+                for token in tokens:
+                    self._emotions.append(self._snh.get_emotion(token))
+
+            elif method == 'roger1':
+                pass
+            elif method == 'himmet1':
+                pass
+
 
         # Calculate result emotion
         emotion = self._summarize_emotions()
@@ -56,7 +72,6 @@ class EmotionAnalyzer:
             result_emotion[Emotions.TRUST.value] += emotion[Emotions.TRUST.value]
             result_emotion[Emotions.SURPRISE.value] += emotion[Emotions.SURPRISE.value]
             result_emotion[Emotions.ANTICIPATION.value] += emotion[Emotions.ANTICIPATION.value]
-            result_emotion[Emotions.NEUTRAL.value] += emotion[Emotions.NEUTRAL.value]
         
         # Normalize
         if emotion_count > 0:
@@ -68,7 +83,6 @@ class EmotionAnalyzer:
             result_emotion[Emotions.TRUST.value] = result_emotion[Emotions.TRUST.value]/emotion_count
             result_emotion[Emotions.SURPRISE.value] = result_emotion[Emotions.SURPRISE.value]/emotion_count
             result_emotion[Emotions.ANTICIPATION.value] = result_emotion[Emotions.ANTICIPATION.value]/emotion_count
-            result_emotion[Emotions.NEUTRAL.value] = result_emotion[Emotions.NEUTRAL.value]/emotion_count
 
         return result_emotion
 
