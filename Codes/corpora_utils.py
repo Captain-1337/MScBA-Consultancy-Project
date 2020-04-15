@@ -3,6 +3,7 @@ from enum import Enum
 import unicodedata
 import re
 from contractions import CONTRACTION_MAP
+from negate import NEGATE
 import nltk
 from nltk.tokenize.toktok import ToktokTokenizer
 """ spaCy is mostly used for lemmatizing purposes, according to the WWW it is supperior to NLTK in this matter """
@@ -67,8 +68,15 @@ class CorporaHelper():
         # TODO  luv => love ...
         None
 
+    def simple_stemmer(text):
+        """ Stemmer removes the inflections of words and transforms it to its' BASE WORDS with respect to verbs in capital letter: My system is daily crashing ,but look now at daily. => y system is daili crash ,but look now at daily.  """
+        ps = nltk.porter.PorterStemmer()
+        text = ' '.join([ps.stem(word) for word in text.split()])
+        return text
+
+
     def lemmatizer(text):
-        """ Lemmatizes (root word) words with respect to verbs in capital letter: keep on keeping on! Death Stranding =>  keep on keep o ! death stranding """
+        """ Simmilar to Stemmer this Lemmatizes words to its' ROOT WORDS with respect to verbs in capital letter: keep on keeping on! Death Stranding =>  keep on keep o ! death stranding """
         text = nlp(text)
         text = ' '.join([word.lemma_ if word.lemma_ != '-PRON-' else word.text for word in text])
         return text
@@ -85,8 +93,7 @@ class CorporaHelper():
         return text
 
     def translate_contractions(text, contraction_mapping=CONTRACTION_MAP):
-        """expands contractions: I'm => I am   He's => He is (see contractions.py for full Map) """ 
-        
+        """expands contractions: I'm => I am | don't => do not | He's => He is (see contractions.py for full map) """ 
             contractions_pattern = re.compile('({})'.format('|'.join(contraction_mapping.keys())),
                                         flags=re.IGNORECASE|re.DOTALL)
         
@@ -102,8 +109,58 @@ class CorporaHelper():
             expanded_text = re.sub("'", "", expanded_text)
             return expanded_text
 
-    def remove_stopwords(text, is_lower_case=False):    
+    def remove_stopwords(text, is_lower_case=False):   
+        """Removes stopwords without touching the negates [no & not]: The, and, if are stopwords, computer is not => , , stopwords , computer not """ 
+        tokenizer = ToktokTokenizer()
+        stopword_list = nltk.corpus.stopwords.words('english')
+        stopword_list.remove('no')    # Removing negates from Stopwords
+        stopword_list.remove('not')   # Removing negates from Stopwords
+        tokens = tokenizer.tokenize(text)
+        tokens = [token.strip() for token in tokens]
+        if is_lower_case:
+            filtered_tokens = [token for token in tokens if token not in stopword_list]
+        else:
+            filtered_tokens = [token for token in tokens if token.lower() not in stopword_list]
+        filtered_text = ' '.join(filtered_tokens)    
+        return filtered_text
 
+    def negated(input_words, include_nt=True):
+        """
+        Determine if input contains negation words.
+        Function retrieved from NLTK VADER (see negates)
+        """
+        input_words = [str(w).lower() for w in input_words]
+        neg_words = []
+        neg_words.extend(NEGATE)
+        for word in neg_words:
+            if word in input_words:
+                return True
+        if include_nt:
+            for word in input_words:
+                if "n't" in word:
+                    return True
+        '''if "least" in input_words:
+            i = input_words.index("least")
+            if i > 0 and input_words[i - 1] != "at":
+                return True'''
+        return False
+    
+    def allcap_differential(words):
+        """
+        Check whether just some words in the input are ALL CAPS
+        :param list words: The words to inspect
+        :returns: `True` if some but not all items in `words` are ALL CAPS
+        Function retrieved from NLTK VADER 
+        """
+        is_different = False
+        allcap_words = 0
+        for word in words:
+        if word.isupper():
+        allcap_words += 1
+        cap_differential = len(words) - allcap_words
+        if 0 < cap_differential < len(words):
+            is_different = True
+        return is_different
 
 class CorporaDomains(Enum):
     """
