@@ -9,7 +9,7 @@ from nltk.tokenize.toktok import ToktokTokenizer
 """ spaCy is mostly used for lemmatizing purposes, according to the WWW it is supperior to NLTK in this matter """
 import spacy                    # If you have problems installing spaCy: 
 import en_core_web_sm           # Try creating a new environment in Python and do a clean spaCy install on there
-nlp = en_core_web_sm.load()     # pip install https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.2.0/en_core_web_sm-2.2.0.tar.gz
+nlp = en_core_web_sm.load() # <- pip install https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.2.0/en_core_web_sm-2.2.0.tar.gz
 
 
 
@@ -51,11 +51,14 @@ class CorporaHelper():
 
         return self._data[self._data[CorporaProperties.DOMAIN.value].str.match(domain)]
 
-    def translate_emoticons(self):
+    def translate_emoticons(self):  # I found a list with various emoticons, some of them are tagged:
+                                    # https://gist.github.com/endolith/157796
+                                    # Let us decide which one to use.
         # TODO :-) => happy
         self._data[CorporaProperties.CLEANED_CORPUS.value]
 
-    def translate_emojis(self):
+    def translate_emojis(self): # check emoji.py, lets discuss which one to choose.
+                                # there are over 600 emojis listed and labeled.
         # TODO 😀 => happy
         None
 
@@ -81,7 +84,9 @@ class CorporaHelper():
         text = ' '.join([word.lemma_ if word.lemma_ != '-PRON-' else word.text for word in text])
         return text
 
-    def translate_abrevations(self):
+    def translate_abrevations(self):    # This one is really context specific. 
+                                        # We need to discuss this
+                                        # Check this out http://lasid.sor.ufscar.br/expansion/static/index.html
         # TODO  => abr. = abrevation
         None
 

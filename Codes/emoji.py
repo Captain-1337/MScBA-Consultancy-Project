@@ -1,3575 +1,625 @@
 # -*- coding: utf-8 -*-
-""" 
-Source: https://github.com/cjhutto/vaderSentiment/
 """
-
-😀	grinning face
-😁	beaming face with smiling eyes
-😂	face with tears of joy
-🤣	rolling on the floor laughing
-😃	grinning face with big eyes
-😄	grinning face with smiling eyes
-😅	grinning face with sweat
-😆	grinning squinting face
-😉	winking face
-😊	smiling face with smiling eyes
-😋	face savoring food
-😎	smiling face with sunglasses
-😍	smiling face with heart-eyes
-😘	face blowing a kiss
-🥰	smiling face with 3 hearts
-😗	kissing face
-😙	kissing face with smiling eyes
-😚	kissing face with closed eyes
-☺️	smiling face
-☺	smiling face
-🙂	slightly smiling face
-🤗	hugging face
-🤩	star-struck
-🤔	thinking face
-🤨	face with raised eyebrow
-😐	neutral face
-😑	expressionless face
-😶	face without mouth
-🙄	face with rolling eyes
-😏	smirking face
-😣	persevering face
-😥	sad but relieved face
-😮	face with open mouth
-🤐	zipper-mouth face
-😯	hushed face
-😪	sleepy face
-😫	tired face
-😴	sleeping face
-😌	relieved face
-😛	face with tongue
-😜	winking face with tongue
-😝	squinting face with tongue
-🤤	drooling face
-😒	unamused face
-😓	downcast face with sweat
-😔	pensive face
-😕	confused face
-🙃	upside-down face
-🤑	money-mouth face
-😲	astonished face
-☹️	frowning face
-☹	frowning face
-🙁	slightly frowning face
-😖	confounded face
-😞	disappointed face
-😟	worried face
-😤	face with steam from nose
-😢	crying face
-😭	loudly crying face
-😦	frowning face with open mouth
-😧	anguished face
-😨	fearful face
-😩	weary face
-🤯	exploding head
-😬	grimacing face
-😰	anxious face with sweat
-😱	face screaming in fear
-🥵	hot face
-🥶	cold face
-😳	flushed face
-🤪	zany face
-😵	dizzy face
-😡	pouting face
-😠	angry face
-🤬	face with symbols on mouth
-😷	face with medical mask
-🤒	face with thermometer
-🤕	face with head-bandage
-🤢	nauseated face
-🤮	face vomiting
-🤧	sneezing face
-😇	smiling face with halo
-🤠	cowboy hat face
-🥳	partying face
-🥴	woozy face
-🥺	pleading face
-🤥	lying face
-🤫	shushing face
-🤭	face with hand over mouth
-🧐	face with monocle
-🤓	nerd face
-😈	smiling face with horns
-👿	angry face with horns
-🤡	clown face
-👹	ogre
-👺	goblin
-💀	skull
-☠️	skull and crossbones
-☠	skull and crossbones
-👻	ghost
-👽	alien
-👾	alien monster
-🤖	robot face
-💩	pile of poo
-😺	grinning cat face
-😸	grinning cat face with smiling eyes
-😹	cat face with tears of joy
-😻	smiling cat face with heart-eyes
-😼	cat face with wry smile
-😽	kissing cat face
-🙀	weary cat face
-😿	crying cat face
-😾	pouting cat face
-🙈	see-no-evil monkey
-🙉	hear-no-evil monkey
-🙊	speak-no-evil monkey
-🏻	light skin tone
-🏼	medium-light skin tone
-🏽	medium skin tone
-🏾	medium-dark skin tone
-🏿	dark skin tone
-👶	baby
-👶🏻	baby: light skin tone
-👶🏼	baby: medium-light skin tone
-👶🏽	baby: medium skin tone
-👶🏾	baby: medium-dark skin tone
-👶🏿	baby: dark skin tone
-🧒	child
-🧒🏻	child: light skin tone
-🧒🏼	child: medium-light skin tone
-🧒🏽	child: medium skin tone
-🧒🏾	child: medium-dark skin tone
-🧒🏿	child: dark skin tone
-👦	boy
-👦🏻	boy: light skin tone
-👦🏼	boy: medium-light skin tone
-👦🏽	boy: medium skin tone
-👦🏾	boy: medium-dark skin tone
-👦🏿	boy: dark skin tone
-👧	girl
-👧🏻	girl: light skin tone
-👧🏼	girl: medium-light skin tone
-👧🏽	girl: medium skin tone
-👧🏾	girl: medium-dark skin tone
-👧🏿	girl: dark skin tone
-🧑	adult
-🧑🏻	adult: light skin tone
-🧑🏼	adult: medium-light skin tone
-🧑🏽	adult: medium skin tone
-🧑🏾	adult: medium-dark skin tone
-🧑🏿	adult: dark skin tone
-👨	man
-👨🏻	man: light skin tone
-👨🏼	man: medium-light skin tone
-👨🏽	man: medium skin tone
-👨🏾	man: medium-dark skin tone
-👨🏿	man: dark skin tone
-👩	woman
-👩🏻	woman: light skin tone
-👩🏼	woman: medium-light skin tone
-👩🏽	woman: medium skin tone
-👩🏾	woman: medium-dark skin tone
-👩🏿	woman: dark skin tone
-🧓	older adult
-🧓🏻	older adult: light skin tone
-🧓🏼	older adult: medium-light skin tone
-🧓🏽	older adult: medium skin tone
-🧓🏾	older adult: medium-dark skin tone
-🧓🏿	older adult: dark skin tone
-👴	old man
-👴🏻	old man: light skin tone
-👴🏼	old man: medium-light skin tone
-👴🏽	old man: medium skin tone
-👴🏾	old man: medium-dark skin tone
-👴🏿	old man: dark skin tone
-👵	old woman
-👵🏻	old woman: light skin tone
-👵🏼	old woman: medium-light skin tone
-👵🏽	old woman: medium skin tone
-👵🏾	old woman: medium-dark skin tone
-👵🏿	old woman: dark skin tone
-👨‍⚕️	man health worker
-👨‍⚕	man health worker
-👨🏻‍⚕️	man health worker: light skin tone
-👨🏻‍⚕	man health worker: light skin tone
-👨🏼‍⚕️	man health worker: medium-light skin tone
-👨🏼‍⚕	man health worker: medium-light skin tone
-👨🏽‍⚕️	man health worker: medium skin tone
-👨🏽‍⚕	man health worker: medium skin tone
-👨🏾‍⚕️	man health worker: medium-dark skin tone
-👨🏾‍⚕	man health worker: medium-dark skin tone
-👨🏿‍⚕️	man health worker: dark skin tone
-👨🏿‍⚕	man health worker: dark skin tone
-👩‍⚕️	woman health worker
-👩‍⚕	woman health worker
-👩🏻‍⚕️	woman health worker: light skin tone
-👩🏻‍⚕	woman health worker: light skin tone
-👩🏼‍⚕️	woman health worker: medium-light skin tone
-👩🏼‍⚕	woman health worker: medium-light skin tone
-👩🏽‍⚕️	woman health worker: medium skin tone
-👩🏽‍⚕	woman health worker: medium skin tone
-👩🏾‍⚕️	woman health worker: medium-dark skin tone
-👩🏾‍⚕	woman health worker: medium-dark skin tone
-👩🏿‍⚕️	woman health worker: dark skin tone
-👩🏿‍⚕	woman health worker: dark skin tone
-👨‍🎓	man student
-👨🏻‍🎓	man student: light skin tone
-👨🏼‍🎓	man student: medium-light skin tone
-👨🏽‍🎓	man student: medium skin tone
-👨🏾‍🎓	man student: medium-dark skin tone
-👨🏿‍🎓	man student: dark skin tone
-👩‍🎓	woman student
-👩🏻‍🎓	woman student: light skin tone
-👩🏼‍🎓	woman student: medium-light skin tone
-👩🏽‍🎓	woman student: medium skin tone
-👩🏾‍🎓	woman student: medium-dark skin tone
-👩🏿‍🎓	woman student: dark skin tone
-👨‍🏫	man teacher
-👨🏻‍🏫	man teacher: light skin tone
-👨🏼‍🏫	man teacher: medium-light skin tone
-👨🏽‍🏫	man teacher: medium skin tone
-👨🏾‍🏫	man teacher: medium-dark skin tone
-👨🏿‍🏫	man teacher: dark skin tone
-👩‍🏫	woman teacher
-👩🏻‍🏫	woman teacher: light skin tone
-👩🏼‍🏫	woman teacher: medium-light skin tone
-👩🏽‍🏫	woman teacher: medium skin tone
-👩🏾‍🏫	woman teacher: medium-dark skin tone
-👩🏿‍🏫	woman teacher: dark skin tone
-👨‍⚖️	man judge
-👨‍⚖	man judge
-👨🏻‍⚖️	man judge: light skin tone
-👨🏻‍⚖	man judge: light skin tone
-👨🏼‍⚖️	man judge: medium-light skin tone
-👨🏼‍⚖	man judge: medium-light skin tone
-👨🏽‍⚖️	man judge: medium skin tone
-👨🏽‍⚖	man judge: medium skin tone
-👨🏾‍⚖️	man judge: medium-dark skin tone
-👨🏾‍⚖	man judge: medium-dark skin tone
-👨🏿‍⚖️	man judge: dark skin tone
-👨🏿‍⚖	man judge: dark skin tone
-👩‍⚖️	woman judge
-👩‍⚖	woman judge
-👩🏻‍⚖️	woman judge: light skin tone
-👩🏻‍⚖	woman judge: light skin tone
-👩🏼‍⚖️	woman judge: medium-light skin tone
-👩🏼‍⚖	woman judge: medium-light skin tone
-👩🏽‍⚖️	woman judge: medium skin tone
-👩🏽‍⚖	woman judge: medium skin tone
-👩🏾‍⚖️	woman judge: medium-dark skin tone
-👩🏾‍⚖	woman judge: medium-dark skin tone
-👩🏿‍⚖️	woman judge: dark skin tone
-👩🏿‍⚖	woman judge: dark skin tone
-👨‍🌾	man farmer
-👨🏻‍🌾	man farmer: light skin tone
-👨🏼‍🌾	man farmer: medium-light skin tone
-👨🏽‍🌾	man farmer: medium skin tone
-👨🏾‍🌾	man farmer: medium-dark skin tone
-👨🏿‍🌾	man farmer: dark skin tone
-👩‍🌾	woman farmer
-👩🏻‍🌾	woman farmer: light skin tone
-👩🏼‍🌾	woman farmer: medium-light skin tone
-👩🏽‍🌾	woman farmer: medium skin tone
-👩🏾‍🌾	woman farmer: medium-dark skin tone
-👩🏿‍🌾	woman farmer: dark skin tone
-👨‍🍳	man cook
-👨🏻‍🍳	man cook: light skin tone
-👨🏼‍🍳	man cook: medium-light skin tone
-👨🏽‍🍳	man cook: medium skin tone
-👨🏾‍🍳	man cook: medium-dark skin tone
-👨🏿‍🍳	man cook: dark skin tone
-👩‍🍳	woman cook
-👩🏻‍🍳	woman cook: light skin tone
-👩🏼‍🍳	woman cook: medium-light skin tone
-👩🏽‍🍳	woman cook: medium skin tone
-👩🏾‍🍳	woman cook: medium-dark skin tone
-👩🏿‍🍳	woman cook: dark skin tone
-👨‍🔧	man mechanic
-👨🏻‍🔧	man mechanic: light skin tone
-👨🏼‍🔧	man mechanic: medium-light skin tone
-👨🏽‍🔧	man mechanic: medium skin tone
-👨🏾‍🔧	man mechanic: medium-dark skin tone
-👨🏿‍🔧	man mechanic: dark skin tone
-👩‍🔧	woman mechanic
-👩🏻‍🔧	woman mechanic: light skin tone
-👩🏼‍🔧	woman mechanic: medium-light skin tone
-👩🏽‍🔧	woman mechanic: medium skin tone
-👩🏾‍🔧	woman mechanic: medium-dark skin tone
-👩🏿‍🔧	woman mechanic: dark skin tone
-👨‍🏭	man factory worker
-👨🏻‍🏭	man factory worker: light skin tone
-👨🏼‍🏭	man factory worker: medium-light skin tone
-👨🏽‍🏭	man factory worker: medium skin tone
-👨🏾‍🏭	man factory worker: medium-dark skin tone
-👨🏿‍🏭	man factory worker: dark skin tone
-👩‍🏭	woman factory worker
-👩🏻‍🏭	woman factory worker: light skin tone
-👩🏼‍🏭	woman factory worker: medium-light skin tone
-👩🏽‍🏭	woman factory worker: medium skin tone
-👩🏾‍🏭	woman factory worker: medium-dark skin tone
-👩🏿‍🏭	woman factory worker: dark skin tone
-👨‍💼	man office worker
-👨🏻‍💼	man office worker: light skin tone
-👨🏼‍💼	man office worker: medium-light skin tone
-👨🏽‍💼	man office worker: medium skin tone
-👨🏾‍💼	man office worker: medium-dark skin tone
-👨🏿‍💼	man office worker: dark skin tone
-👩‍💼	woman office worker
-👩🏻‍💼	woman office worker: light skin tone
-👩🏼‍💼	woman office worker: medium-light skin tone
-👩🏽‍💼	woman office worker: medium skin tone
-👩🏾‍💼	woman office worker: medium-dark skin tone
-👩🏿‍💼	woman office worker: dark skin tone
-👨‍🔬	man scientist
-👨🏻‍🔬	man scientist: light skin tone
-👨🏼‍🔬	man scientist: medium-light skin tone
-👨🏽‍🔬	man scientist: medium skin tone
-👨🏾‍🔬	man scientist: medium-dark skin tone
-👨🏿‍🔬	man scientist: dark skin tone
-👩‍🔬	woman scientist
-👩🏻‍🔬	woman scientist: light skin tone
-👩🏼‍🔬	woman scientist: medium-light skin tone
-👩🏽‍🔬	woman scientist: medium skin tone
-👩🏾‍🔬	woman scientist: medium-dark skin tone
-👩🏿‍🔬	woman scientist: dark skin tone
-👨‍💻	man technologist
-👨🏻‍💻	man technologist: light skin tone
-👨🏼‍💻	man technologist: medium-light skin tone
-👨🏽‍💻	man technologist: medium skin tone
-👨🏾‍💻	man technologist: medium-dark skin tone
-👨🏿‍💻	man technologist: dark skin tone
-👩‍💻	woman technologist
-👩🏻‍💻	woman technologist: light skin tone
-👩🏼‍💻	woman technologist: medium-light skin tone
-👩🏽‍💻	woman technologist: medium skin tone
-👩🏾‍💻	woman technologist: medium-dark skin tone
-👩🏿‍💻	woman technologist: dark skin tone
-👨‍🎤	man singer
-👨🏻‍🎤	man singer: light skin tone
-👨🏼‍🎤	man singer: medium-light skin tone
-👨🏽‍🎤	man singer: medium skin tone
-👨🏾‍🎤	man singer: medium-dark skin tone
-👨🏿‍🎤	man singer: dark skin tone
-👩‍🎤	woman singer
-👩🏻‍🎤	woman singer: light skin tone
-👩🏼‍🎤	woman singer: medium-light skin tone
-👩🏽‍🎤	woman singer: medium skin tone
-👩🏾‍🎤	woman singer: medium-dark skin tone
-👩🏿‍🎤	woman singer: dark skin tone
-👨‍🎨	man artist
-👨🏻‍🎨	man artist: light skin tone
-👨🏼‍🎨	man artist: medium-light skin tone
-👨🏽‍🎨	man artist: medium skin tone
-👨🏾‍🎨	man artist: medium-dark skin tone
-👨🏿‍🎨	man artist: dark skin tone
-👩‍🎨	woman artist
-👩🏻‍🎨	woman artist: light skin tone
-👩🏼‍🎨	woman artist: medium-light skin tone
-👩🏽‍🎨	woman artist: medium skin tone
-👩🏾‍🎨	woman artist: medium-dark skin tone
-👩🏿‍🎨	woman artist: dark skin tone
-👨‍✈️	man pilot
-👨‍✈	man pilot
-👨🏻‍✈️	man pilot: light skin tone
-👨🏻‍✈	man pilot: light skin tone
-👨🏼‍✈️	man pilot: medium-light skin tone
-👨🏼‍✈	man pilot: medium-light skin tone
-👨🏽‍✈️	man pilot: medium skin tone
-👨🏽‍✈	man pilot: medium skin tone
-👨🏾‍✈️	man pilot: medium-dark skin tone
-👨🏾‍✈	man pilot: medium-dark skin tone
-👨🏿‍✈️	man pilot: dark skin tone
-👨🏿‍✈	man pilot: dark skin tone
-👩‍✈️	woman pilot
-👩‍✈	woman pilot
-👩🏻‍✈️	woman pilot: light skin tone
-👩🏻‍✈	woman pilot: light skin tone
-👩🏼‍✈️	woman pilot: medium-light skin tone
-👩🏼‍✈	woman pilot: medium-light skin tone
-👩🏽‍✈️	woman pilot: medium skin tone
-👩🏽‍✈	woman pilot: medium skin tone
-👩🏾‍✈️	woman pilot: medium-dark skin tone
-👩🏾‍✈	woman pilot: medium-dark skin tone
-👩🏿‍✈️	woman pilot: dark skin tone
-👩🏿‍✈	woman pilot: dark skin tone
-👨‍🚀	man astronaut
-👨🏻‍🚀	man astronaut: light skin tone
-👨🏼‍🚀	man astronaut: medium-light skin tone
-👨🏽‍🚀	man astronaut: medium skin tone
-👨🏾‍🚀	man astronaut: medium-dark skin tone
-👨🏿‍🚀	man astronaut: dark skin tone
-👩‍🚀	woman astronaut
-👩🏻‍🚀	woman astronaut: light skin tone
-👩🏼‍🚀	woman astronaut: medium-light skin tone
-👩🏽‍🚀	woman astronaut: medium skin tone
-👩🏾‍🚀	woman astronaut: medium-dark skin tone
-👩🏿‍🚀	woman astronaut: dark skin tone
-👨‍🚒	man firefighter
-👨🏻‍🚒	man firefighter: light skin tone
-👨🏼‍🚒	man firefighter: medium-light skin tone
-👨🏽‍🚒	man firefighter: medium skin tone
-👨🏾‍🚒	man firefighter: medium-dark skin tone
-👨🏿‍🚒	man firefighter: dark skin tone
-👩‍🚒	woman firefighter
-👩🏻‍🚒	woman firefighter: light skin tone
-👩🏼‍🚒	woman firefighter: medium-light skin tone
-👩🏽‍🚒	woman firefighter: medium skin tone
-👩🏾‍🚒	woman firefighter: medium-dark skin tone
-👩🏿‍🚒	woman firefighter: dark skin tone
-👮	police officer
-👮🏻	police officer: light skin tone
-👮🏼	police officer: medium-light skin tone
-👮🏽	police officer: medium skin tone
-👮🏾	police officer: medium-dark skin tone
-👮🏿	police officer: dark skin tone
-👮‍♂️	man police officer
-👮‍♂	man police officer
-👮🏻‍♂️	man police officer: light skin tone
-👮🏻‍♂	man police officer: light skin tone
-👮🏼‍♂️	man police officer: medium-light skin tone
-👮🏼‍♂	man police officer: medium-light skin tone
-👮🏽‍♂️	man police officer: medium skin tone
-👮🏽‍♂	man police officer: medium skin tone
-👮🏾‍♂️	man police officer: medium-dark skin tone
-👮🏾‍♂	man police officer: medium-dark skin tone
-👮🏿‍♂️	man police officer: dark skin tone
-👮🏿‍♂	man police officer: dark skin tone
-👮‍♀️	woman police officer
-👮‍♀	woman police officer
-👮🏻‍♀️	woman police officer: light skin tone
-👮🏻‍♀	woman police officer: light skin tone
-👮🏼‍♀️	woman police officer: medium-light skin tone
-👮🏼‍♀	woman police officer: medium-light skin tone
-👮🏽‍♀️	woman police officer: medium skin tone
-👮🏽‍♀	woman police officer: medium skin tone
-👮🏾‍♀️	woman police officer: medium-dark skin tone
-👮🏾‍♀	woman police officer: medium-dark skin tone
-👮🏿‍♀️	woman police officer: dark skin tone
-👮🏿‍♀	woman police officer: dark skin tone
-🕵️	detective
-🕵	detective
-🕵🏻	detective: light skin tone
-🕵🏼	detective: medium-light skin tone
-🕵🏽	detective: medium skin tone
-🕵🏾	detective: medium-dark skin tone
-🕵🏿	detective: dark skin tone
-🕵️‍♂️	man detective
-🕵‍♂️	man detective
-🕵️‍♂	man detective
-🕵‍♂	man detective
-🕵🏻‍♂️	man detective: light skin tone
-🕵🏻‍♂	man detective: light skin tone
-🕵🏼‍♂️	man detective: medium-light skin tone
-🕵🏼‍♂	man detective: medium-light skin tone
-🕵🏽‍♂️	man detective: medium skin tone
-🕵🏽‍♂	man detective: medium skin tone
-🕵🏾‍♂️	man detective: medium-dark skin tone
-🕵🏾‍♂	man detective: medium-dark skin tone
-🕵🏿‍♂️	man detective: dark skin tone
-🕵🏿‍♂	man detective: dark skin tone
-🕵️‍♀️	woman detective
-🕵‍♀️	woman detective
-🕵️‍♀	woman detective
-🕵‍♀	woman detective
-🕵🏻‍♀️	woman detective: light skin tone
-🕵🏻‍♀	woman detective: light skin tone
-🕵🏼‍♀️	woman detective: medium-light skin tone
-🕵🏼‍♀	woman detective: medium-light skin tone
-🕵🏽‍♀️	woman detective: medium skin tone
-🕵🏽‍♀	woman detective: medium skin tone
-🕵🏾‍♀️	woman detective: medium-dark skin tone
-🕵🏾‍♀	woman detective: medium-dark skin tone
-🕵🏿‍♀️	woman detective: dark skin tone
-🕵🏿‍♀	woman detective: dark skin tone
-💂	guard
-💂🏻	guard: light skin tone
-💂🏼	guard: medium-light skin tone
-💂🏽	guard: medium skin tone
-💂🏾	guard: medium-dark skin tone
-💂🏿	guard: dark skin tone
-💂‍♂️	man guard
-💂‍♂	man guard
-💂🏻‍♂️	man guard: light skin tone
-💂🏻‍♂	man guard: light skin tone
-💂🏼‍♂️	man guard: medium-light skin tone
-💂🏼‍♂	man guard: medium-light skin tone
-💂🏽‍♂️	man guard: medium skin tone
-💂🏽‍♂	man guard: medium skin tone
-💂🏾‍♂️	man guard: medium-dark skin tone
-💂🏾‍♂	man guard: medium-dark skin tone
-💂🏿‍♂️	man guard: dark skin tone
-💂🏿‍♂	man guard: dark skin tone
-💂‍♀️	woman guard
-💂‍♀	woman guard
-💂🏻‍♀️	woman guard: light skin tone
-💂🏻‍♀	woman guard: light skin tone
-💂🏼‍♀️	woman guard: medium-light skin tone
-💂🏼‍♀	woman guard: medium-light skin tone
-💂🏽‍♀️	woman guard: medium skin tone
-💂🏽‍♀	woman guard: medium skin tone
-💂🏾‍♀️	woman guard: medium-dark skin tone
-💂🏾‍♀	woman guard: medium-dark skin tone
-💂🏿‍♀️	woman guard: dark skin tone
-💂🏿‍♀	woman guard: dark skin tone
-👷	construction worker
-👷🏻	construction worker: light skin tone
-👷🏼	construction worker: medium-light skin tone
-👷🏽	construction worker: medium skin tone
-👷🏾	construction worker: medium-dark skin tone
-👷🏿	construction worker: dark skin tone
-👷‍♂️	man construction worker
-👷‍♂	man construction worker
-👷🏻‍♂️	man construction worker: light skin tone
-👷🏻‍♂	man construction worker: light skin tone
-👷🏼‍♂️	man construction worker: medium-light skin tone
-👷🏼‍♂	man construction worker: medium-light skin tone
-👷🏽‍♂️	man construction worker: medium skin tone
-👷🏽‍♂	man construction worker: medium skin tone
-👷🏾‍♂️	man construction worker: medium-dark skin tone
-👷🏾‍♂	man construction worker: medium-dark skin tone
-👷🏿‍♂️	man construction worker: dark skin tone
-👷🏿‍♂	man construction worker: dark skin tone
-👷‍♀️	woman construction worker
-👷‍♀	woman construction worker
-👷🏻‍♀️	woman construction worker: light skin tone
-👷🏻‍♀	woman construction worker: light skin tone
-👷🏼‍♀️	woman construction worker: medium-light skin tone
-👷🏼‍♀	woman construction worker: medium-light skin tone
-👷🏽‍♀️	woman construction worker: medium skin tone
-👷🏽‍♀	woman construction worker: medium skin tone
-👷🏾‍♀️	woman construction worker: medium-dark skin tone
-👷🏾‍♀	woman construction worker: medium-dark skin tone
-👷🏿‍♀️	woman construction worker: dark skin tone
-👷🏿‍♀	woman construction worker: dark skin tone
-🤴	prince
-🤴🏻	prince: light skin tone
-🤴🏼	prince: medium-light skin tone
-🤴🏽	prince: medium skin tone
-🤴🏾	prince: medium-dark skin tone
-🤴🏿	prince: dark skin tone
-👸	princess
-👸🏻	princess: light skin tone
-👸🏼	princess: medium-light skin tone
-👸🏽	princess: medium skin tone
-👸🏾	princess: medium-dark skin tone
-👸🏿	princess: dark skin tone
-👳	person wearing turban
-👳🏻	person wearing turban: light skin tone
-👳🏼	person wearing turban: medium-light skin tone
-👳🏽	person wearing turban: medium skin tone
-👳🏾	person wearing turban: medium-dark skin tone
-👳🏿	person wearing turban: dark skin tone
-👳‍♂️	man wearing turban
-👳‍♂	man wearing turban
-👳🏻‍♂️	man wearing turban: light skin tone
-👳🏻‍♂	man wearing turban: light skin tone
-👳🏼‍♂️	man wearing turban: medium-light skin tone
-👳🏼‍♂	man wearing turban: medium-light skin tone
-👳🏽‍♂️	man wearing turban: medium skin tone
-👳🏽‍♂	man wearing turban: medium skin tone
-👳🏾‍♂️	man wearing turban: medium-dark skin tone
-👳🏾‍♂	man wearing turban: medium-dark skin tone
-👳🏿‍♂️	man wearing turban: dark skin tone
-👳🏿‍♂	man wearing turban: dark skin tone
-👳‍♀️	woman wearing turban
-👳‍♀	woman wearing turban
-👳🏻‍♀️	woman wearing turban: light skin tone
-👳🏻‍♀	woman wearing turban: light skin tone
-👳🏼‍♀️	woman wearing turban: medium-light skin tone
-👳🏼‍♀	woman wearing turban: medium-light skin tone
-👳🏽‍♀️	woman wearing turban: medium skin tone
-👳🏽‍♀	woman wearing turban: medium skin tone
-👳🏾‍♀️	woman wearing turban: medium-dark skin tone
-👳🏾‍♀	woman wearing turban: medium-dark skin tone
-👳🏿‍♀️	woman wearing turban: dark skin tone
-👳🏿‍♀	woman wearing turban: dark skin tone
-👲	man with Chinese cap
-👲🏻	man with Chinese cap: light skin tone
-👲🏼	man with Chinese cap: medium-light skin tone
-👲🏽	man with Chinese cap: medium skin tone
-👲🏾	man with Chinese cap: medium-dark skin tone
-👲🏿	man with Chinese cap: dark skin tone
-🧕	woman with headscarf
-🧕🏻	woman with headscarf: light skin tone
-🧕🏼	woman with headscarf: medium-light skin tone
-🧕🏽	woman with headscarf: medium skin tone
-🧕🏾	woman with headscarf: medium-dark skin tone
-🧕🏿	woman with headscarf: dark skin tone
-🧔	bearded person
-🧔🏻	bearded person: light skin tone
-🧔🏼	bearded person: medium-light skin tone
-🧔🏽	bearded person: medium skin tone
-🧔🏾	bearded person: medium-dark skin tone
-🧔🏿	bearded person: dark skin tone
-👱	blond-haired person
-👱🏻	blond-haired person: light skin tone
-👱🏼	blond-haired person: medium-light skin tone
-👱🏽	blond-haired person: medium skin tone
-👱🏾	blond-haired person: medium-dark skin tone
-👱🏿	blond-haired person: dark skin tone
-👱‍♂️	blond-haired man
-👱‍♂	blond-haired man
-👱🏻‍♂️	blond-haired man: light skin tone
-👱🏻‍♂	blond-haired man: light skin tone
-👱🏼‍♂️	blond-haired man: medium-light skin tone
-👱🏼‍♂	blond-haired man: medium-light skin tone
-👱🏽‍♂️	blond-haired man: medium skin tone
-👱🏽‍♂	blond-haired man: medium skin tone
-👱🏾‍♂️	blond-haired man: medium-dark skin tone
-👱🏾‍♂	blond-haired man: medium-dark skin tone
-👱🏿‍♂️	blond-haired man: dark skin tone
-👱🏿‍♂	blond-haired man: dark skin tone
-👱‍♀️	blond-haired woman
-👱‍♀	blond-haired woman
-👱🏻‍♀️	blond-haired woman: light skin tone
-👱🏻‍♀	blond-haired woman: light skin tone
-👱🏼‍♀️	blond-haired woman: medium-light skin tone
-👱🏼‍♀	blond-haired woman: medium-light skin tone
-👱🏽‍♀️	blond-haired woman: medium skin tone
-👱🏽‍♀	blond-haired woman: medium skin tone
-👱🏾‍♀️	blond-haired woman: medium-dark skin tone
-👱🏾‍♀	blond-haired woman: medium-dark skin tone
-👱🏿‍♀️	blond-haired woman: dark skin tone
-👱🏿‍♀	blond-haired woman: dark skin tone
-👨‍🦰	man, red haired
-👨🏻‍🦰	man, red haired: light skin tone
-👨🏼‍🦰	man, red haired: medium-light skin tone
-👨🏽‍🦰	man, red haired: medium skin tone
-👨🏾‍🦰	man, red haired: medium-dark skin tone
-👨🏿‍🦰	man, red haired: dark skin tone
-👩‍🦰	woman, red haired
-👩🏻‍🦰	woman, red haired: light skin tone
-👩🏼‍🦰	woman, red haired: medium-light skin tone
-👩🏽‍🦰	woman, red haired: medium skin tone
-👩🏾‍🦰	woman, red haired: medium-dark skin tone
-👩🏿‍🦰	woman, red haired: dark skin tone
-👨‍🦱	man, curly haired
-👨🏻‍🦱	man, curly haired: light skin tone
-👨🏼‍🦱	man, curly haired: medium-light skin tone
-👨🏽‍🦱	man, curly haired: medium skin tone
-👨🏾‍🦱	man, curly haired: medium-dark skin tone
-👨🏿‍🦱	man, curly haired: dark skin tone
-👩‍🦱	woman, curly haired
-👩🏻‍🦱	woman, curly haired: light skin tone
-👩🏼‍🦱	woman, curly haired: medium-light skin tone
-👩🏽‍🦱	woman, curly haired: medium skin tone
-👩🏾‍🦱	woman, curly haired: medium-dark skin tone
-👩🏿‍🦱	woman, curly haired: dark skin tone
-👨‍🦲	man, bald
-👨🏻‍🦲	man, bald: light skin tone
-👨🏼‍🦲	man, bald: medium-light skin tone
-👨🏽‍🦲	man, bald: medium skin tone
-👨🏾‍🦲	man, bald: medium-dark skin tone
-👨🏿‍🦲	man, bald: dark skin tone
-👩‍🦲	woman, bald
-👩🏻‍🦲	woman, bald: light skin tone
-👩🏼‍🦲	woman, bald: medium-light skin tone
-👩🏽‍🦲	woman, bald: medium skin tone
-👩🏾‍🦲	woman, bald: medium-dark skin tone
-👩🏿‍🦲	woman, bald: dark skin tone
-👨‍🦳	man, white haired
-👨🏻‍🦳	man, white haired: light skin tone
-👨🏼‍🦳	man, white haired: medium-light skin tone
-👨🏽‍🦳	man, white haired: medium skin tone
-👨🏾‍🦳	man, white haired: medium-dark skin tone
-👨🏿‍🦳	man, white haired: dark skin tone
-👩‍🦳	woman, white haired
-👩🏻‍🦳	woman, white haired: light skin tone
-👩🏼‍🦳	woman, white haired: medium-light skin tone
-👩🏽‍🦳	woman, white haired: medium skin tone
-👩🏾‍🦳	woman, white haired: medium-dark skin tone
-👩🏿‍🦳	woman, white haired: dark skin tone
-🤵	man in tuxedo
-🤵🏻	man in tuxedo: light skin tone
-🤵🏼	man in tuxedo: medium-light skin tone
-🤵🏽	man in tuxedo: medium skin tone
-🤵🏾	man in tuxedo: medium-dark skin tone
-🤵🏿	man in tuxedo: dark skin tone
-👰	bride with veil
-👰🏻	bride with veil: light skin tone
-👰🏼	bride with veil: medium-light skin tone
-👰🏽	bride with veil: medium skin tone
-👰🏾	bride with veil: medium-dark skin tone
-👰🏿	bride with veil: dark skin tone
-🤰	pregnant woman
-🤰🏻	pregnant woman: light skin tone
-🤰🏼	pregnant woman: medium-light skin tone
-🤰🏽	pregnant woman: medium skin tone
-🤰🏾	pregnant woman: medium-dark skin tone
-🤰🏿	pregnant woman: dark skin tone
-🤱	breast-feeding
-🤱🏻	breast-feeding: light skin tone
-🤱🏼	breast-feeding: medium-light skin tone
-🤱🏽	breast-feeding: medium skin tone
-🤱🏾	breast-feeding: medium-dark skin tone
-🤱🏿	breast-feeding: dark skin tone
-👼	baby angel
-👼🏻	baby angel: light skin tone
-👼🏼	baby angel: medium-light skin tone
-👼🏽	baby angel: medium skin tone
-👼🏾	baby angel: medium-dark skin tone
-👼🏿	baby angel: dark skin tone
-🎅	Santa Claus
-🎅🏻	Santa Claus: light skin tone
-🎅🏼	Santa Claus: medium-light skin tone
-🎅🏽	Santa Claus: medium skin tone
-🎅🏾	Santa Claus: medium-dark skin tone
-🎅🏿	Santa Claus: dark skin tone
-🤶	Mrs. Claus
-🤶🏻	Mrs. Claus: light skin tone
-🤶🏼	Mrs. Claus: medium-light skin tone
-🤶🏽	Mrs. Claus: medium skin tone
-🤶🏾	Mrs. Claus: medium-dark skin tone
-🤶🏿	Mrs. Claus: dark skin tone
-🦸	superhero
-🦸🏻	superhero: light skin tone
-🦸🏼	superhero: medium-light skin tone
-🦸🏽	superhero: medium skin tone
-🦸🏾	superhero: medium-dark skin tone
-🦸🏿	superhero: dark skin tone
-🦸‍♀️	woman superhero
-🦸‍♀	woman superhero
-🦸🏻‍♀️	woman superhero: light skin tone
-🦸🏻‍♀	woman superhero: light skin tone
-🦸🏼‍♀️	woman superhero: medium-light skin tone
-🦸🏼‍♀	woman superhero: medium-light skin tone
-🦸🏽‍♀️	woman superhero: medium skin tone
-🦸🏽‍♀	woman superhero: medium skin tone
-🦸🏾‍♀️	woman superhero: medium-dark skin tone
-🦸🏾‍♀	woman superhero: medium-dark skin tone
-🦸🏿‍♀️	woman superhero: dark skin tone
-🦸🏿‍♀	woman superhero: dark skin tone
-🦸‍♂️	man superhero
-🦸‍♂	man superhero
-🦸🏻‍♂️	man superhero: light skin tone
-🦸🏻‍♂	man superhero: light skin tone
-🦸🏼‍♂️	man superhero: medium-light skin tone
-🦸🏼‍♂	man superhero: medium-light skin tone
-🦸🏽‍♂️	man superhero: medium skin tone
-🦸🏽‍♂	man superhero: medium skin tone
-🦸🏾‍♂️	man superhero: medium-dark skin tone
-🦸🏾‍♂	man superhero: medium-dark skin tone
-🦸🏿‍♂️	man superhero: dark skin tone
-🦸🏿‍♂	man superhero: dark skin tone
-🦹	supervillain
-🦹🏻	supervillain: light skin tone
-🦹🏼	supervillain: medium-light skin tone
-🦹🏽	supervillain: medium skin tone
-🦹🏾	supervillain: medium-dark skin tone
-🦹🏿	supervillain: dark skin tone
-🦹‍♀️	woman supervillain
-🦹‍♀	woman supervillain
-🦹🏻‍♀️	woman supervillain: light skin tone
-🦹🏻‍♀	woman supervillain: light skin tone
-🦹🏼‍♀️	woman supervillain: medium-light skin tone
-🦹🏼‍♀	woman supervillain: medium-light skin tone
-🦹🏽‍♀️	woman supervillain: medium skin tone
-🦹🏽‍♀	woman supervillain: medium skin tone
-🦹🏾‍♀️	woman supervillain: medium-dark skin tone
-🦹🏾‍♀	woman supervillain: medium-dark skin tone
-🦹🏿‍♀️	woman supervillain: dark skin tone
-🦹🏿‍♀	woman supervillain: dark skin tone
-🦹‍♂️	man supervillain
-🦹‍♂	man supervillain
-🦹🏻‍♂️	man supervillain: light skin tone
-🦹🏻‍♂	man supervillain: light skin tone
-🦹🏼‍♂️	man supervillain: medium-light skin tone
-🦹🏼‍♂	man supervillain: medium-light skin tone
-🦹🏽‍♂️	man supervillain: medium skin tone
-🦹🏽‍♂	man supervillain: medium skin tone
-🦹🏾‍♂️	man supervillain: medium-dark skin tone
-🦹🏾‍♂	man supervillain: medium-dark skin tone
-🦹🏿‍♂️	man supervillain: dark skin tone
-🦹🏿‍♂	man supervillain: dark skin tone
-🧙	mage
-🧙🏻	mage: light skin tone
-🧙🏼	mage: medium-light skin tone
-🧙🏽	mage: medium skin tone
-🧙🏾	mage: medium-dark skin tone
-🧙🏿	mage: dark skin tone
-🧙‍♀️	woman mage
-🧙‍♀	woman mage
-🧙🏻‍♀️	woman mage: light skin tone
-🧙🏻‍♀	woman mage: light skin tone
-🧙🏼‍♀️	woman mage: medium-light skin tone
-🧙🏼‍♀	woman mage: medium-light skin tone
-🧙🏽‍♀️	woman mage: medium skin tone
-🧙🏽‍♀	woman mage: medium skin tone
-🧙🏾‍♀️	woman mage: medium-dark skin tone
-🧙🏾‍♀	woman mage: medium-dark skin tone
-🧙🏿‍♀️	woman mage: dark skin tone
-🧙🏿‍♀	woman mage: dark skin tone
-🧙‍♂️	man mage
-🧙‍♂	man mage
-🧙🏻‍♂️	man mage: light skin tone
-🧙🏻‍♂	man mage: light skin tone
-🧙🏼‍♂️	man mage: medium-light skin tone
-🧙🏼‍♂	man mage: medium-light skin tone
-🧙🏽‍♂️	man mage: medium skin tone
-🧙🏽‍♂	man mage: medium skin tone
-🧙🏾‍♂️	man mage: medium-dark skin tone
-🧙🏾‍♂	man mage: medium-dark skin tone
-🧙🏿‍♂️	man mage: dark skin tone
-🧙🏿‍♂	man mage: dark skin tone
-🧚	fairy
-🧚🏻	fairy: light skin tone
-🧚🏼	fairy: medium-light skin tone
-🧚🏽	fairy: medium skin tone
-🧚🏾	fairy: medium-dark skin tone
-🧚🏿	fairy: dark skin tone
-🧚‍♀️	woman fairy
-🧚‍♀	woman fairy
-🧚🏻‍♀️	woman fairy: light skin tone
-🧚🏻‍♀	woman fairy: light skin tone
-🧚🏼‍♀️	woman fairy: medium-light skin tone
-🧚🏼‍♀	woman fairy: medium-light skin tone
-🧚🏽‍♀️	woman fairy: medium skin tone
-🧚🏽‍♀	woman fairy: medium skin tone
-🧚🏾‍♀️	woman fairy: medium-dark skin tone
-🧚🏾‍♀	woman fairy: medium-dark skin tone
-🧚🏿‍♀️	woman fairy: dark skin tone
-🧚🏿‍♀	woman fairy: dark skin tone
-🧚‍♂️	man fairy
-🧚‍♂	man fairy
-🧚🏻‍♂️	man fairy: light skin tone
-🧚🏻‍♂	man fairy: light skin tone
-🧚🏼‍♂️	man fairy: medium-light skin tone
-🧚🏼‍♂	man fairy: medium-light skin tone
-🧚🏽‍♂️	man fairy: medium skin tone
-🧚🏽‍♂	man fairy: medium skin tone
-🧚🏾‍♂️	man fairy: medium-dark skin tone
-🧚🏾‍♂	man fairy: medium-dark skin tone
-🧚🏿‍♂️	man fairy: dark skin tone
-🧚🏿‍♂	man fairy: dark skin tone
-🧛	vampire
-🧛🏻	vampire: light skin tone
-🧛🏼	vampire: medium-light skin tone
-🧛🏽	vampire: medium skin tone
-🧛🏾	vampire: medium-dark skin tone
-🧛🏿	vampire: dark skin tone
-🧛‍♀️	woman vampire
-🧛‍♀	woman vampire
-🧛🏻‍♀️	woman vampire: light skin tone
-🧛🏻‍♀	woman vampire: light skin tone
-🧛🏼‍♀️	woman vampire: medium-light skin tone
-🧛🏼‍♀	woman vampire: medium-light skin tone
-🧛🏽‍♀️	woman vampire: medium skin tone
-🧛🏽‍♀	woman vampire: medium skin tone
-🧛🏾‍♀️	woman vampire: medium-dark skin tone
-🧛🏾‍♀	woman vampire: medium-dark skin tone
-🧛🏿‍♀️	woman vampire: dark skin tone
-🧛🏿‍♀	woman vampire: dark skin tone
-🧛‍♂️	man vampire
-🧛‍♂	man vampire
-🧛🏻‍♂️	man vampire: light skin tone
-🧛🏻‍♂	man vampire: light skin tone
-🧛🏼‍♂️	man vampire: medium-light skin tone
-🧛🏼‍♂	man vampire: medium-light skin tone
-🧛🏽‍♂️	man vampire: medium skin tone
-🧛🏽‍♂	man vampire: medium skin tone
-🧛🏾‍♂️	man vampire: medium-dark skin tone
-🧛🏾‍♂	man vampire: medium-dark skin tone
-🧛🏿‍♂️	man vampire: dark skin tone
-🧛🏿‍♂	man vampire: dark skin tone
-🧜	merperson
-🧜🏻	merperson: light skin tone
-🧜🏼	merperson: medium-light skin tone
-🧜🏽	merperson: medium skin tone
-🧜🏾	merperson: medium-dark skin tone
-🧜🏿	merperson: dark skin tone
-🧜‍♀️	mermaid
-🧜‍♀	mermaid
-🧜🏻‍♀️	mermaid: light skin tone
-🧜🏻‍♀	mermaid: light skin tone
-🧜🏼‍♀️	mermaid: medium-light skin tone
-🧜🏼‍♀	mermaid: medium-light skin tone
-🧜🏽‍♀️	mermaid: medium skin tone
-🧜🏽‍♀	mermaid: medium skin tone
-🧜🏾‍♀️	mermaid: medium-dark skin tone
-🧜🏾‍♀	mermaid: medium-dark skin tone
-🧜🏿‍♀️	mermaid: dark skin tone
-🧜🏿‍♀	mermaid: dark skin tone
-🧜‍♂️	merman
-🧜‍♂	merman
-🧜🏻‍♂️	merman: light skin tone
-🧜🏻‍♂	merman: light skin tone
-🧜🏼‍♂️	merman: medium-light skin tone
-🧜🏼‍♂	merman: medium-light skin tone
-🧜🏽‍♂️	merman: medium skin tone
-🧜🏽‍♂	merman: medium skin tone
-🧜🏾‍♂️	merman: medium-dark skin tone
-🧜🏾‍♂	merman: medium-dark skin tone
-🧜🏿‍♂️	merman: dark skin tone
-🧜🏿‍♂	merman: dark skin tone
-🧝	elf
-🧝🏻	elf: light skin tone
-🧝🏼	elf: medium-light skin tone
-🧝🏽	elf: medium skin tone
-🧝🏾	elf: medium-dark skin tone
-🧝🏿	elf: dark skin tone
-🧝‍♀️	woman elf
-🧝‍♀	woman elf
-🧝🏻‍♀️	woman elf: light skin tone
-🧝🏻‍♀	woman elf: light skin tone
-🧝🏼‍♀️	woman elf: medium-light skin tone
-🧝🏼‍♀	woman elf: medium-light skin tone
-🧝🏽‍♀️	woman elf: medium skin tone
-🧝🏽‍♀	woman elf: medium skin tone
-🧝🏾‍♀️	woman elf: medium-dark skin tone
-🧝🏾‍♀	woman elf: medium-dark skin tone
-🧝🏿‍♀️	woman elf: dark skin tone
-🧝🏿‍♀	woman elf: dark skin tone
-🧝‍♂️	man elf
-🧝‍♂	man elf
-🧝🏻‍♂️	man elf: light skin tone
-🧝🏻‍♂	man elf: light skin tone
-🧝🏼‍♂️	man elf: medium-light skin tone
-🧝🏼‍♂	man elf: medium-light skin tone
-🧝🏽‍♂️	man elf: medium skin tone
-🧝🏽‍♂	man elf: medium skin tone
-🧝🏾‍♂️	man elf: medium-dark skin tone
-🧝🏾‍♂	man elf: medium-dark skin tone
-🧝🏿‍♂️	man elf: dark skin tone
-🧝🏿‍♂	man elf: dark skin tone
-🧞	genie
-🧞‍♀️	woman genie
-🧞‍♀	woman genie
-🧞‍♂️	man genie
-🧞‍♂	man genie
-🧟	zombie
-🧟‍♀️	woman zombie
-🧟‍♀	woman zombie
-🧟‍♂️	man zombie
-🧟‍♂	man zombie
-🙍	person frowning
-🙍🏻	person frowning: light skin tone
-🙍🏼	person frowning: medium-light skin tone
-🙍🏽	person frowning: medium skin tone
-🙍🏾	person frowning: medium-dark skin tone
-🙍🏿	person frowning: dark skin tone
-🙍‍♂️	man frowning
-🙍‍♂	man frowning
-🙍🏻‍♂️	man frowning: light skin tone
-🙍🏻‍♂	man frowning: light skin tone
-🙍🏼‍♂️	man frowning: medium-light skin tone
-🙍🏼‍♂	man frowning: medium-light skin tone
-🙍🏽‍♂️	man frowning: medium skin tone
-🙍🏽‍♂	man frowning: medium skin tone
-🙍🏾‍♂️	man frowning: medium-dark skin tone
-🙍🏾‍♂	man frowning: medium-dark skin tone
-🙍🏿‍♂️	man frowning: dark skin tone
-🙍🏿‍♂	man frowning: dark skin tone
-🙍‍♀️	woman frowning
-🙍‍♀	woman frowning
-🙍🏻‍♀️	woman frowning: light skin tone
-🙍🏻‍♀	woman frowning: light skin tone
-🙍🏼‍♀️	woman frowning: medium-light skin tone
-🙍🏼‍♀	woman frowning: medium-light skin tone
-🙍🏽‍♀️	woman frowning: medium skin tone
-🙍🏽‍♀	woman frowning: medium skin tone
-🙍🏾‍♀️	woman frowning: medium-dark skin tone
-🙍🏾‍♀	woman frowning: medium-dark skin tone
-🙍🏿‍♀️	woman frowning: dark skin tone
-🙍🏿‍♀	woman frowning: dark skin tone
-🙎	person pouting
-🙎🏻	person pouting: light skin tone
-🙎🏼	person pouting: medium-light skin tone
-🙎🏽	person pouting: medium skin tone
-🙎🏾	person pouting: medium-dark skin tone
-🙎🏿	person pouting: dark skin tone
-🙎‍♂️	man pouting
-🙎‍♂	man pouting
-🙎🏻‍♂️	man pouting: light skin tone
-🙎🏻‍♂	man pouting: light skin tone
-🙎🏼‍♂️	man pouting: medium-light skin tone
-🙎🏼‍♂	man pouting: medium-light skin tone
-🙎🏽‍♂️	man pouting: medium skin tone
-🙎🏽‍♂	man pouting: medium skin tone
-🙎🏾‍♂️	man pouting: medium-dark skin tone
-🙎🏾‍♂	man pouting: medium-dark skin tone
-🙎🏿‍♂️	man pouting: dark skin tone
-🙎🏿‍♂	man pouting: dark skin tone
-🙎‍♀️	woman pouting
-🙎‍♀	woman pouting
-🙎🏻‍♀️	woman pouting: light skin tone
-🙎🏻‍♀	woman pouting: light skin tone
-🙎🏼‍♀️	woman pouting: medium-light skin tone
-🙎🏼‍♀	woman pouting: medium-light skin tone
-🙎🏽‍♀️	woman pouting: medium skin tone
-🙎🏽‍♀	woman pouting: medium skin tone
-🙎🏾‍♀️	woman pouting: medium-dark skin tone
-🙎🏾‍♀	woman pouting: medium-dark skin tone
-🙎🏿‍♀️	woman pouting: dark skin tone
-🙎🏿‍♀	woman pouting: dark skin tone
-🙅	person gesturing NO
-🙅🏻	person gesturing NO: light skin tone
-🙅🏼	person gesturing NO: medium-light skin tone
-🙅🏽	person gesturing NO: medium skin tone
-🙅🏾	person gesturing NO: medium-dark skin tone
-🙅🏿	person gesturing NO: dark skin tone
-🙅‍♂️	man gesturing NO
-🙅‍♂	man gesturing NO
-🙅🏻‍♂️	man gesturing NO: light skin tone
-🙅🏻‍♂	man gesturing NO: light skin tone
-🙅🏼‍♂️	man gesturing NO: medium-light skin tone
-🙅🏼‍♂	man gesturing NO: medium-light skin tone
-🙅🏽‍♂️	man gesturing NO: medium skin tone
-🙅🏽‍♂	man gesturing NO: medium skin tone
-🙅🏾‍♂️	man gesturing NO: medium-dark skin tone
-🙅🏾‍♂	man gesturing NO: medium-dark skin tone
-🙅🏿‍♂️	man gesturing NO: dark skin tone
-🙅🏿‍♂	man gesturing NO: dark skin tone
-🙅‍♀️	woman gesturing NO
-🙅‍♀	woman gesturing NO
-🙅🏻‍♀️	woman gesturing NO: light skin tone
-🙅🏻‍♀	woman gesturing NO: light skin tone
-🙅🏼‍♀️	woman gesturing NO: medium-light skin tone
-🙅🏼‍♀	woman gesturing NO: medium-light skin tone
-🙅🏽‍♀️	woman gesturing NO: medium skin tone
-🙅🏽‍♀	woman gesturing NO: medium skin tone
-🙅🏾‍♀️	woman gesturing NO: medium-dark skin tone
-🙅🏾‍♀	woman gesturing NO: medium-dark skin tone
-🙅🏿‍♀️	woman gesturing NO: dark skin tone
-🙅🏿‍♀	woman gesturing NO: dark skin tone
-🙆	person gesturing OK
-🙆🏻	person gesturing OK: light skin tone
-🙆🏼	person gesturing OK: medium-light skin tone
-🙆🏽	person gesturing OK: medium skin tone
-🙆🏾	person gesturing OK: medium-dark skin tone
-🙆🏿	person gesturing OK: dark skin tone
-🙆‍♂️	man gesturing OK
-🙆‍♂	man gesturing OK
-🙆🏻‍♂️	man gesturing OK: light skin tone
-🙆🏻‍♂	man gesturing OK: light skin tone
-🙆🏼‍♂️	man gesturing OK: medium-light skin tone
-🙆🏼‍♂	man gesturing OK: medium-light skin tone
-🙆🏽‍♂️	man gesturing OK: medium skin tone
-🙆🏽‍♂	man gesturing OK: medium skin tone
-🙆🏾‍♂️	man gesturing OK: medium-dark skin tone
-🙆🏾‍♂	man gesturing OK: medium-dark skin tone
-🙆🏿‍♂️	man gesturing OK: dark skin tone
-🙆🏿‍♂	man gesturing OK: dark skin tone
-🙆‍♀️	woman gesturing OK
-🙆‍♀	woman gesturing OK
-🙆🏻‍♀️	woman gesturing OK: light skin tone
-🙆🏻‍♀	woman gesturing OK: light skin tone
-🙆🏼‍♀️	woman gesturing OK: medium-light skin tone
-🙆🏼‍♀	woman gesturing OK: medium-light skin tone
-🙆🏽‍♀️	woman gesturing OK: medium skin tone
-🙆🏽‍♀	woman gesturing OK: medium skin tone
-🙆🏾‍♀️	woman gesturing OK: medium-dark skin tone
-🙆🏾‍♀	woman gesturing OK: medium-dark skin tone
-🙆🏿‍♀️	woman gesturing OK: dark skin tone
-🙆🏿‍♀	woman gesturing OK: dark skin tone
-💁	person tipping hand
-💁🏻	person tipping hand: light skin tone
-💁🏼	person tipping hand: medium-light skin tone
-💁🏽	person tipping hand: medium skin tone
-💁🏾	person tipping hand: medium-dark skin tone
-💁🏿	person tipping hand: dark skin tone
-💁‍♂️	man tipping hand
-💁‍♂	man tipping hand
-💁🏻‍♂️	man tipping hand: light skin tone
-💁🏻‍♂	man tipping hand: light skin tone
-💁🏼‍♂️	man tipping hand: medium-light skin tone
-💁🏼‍♂	man tipping hand: medium-light skin tone
-💁🏽‍♂️	man tipping hand: medium skin tone
-💁🏽‍♂	man tipping hand: medium skin tone
-💁🏾‍♂️	man tipping hand: medium-dark skin tone
-💁🏾‍♂	man tipping hand: medium-dark skin tone
-💁🏿‍♂️	man tipping hand: dark skin tone
-💁🏿‍♂	man tipping hand: dark skin tone
-💁‍♀️	woman tipping hand
-💁‍♀	woman tipping hand
-💁🏻‍♀️	woman tipping hand: light skin tone
-💁🏻‍♀	woman tipping hand: light skin tone
-💁🏼‍♀️	woman tipping hand: medium-light skin tone
-💁🏼‍♀	woman tipping hand: medium-light skin tone
-💁🏽‍♀️	woman tipping hand: medium skin tone
-💁🏽‍♀	woman tipping hand: medium skin tone
-💁🏾‍♀️	woman tipping hand: medium-dark skin tone
-💁🏾‍♀	woman tipping hand: medium-dark skin tone
-💁🏿‍♀️	woman tipping hand: dark skin tone
-💁🏿‍♀	woman tipping hand: dark skin tone
-🙋	person raising hand
-🙋🏻	person raising hand: light skin tone
-🙋🏼	person raising hand: medium-light skin tone
-🙋🏽	person raising hand: medium skin tone
-🙋🏾	person raising hand: medium-dark skin tone
-🙋🏿	person raising hand: dark skin tone
-🙋‍♂️	man raising hand
-🙋‍♂	man raising hand
-🙋🏻‍♂️	man raising hand: light skin tone
-🙋🏻‍♂	man raising hand: light skin tone
-🙋🏼‍♂️	man raising hand: medium-light skin tone
-🙋🏼‍♂	man raising hand: medium-light skin tone
-🙋🏽‍♂️	man raising hand: medium skin tone
-🙋🏽‍♂	man raising hand: medium skin tone
-🙋🏾‍♂️	man raising hand: medium-dark skin tone
-🙋🏾‍♂	man raising hand: medium-dark skin tone
-🙋🏿‍♂️	man raising hand: dark skin tone
-🙋🏿‍♂	man raising hand: dark skin tone
-🙋‍♀️	woman raising hand
-🙋‍♀	woman raising hand
-🙋🏻‍♀️	woman raising hand: light skin tone
-🙋🏻‍♀	woman raising hand: light skin tone
-🙋🏼‍♀️	woman raising hand: medium-light skin tone
-🙋🏼‍♀	woman raising hand: medium-light skin tone
-🙋🏽‍♀️	woman raising hand: medium skin tone
-🙋🏽‍♀	woman raising hand: medium skin tone
-🙋🏾‍♀️	woman raising hand: medium-dark skin tone
-🙋🏾‍♀	woman raising hand: medium-dark skin tone
-🙋🏿‍♀️	woman raising hand: dark skin tone
-🙋🏿‍♀	woman raising hand: dark skin tone
-🙇	person bowing
-🙇🏻	person bowing: light skin tone
-🙇🏼	person bowing: medium-light skin tone
-🙇🏽	person bowing: medium skin tone
-🙇🏾	person bowing: medium-dark skin tone
-🙇🏿	person bowing: dark skin tone
-🙇‍♂️	man bowing
-🙇‍♂	man bowing
-🙇🏻‍♂️	man bowing: light skin tone
-🙇🏻‍♂	man bowing: light skin tone
-🙇🏼‍♂️	man bowing: medium-light skin tone
-🙇🏼‍♂	man bowing: medium-light skin tone
-🙇🏽‍♂️	man bowing: medium skin tone
-🙇🏽‍♂	man bowing: medium skin tone
-🙇🏾‍♂️	man bowing: medium-dark skin tone
-🙇🏾‍♂	man bowing: medium-dark skin tone
-🙇🏿‍♂️	man bowing: dark skin tone
-🙇🏿‍♂	man bowing: dark skin tone
-🙇‍♀️	woman bowing
-🙇‍♀	woman bowing
-🙇🏻‍♀️	woman bowing: light skin tone
-🙇🏻‍♀	woman bowing: light skin tone
-🙇🏼‍♀️	woman bowing: medium-light skin tone
-🙇🏼‍♀	woman bowing: medium-light skin tone
-🙇🏽‍♀️	woman bowing: medium skin tone
-🙇🏽‍♀	woman bowing: medium skin tone
-🙇🏾‍♀️	woman bowing: medium-dark skin tone
-🙇🏾‍♀	woman bowing: medium-dark skin tone
-🙇🏿‍♀️	woman bowing: dark skin tone
-🙇🏿‍♀	woman bowing: dark skin tone
-🤦	person facepalming
-🤦🏻	person facepalming: light skin tone
-🤦🏼	person facepalming: medium-light skin tone
-🤦🏽	person facepalming: medium skin tone
-🤦🏾	person facepalming: medium-dark skin tone
-🤦🏿	person facepalming: dark skin tone
-🤦‍♂️	man facepalming
-🤦‍♂	man facepalming
-🤦🏻‍♂️	man facepalming: light skin tone
-🤦🏻‍♂	man facepalming: light skin tone
-🤦🏼‍♂️	man facepalming: medium-light skin tone
-🤦🏼‍♂	man facepalming: medium-light skin tone
-🤦🏽‍♂️	man facepalming: medium skin tone
-🤦🏽‍♂	man facepalming: medium skin tone
-🤦🏾‍♂️	man facepalming: medium-dark skin tone
-🤦🏾‍♂	man facepalming: medium-dark skin tone
-🤦🏿‍♂️	man facepalming: dark skin tone
-🤦🏿‍♂	man facepalming: dark skin tone
-🤦‍♀️	woman facepalming
-🤦‍♀	woman facepalming
-🤦🏻‍♀️	woman facepalming: light skin tone
-🤦🏻‍♀	woman facepalming: light skin tone
-🤦🏼‍♀️	woman facepalming: medium-light skin tone
-🤦🏼‍♀	woman facepalming: medium-light skin tone
-🤦🏽‍♀️	woman facepalming: medium skin tone
-🤦🏽‍♀	woman facepalming: medium skin tone
-🤦🏾‍♀️	woman facepalming: medium-dark skin tone
-🤦🏾‍♀	woman facepalming: medium-dark skin tone
-🤦🏿‍♀️	woman facepalming: dark skin tone
-🤦🏿‍♀	woman facepalming: dark skin tone
-🤷	person shrugging
-🤷🏻	person shrugging: light skin tone
-🤷🏼	person shrugging: medium-light skin tone
-🤷🏽	person shrugging: medium skin tone
-🤷🏾	person shrugging: medium-dark skin tone
-🤷🏿	person shrugging: dark skin tone
-🤷‍♂️	man shrugging
-🤷‍♂	man shrugging
-🤷🏻‍♂️	man shrugging: light skin tone
-🤷🏻‍♂	man shrugging: light skin tone
-🤷🏼‍♂️	man shrugging: medium-light skin tone
-🤷🏼‍♂	man shrugging: medium-light skin tone
-🤷🏽‍♂️	man shrugging: medium skin tone
-🤷🏽‍♂	man shrugging: medium skin tone
-🤷🏾‍♂️	man shrugging: medium-dark skin tone
-🤷🏾‍♂	man shrugging: medium-dark skin tone
-🤷🏿‍♂️	man shrugging: dark skin tone
-🤷🏿‍♂	man shrugging: dark skin tone
-🤷‍♀️	woman shrugging
-🤷‍♀	woman shrugging
-🤷🏻‍♀️	woman shrugging: light skin tone
-🤷🏻‍♀	woman shrugging: light skin tone
-🤷🏼‍♀️	woman shrugging: medium-light skin tone
-🤷🏼‍♀	woman shrugging: medium-light skin tone
-🤷🏽‍♀️	woman shrugging: medium skin tone
-🤷🏽‍♀	woman shrugging: medium skin tone
-🤷🏾‍♀️	woman shrugging: medium-dark skin tone
-🤷🏾‍♀	woman shrugging: medium-dark skin tone
-🤷🏿‍♀️	woman shrugging: dark skin tone
-🤷🏿‍♀	woman shrugging: dark skin tone
-💆	person getting massage
-💆🏻	person getting massage: light skin tone
-💆🏼	person getting massage: medium-light skin tone
-💆🏽	person getting massage: medium skin tone
-💆🏾	person getting massage: medium-dark skin tone
-💆🏿	person getting massage: dark skin tone
-💆‍♂️	man getting massage
-💆‍♂	man getting massage
-💆🏻‍♂️	man getting massage: light skin tone
-💆🏻‍♂	man getting massage: light skin tone
-💆🏼‍♂️	man getting massage: medium-light skin tone
-💆🏼‍♂	man getting massage: medium-light skin tone
-💆🏽‍♂️	man getting massage: medium skin tone
-💆🏽‍♂	man getting massage: medium skin tone
-💆🏾‍♂️	man getting massage: medium-dark skin tone
-💆🏾‍♂	man getting massage: medium-dark skin tone
-💆🏿‍♂️	man getting massage: dark skin tone
-💆🏿‍♂	man getting massage: dark skin tone
-💆‍♀️	woman getting massage
-💆‍♀	woman getting massage
-💆🏻‍♀️	woman getting massage: light skin tone
-💆🏻‍♀	woman getting massage: light skin tone
-💆🏼‍♀️	woman getting massage: medium-light skin tone
-💆🏼‍♀	woman getting massage: medium-light skin tone
-💆🏽‍♀️	woman getting massage: medium skin tone
-💆🏽‍♀	woman getting massage: medium skin tone
-💆🏾‍♀️	woman getting massage: medium-dark skin tone
-💆🏾‍♀	woman getting massage: medium-dark skin tone
-💆🏿‍♀️	woman getting massage: dark skin tone
-💆🏿‍♀	woman getting massage: dark skin tone
-💇	person getting haircut
-💇🏻	person getting haircut: light skin tone
-💇🏼	person getting haircut: medium-light skin tone
-💇🏽	person getting haircut: medium skin tone
-💇🏾	person getting haircut: medium-dark skin tone
-💇🏿	person getting haircut: dark skin tone
-💇‍♂️	man getting haircut
-💇‍♂	man getting haircut
-💇🏻‍♂️	man getting haircut: light skin tone
-💇🏻‍♂	man getting haircut: light skin tone
-💇🏼‍♂️	man getting haircut: medium-light skin tone
-💇🏼‍♂	man getting haircut: medium-light skin tone
-💇🏽‍♂️	man getting haircut: medium skin tone
-💇🏽‍♂	man getting haircut: medium skin tone
-💇🏾‍♂️	man getting haircut: medium-dark skin tone
-💇🏾‍♂	man getting haircut: medium-dark skin tone
-💇🏿‍♂️	man getting haircut: dark skin tone
-💇🏿‍♂	man getting haircut: dark skin tone
-💇‍♀️	woman getting haircut
-💇‍♀	woman getting haircut
-💇🏻‍♀️	woman getting haircut: light skin tone
-💇🏻‍♀	woman getting haircut: light skin tone
-💇🏼‍♀️	woman getting haircut: medium-light skin tone
-💇🏼‍♀	woman getting haircut: medium-light skin tone
-💇🏽‍♀️	woman getting haircut: medium skin tone
-💇🏽‍♀	woman getting haircut: medium skin tone
-💇🏾‍♀️	woman getting haircut: medium-dark skin tone
-💇🏾‍♀	woman getting haircut: medium-dark skin tone
-💇🏿‍♀️	woman getting haircut: dark skin tone
-💇🏿‍♀	woman getting haircut: dark skin tone
-🚶	person walking
-🚶🏻	person walking: light skin tone
-🚶🏼	person walking: medium-light skin tone
-🚶🏽	person walking: medium skin tone
-🚶🏾	person walking: medium-dark skin tone
-🚶🏿	person walking: dark skin tone
-🚶‍♂️	man walking
-🚶‍♂	man walking
-🚶🏻‍♂️	man walking: light skin tone
-🚶🏻‍♂	man walking: light skin tone
-🚶🏼‍♂️	man walking: medium-light skin tone
-🚶🏼‍♂	man walking: medium-light skin tone
-🚶🏽‍♂️	man walking: medium skin tone
-🚶🏽‍♂	man walking: medium skin tone
-🚶🏾‍♂️	man walking: medium-dark skin tone
-🚶🏾‍♂	man walking: medium-dark skin tone
-🚶🏿‍♂️	man walking: dark skin tone
-🚶🏿‍♂	man walking: dark skin tone
-🚶‍♀️	woman walking
-🚶‍♀	woman walking
-🚶🏻‍♀️	woman walking: light skin tone
-🚶🏻‍♀	woman walking: light skin tone
-🚶🏼‍♀️	woman walking: medium-light skin tone
-🚶🏼‍♀	woman walking: medium-light skin tone
-🚶🏽‍♀️	woman walking: medium skin tone
-🚶🏽‍♀	woman walking: medium skin tone
-🚶🏾‍♀️	woman walking: medium-dark skin tone
-🚶🏾‍♀	woman walking: medium-dark skin tone
-🚶🏿‍♀️	woman walking: dark skin tone
-🚶🏿‍♀	woman walking: dark skin tone
-🏃	person running
-🏃🏻	person running: light skin tone
-🏃🏼	person running: medium-light skin tone
-🏃🏽	person running: medium skin tone
-🏃🏾	person running: medium-dark skin tone
-🏃🏿	person running: dark skin tone
-🏃‍♂️	man running
-🏃‍♂	man running
-🏃🏻‍♂️	man running: light skin tone
-🏃🏻‍♂	man running: light skin tone
-🏃🏼‍♂️	man running: medium-light skin tone
-🏃🏼‍♂	man running: medium-light skin tone
-🏃🏽‍♂️	man running: medium skin tone
-🏃🏽‍♂	man running: medium skin tone
-🏃🏾‍♂️	man running: medium-dark skin tone
-🏃🏾‍♂	man running: medium-dark skin tone
-🏃🏿‍♂️	man running: dark skin tone
-🏃🏿‍♂	man running: dark skin tone
-🏃‍♀️	woman running
-🏃‍♀	woman running
-🏃🏻‍♀️	woman running: light skin tone
-🏃🏻‍♀	woman running: light skin tone
-🏃🏼‍♀️	woman running: medium-light skin tone
-🏃🏼‍♀	woman running: medium-light skin tone
-🏃🏽‍♀️	woman running: medium skin tone
-🏃🏽‍♀	woman running: medium skin tone
-🏃🏾‍♀️	woman running: medium-dark skin tone
-🏃🏾‍♀	woman running: medium-dark skin tone
-🏃🏿‍♀️	woman running: dark skin tone
-🏃🏿‍♀	woman running: dark skin tone
-💃	woman dancing
-💃🏻	woman dancing: light skin tone
-💃🏼	woman dancing: medium-light skin tone
-💃🏽	woman dancing: medium skin tone
-💃🏾	woman dancing: medium-dark skin tone
-💃🏿	woman dancing: dark skin tone
-🕺	man dancing
-🕺🏻	man dancing: light skin tone
-🕺🏼	man dancing: medium-light skin tone
-🕺🏽	man dancing: medium skin tone
-🕺🏾	man dancing: medium-dark skin tone
-🕺🏿	man dancing: dark skin tone
-👯	people with bunny ears
-👯‍♂️	men with bunny ears
-👯‍♂	men with bunny ears
-👯‍♀️	women with bunny ears
-👯‍♀	women with bunny ears
-🧖	person in steamy room
-🧖🏻	person in steamy room: light skin tone
-🧖🏼	person in steamy room: medium-light skin tone
-🧖🏽	person in steamy room: medium skin tone
-🧖🏾	person in steamy room: medium-dark skin tone
-🧖🏿	person in steamy room: dark skin tone
-🧖‍♀️	woman in steamy room
-🧖‍♀	woman in steamy room
-🧖🏻‍♀️	woman in steamy room: light skin tone
-🧖🏻‍♀	woman in steamy room: light skin tone
-🧖🏼‍♀️	woman in steamy room: medium-light skin tone
-🧖🏼‍♀	woman in steamy room: medium-light skin tone
-🧖🏽‍♀️	woman in steamy room: medium skin tone
-🧖🏽‍♀	woman in steamy room: medium skin tone
-🧖🏾‍♀️	woman in steamy room: medium-dark skin tone
-🧖🏾‍♀	woman in steamy room: medium-dark skin tone
-🧖🏿‍♀️	woman in steamy room: dark skin tone
-🧖🏿‍♀	woman in steamy room: dark skin tone
-🧖‍♂️	man in steamy room
-🧖‍♂	man in steamy room
-🧖🏻‍♂️	man in steamy room: light skin tone
-🧖🏻‍♂	man in steamy room: light skin tone
-🧖🏼‍♂️	man in steamy room: medium-light skin tone
-🧖🏼‍♂	man in steamy room: medium-light skin tone
-🧖🏽‍♂️	man in steamy room: medium skin tone
-🧖🏽‍♂	man in steamy room: medium skin tone
-🧖🏾‍♂️	man in steamy room: medium-dark skin tone
-🧖🏾‍♂	man in steamy room: medium-dark skin tone
-🧖🏿‍♂️	man in steamy room: dark skin tone
-🧖🏿‍♂	man in steamy room: dark skin tone
-🧗	person climbing
-🧗🏻	person climbing: light skin tone
-🧗🏼	person climbing: medium-light skin tone
-🧗🏽	person climbing: medium skin tone
-🧗🏾	person climbing: medium-dark skin tone
-🧗🏿	person climbing: dark skin tone
-🧗‍♀️	woman climbing
-🧗‍♀	woman climbing
-🧗🏻‍♀️	woman climbing: light skin tone
-🧗🏻‍♀	woman climbing: light skin tone
-🧗🏼‍♀️	woman climbing: medium-light skin tone
-🧗🏼‍♀	woman climbing: medium-light skin tone
-🧗🏽‍♀️	woman climbing: medium skin tone
-🧗🏽‍♀	woman climbing: medium skin tone
-🧗🏾‍♀️	woman climbing: medium-dark skin tone
-🧗🏾‍♀	woman climbing: medium-dark skin tone
-🧗🏿‍♀️	woman climbing: dark skin tone
-🧗🏿‍♀	woman climbing: dark skin tone
-🧗‍♂️	man climbing
-🧗‍♂	man climbing
-🧗🏻‍♂️	man climbing: light skin tone
-🧗🏻‍♂	man climbing: light skin tone
-🧗🏼‍♂️	man climbing: medium-light skin tone
-🧗🏼‍♂	man climbing: medium-light skin tone
-🧗🏽‍♂️	man climbing: medium skin tone
-🧗🏽‍♂	man climbing: medium skin tone
-🧗🏾‍♂️	man climbing: medium-dark skin tone
-🧗🏾‍♂	man climbing: medium-dark skin tone
-🧗🏿‍♂️	man climbing: dark skin tone
-🧗🏿‍♂	man climbing: dark skin tone
-🧘	person in lotus position
-🧘🏻	person in lotus position: light skin tone
-🧘🏼	person in lotus position: medium-light skin tone
-🧘🏽	person in lotus position: medium skin tone
-🧘🏾	person in lotus position: medium-dark skin tone
-🧘🏿	person in lotus position: dark skin tone
-🧘‍♀️	woman in lotus position
-🧘‍♀	woman in lotus position
-🧘🏻‍♀️	woman in lotus position: light skin tone
-🧘🏻‍♀	woman in lotus position: light skin tone
-🧘🏼‍♀️	woman in lotus position: medium-light skin tone
-🧘🏼‍♀	woman in lotus position: medium-light skin tone
-🧘🏽‍♀️	woman in lotus position: medium skin tone
-🧘🏽‍♀	woman in lotus position: medium skin tone
-🧘🏾‍♀️	woman in lotus position: medium-dark skin tone
-🧘🏾‍♀	woman in lotus position: medium-dark skin tone
-🧘🏿‍♀️	woman in lotus position: dark skin tone
-🧘🏿‍♀	woman in lotus position: dark skin tone
-🧘‍♂️	man in lotus position
-🧘‍♂	man in lotus position
-🧘🏻‍♂️	man in lotus position: light skin tone
-🧘🏻‍♂	man in lotus position: light skin tone
-🧘🏼‍♂️	man in lotus position: medium-light skin tone
-🧘🏼‍♂	man in lotus position: medium-light skin tone
-🧘🏽‍♂️	man in lotus position: medium skin tone
-🧘🏽‍♂	man in lotus position: medium skin tone
-🧘🏾‍♂️	man in lotus position: medium-dark skin tone
-🧘🏾‍♂	man in lotus position: medium-dark skin tone
-🧘🏿‍♂️	man in lotus position: dark skin tone
-🧘🏿‍♂	man in lotus position: dark skin tone
-🛀	person taking bath
-🛀🏻	person taking bath: light skin tone
-🛀🏼	person taking bath: medium-light skin tone
-🛀🏽	person taking bath: medium skin tone
-🛀🏾	person taking bath: medium-dark skin tone
-🛀🏿	person taking bath: dark skin tone
-🛌	person in bed
-🛌🏻	person in bed: light skin tone
-🛌🏼	person in bed: medium-light skin tone
-🛌🏽	person in bed: medium skin tone
-🛌🏾	person in bed: medium-dark skin tone
-🛌🏿	person in bed: dark skin tone
-🕴️	man in suit levitating
-🕴	man in suit levitating
-🕴🏻	man in suit levitating: light skin tone
-🕴🏼	man in suit levitating: medium-light skin tone
-🕴🏽	man in suit levitating: medium skin tone
-🕴🏾	man in suit levitating: medium-dark skin tone
-🕴🏿	man in suit levitating: dark skin tone
-🗣️	speaking head
-🗣	speaking head
-👤	bust in silhouette
-👥	busts in silhouette
-🤺	person fencing
-🏇	horse racing
-🏇🏻	horse racing: light skin tone
-🏇🏼	horse racing: medium-light skin tone
-🏇🏽	horse racing: medium skin tone
-🏇🏾	horse racing: medium-dark skin tone
-🏇🏿	horse racing: dark skin tone
-⛷️	skier
-⛷	skier
-🏂	snowboarder
-🏂🏻	snowboarder: light skin tone
-🏂🏼	snowboarder: medium-light skin tone
-🏂🏽	snowboarder: medium skin tone
-🏂🏾	snowboarder: medium-dark skin tone
-🏂🏿	snowboarder: dark skin tone
-🏌️	person golfing
-🏌	person golfing
-🏌🏻	person golfing: light skin tone
-🏌🏼	person golfing: medium-light skin tone
-🏌🏽	person golfing: medium skin tone
-🏌🏾	person golfing: medium-dark skin tone
-🏌🏿	person golfing: dark skin tone
-🏌️‍♂️	man golfing
-🏌‍♂️	man golfing
-🏌️‍♂	man golfing
-🏌‍♂	man golfing
-🏌🏻‍♂️	man golfing: light skin tone
-🏌🏻‍♂	man golfing: light skin tone
-🏌🏼‍♂️	man golfing: medium-light skin tone
-🏌🏼‍♂	man golfing: medium-light skin tone
-🏌🏽‍♂️	man golfing: medium skin tone
-🏌🏽‍♂	man golfing: medium skin tone
-🏌🏾‍♂️	man golfing: medium-dark skin tone
-🏌🏾‍♂	man golfing: medium-dark skin tone
-🏌🏿‍♂️	man golfing: dark skin tone
-🏌🏿‍♂	man golfing: dark skin tone
-🏌️‍♀️	woman golfing
-🏌‍♀️	woman golfing
-🏌️‍♀	woman golfing
-🏌‍♀	woman golfing
-🏌🏻‍♀️	woman golfing: light skin tone
-🏌🏻‍♀	woman golfing: light skin tone
-🏌🏼‍♀️	woman golfing: medium-light skin tone
-🏌🏼‍♀	woman golfing: medium-light skin tone
-🏌🏽‍♀️	woman golfing: medium skin tone
-🏌🏽‍♀	woman golfing: medium skin tone
-🏌🏾‍♀️	woman golfing: medium-dark skin tone
-🏌🏾‍♀	woman golfing: medium-dark skin tone
-🏌🏿‍♀️	woman golfing: dark skin tone
-🏌🏿‍♀	woman golfing: dark skin tone
-🏄	person surfing
-🏄🏻	person surfing: light skin tone
-🏄🏼	person surfing: medium-light skin tone
-🏄🏽	person surfing: medium skin tone
-🏄🏾	person surfing: medium-dark skin tone
-🏄🏿	person surfing: dark skin tone
-🏄‍♂️	man surfing
-🏄‍♂	man surfing
-🏄🏻‍♂️	man surfing: light skin tone
-🏄🏻‍♂	man surfing: light skin tone
-🏄🏼‍♂️	man surfing: medium-light skin tone
-🏄🏼‍♂	man surfing: medium-light skin tone
-🏄🏽‍♂️	man surfing: medium skin tone
-🏄🏽‍♂	man surfing: medium skin tone
-🏄🏾‍♂️	man surfing: medium-dark skin tone
-🏄🏾‍♂	man surfing: medium-dark skin tone
-🏄🏿‍♂️	man surfing: dark skin tone
-🏄🏿‍♂	man surfing: dark skin tone
-🏄‍♀️	woman surfing
-🏄‍♀	woman surfing
-🏄🏻‍♀️	woman surfing: light skin tone
-🏄🏻‍♀	woman surfing: light skin tone
-🏄🏼‍♀️	woman surfing: medium-light skin tone
-🏄🏼‍♀	woman surfing: medium-light skin tone
-🏄🏽‍♀️	woman surfing: medium skin tone
-🏄🏽‍♀	woman surfing: medium skin tone
-🏄🏾‍♀️	woman surfing: medium-dark skin tone
-🏄🏾‍♀	woman surfing: medium-dark skin tone
-🏄🏿‍♀️	woman surfing: dark skin tone
-🏄🏿‍♀	woman surfing: dark skin tone
-🚣	person rowing boat
-🚣🏻	person rowing boat: light skin tone
-🚣🏼	person rowing boat: medium-light skin tone
-🚣🏽	person rowing boat: medium skin tone
-🚣🏾	person rowing boat: medium-dark skin tone
-🚣🏿	person rowing boat: dark skin tone
-🚣‍♂️	man rowing boat
-🚣‍♂	man rowing boat
-🚣🏻‍♂️	man rowing boat: light skin tone
-🚣🏻‍♂	man rowing boat: light skin tone
-🚣🏼‍♂️	man rowing boat: medium-light skin tone
-🚣🏼‍♂	man rowing boat: medium-light skin tone
-🚣🏽‍♂️	man rowing boat: medium skin tone
-🚣🏽‍♂	man rowing boat: medium skin tone
-🚣🏾‍♂️	man rowing boat: medium-dark skin tone
-🚣🏾‍♂	man rowing boat: medium-dark skin tone
-🚣🏿‍♂️	man rowing boat: dark skin tone
-🚣🏿‍♂	man rowing boat: dark skin tone
-🚣‍♀️	woman rowing boat
-🚣‍♀	woman rowing boat
-🚣🏻‍♀️	woman rowing boat: light skin tone
-🚣🏻‍♀	woman rowing boat: light skin tone
-🚣🏼‍♀️	woman rowing boat: medium-light skin tone
-🚣🏼‍♀	woman rowing boat: medium-light skin tone
-🚣🏽‍♀️	woman rowing boat: medium skin tone
-🚣🏽‍♀	woman rowing boat: medium skin tone
-🚣🏾‍♀️	woman rowing boat: medium-dark skin tone
-🚣🏾‍♀	woman rowing boat: medium-dark skin tone
-🚣🏿‍♀️	woman rowing boat: dark skin tone
-🚣🏿‍♀	woman rowing boat: dark skin tone
-🏊	person swimming
-🏊🏻	person swimming: light skin tone
-🏊🏼	person swimming: medium-light skin tone
-🏊🏽	person swimming: medium skin tone
-🏊🏾	person swimming: medium-dark skin tone
-🏊🏿	person swimming: dark skin tone
-🏊‍♂️	man swimming
-🏊‍♂	man swimming
-🏊🏻‍♂️	man swimming: light skin tone
-🏊🏻‍♂	man swimming: light skin tone
-🏊🏼‍♂️	man swimming: medium-light skin tone
-🏊🏼‍♂	man swimming: medium-light skin tone
-🏊🏽‍♂️	man swimming: medium skin tone
-🏊🏽‍♂	man swimming: medium skin tone
-🏊🏾‍♂️	man swimming: medium-dark skin tone
-🏊🏾‍♂	man swimming: medium-dark skin tone
-🏊🏿‍♂️	man swimming: dark skin tone
-🏊🏿‍♂	man swimming: dark skin tone
-🏊‍♀️	woman swimming
-🏊‍♀	woman swimming
-🏊🏻‍♀️	woman swimming: light skin tone
-🏊🏻‍♀	woman swimming: light skin tone
-🏊🏼‍♀️	woman swimming: medium-light skin tone
-🏊🏼‍♀	woman swimming: medium-light skin tone
-🏊🏽‍♀️	woman swimming: medium skin tone
-🏊🏽‍♀	woman swimming: medium skin tone
-🏊🏾‍♀️	woman swimming: medium-dark skin tone
-🏊🏾‍♀	woman swimming: medium-dark skin tone
-🏊🏿‍♀️	woman swimming: dark skin tone
-🏊🏿‍♀	woman swimming: dark skin tone
-⛹️	person bouncing ball
-⛹	person bouncing ball
-⛹🏻	person bouncing ball: light skin tone
-⛹🏼	person bouncing ball: medium-light skin tone
-⛹🏽	person bouncing ball: medium skin tone
-⛹🏾	person bouncing ball: medium-dark skin tone
-⛹🏿	person bouncing ball: dark skin tone
-⛹️‍♂️	man bouncing ball
-⛹‍♂️	man bouncing ball
-⛹️‍♂	man bouncing ball
-⛹‍♂	man bouncing ball
-⛹🏻‍♂️	man bouncing ball: light skin tone
-⛹🏻‍♂	man bouncing ball: light skin tone
-⛹🏼‍♂️	man bouncing ball: medium-light skin tone
-⛹🏼‍♂	man bouncing ball: medium-light skin tone
-⛹🏽‍♂️	man bouncing ball: medium skin tone
-⛹🏽‍♂	man bouncing ball: medium skin tone
-⛹🏾‍♂️	man bouncing ball: medium-dark skin tone
-⛹🏾‍♂	man bouncing ball: medium-dark skin tone
-⛹🏿‍♂️	man bouncing ball: dark skin tone
-⛹🏿‍♂	man bouncing ball: dark skin tone
-⛹️‍♀️	woman bouncing ball
-⛹‍♀️	woman bouncing ball
-⛹️‍♀	woman bouncing ball
-⛹‍♀	woman bouncing ball
-⛹🏻‍♀️	woman bouncing ball: light skin tone
-⛹🏻‍♀	woman bouncing ball: light skin tone
-⛹🏼‍♀️	woman bouncing ball: medium-light skin tone
-⛹🏼‍♀	woman bouncing ball: medium-light skin tone
-⛹🏽‍♀️	woman bouncing ball: medium skin tone
-⛹🏽‍♀	woman bouncing ball: medium skin tone
-⛹🏾‍♀️	woman bouncing ball: medium-dark skin tone
-⛹🏾‍♀	woman bouncing ball: medium-dark skin tone
-⛹🏿‍♀️	woman bouncing ball: dark skin tone
-⛹🏿‍♀	woman bouncing ball: dark skin tone
-🏋️	person lifting weights
-🏋	person lifting weights
-🏋🏻	person lifting weights: light skin tone
-🏋🏼	person lifting weights: medium-light skin tone
-🏋🏽	person lifting weights: medium skin tone
-🏋🏾	person lifting weights: medium-dark skin tone
-🏋🏿	person lifting weights: dark skin tone
-🏋️‍♂️	man lifting weights
-🏋‍♂️	man lifting weights
-🏋️‍♂	man lifting weights
-🏋‍♂	man lifting weights
-🏋🏻‍♂️	man lifting weights: light skin tone
-🏋🏻‍♂	man lifting weights: light skin tone
-🏋🏼‍♂️	man lifting weights: medium-light skin tone
-🏋🏼‍♂	man lifting weights: medium-light skin tone
-🏋🏽‍♂️	man lifting weights: medium skin tone
-🏋🏽‍♂	man lifting weights: medium skin tone
-🏋🏾‍♂️	man lifting weights: medium-dark skin tone
-🏋🏾‍♂	man lifting weights: medium-dark skin tone
-🏋🏿‍♂️	man lifting weights: dark skin tone
-🏋🏿‍♂	man lifting weights: dark skin tone
-🏋️‍♀️	woman lifting weights
-🏋‍♀️	woman lifting weights
-🏋️‍♀	woman lifting weights
-🏋‍♀	woman lifting weights
-🏋🏻‍♀️	woman lifting weights: light skin tone
-🏋🏻‍♀	woman lifting weights: light skin tone
-🏋🏼‍♀️	woman lifting weights: medium-light skin tone
-🏋🏼‍♀	woman lifting weights: medium-light skin tone
-🏋🏽‍♀️	woman lifting weights: medium skin tone
-🏋🏽‍♀	woman lifting weights: medium skin tone
-🏋🏾‍♀️	woman lifting weights: medium-dark skin tone
-🏋🏾‍♀	woman lifting weights: medium-dark skin tone
-🏋🏿‍♀️	woman lifting weights: dark skin tone
-🏋🏿‍♀	woman lifting weights: dark skin tone
-🚴	person biking
-🚴🏻	person biking: light skin tone
-🚴🏼	person biking: medium-light skin tone
-🚴🏽	person biking: medium skin tone
-🚴🏾	person biking: medium-dark skin tone
-🚴🏿	person biking: dark skin tone
-🚴‍♂️	man biking
-🚴‍♂	man biking
-🚴🏻‍♂️	man biking: light skin tone
-🚴🏻‍♂	man biking: light skin tone
-🚴🏼‍♂️	man biking: medium-light skin tone
-🚴🏼‍♂	man biking: medium-light skin tone
-🚴🏽‍♂️	man biking: medium skin tone
-🚴🏽‍♂	man biking: medium skin tone
-🚴🏾‍♂️	man biking: medium-dark skin tone
-🚴🏾‍♂	man biking: medium-dark skin tone
-🚴🏿‍♂️	man biking: dark skin tone
-🚴🏿‍♂	man biking: dark skin tone
-🚴‍♀️	woman biking
-🚴‍♀	woman biking
-🚴🏻‍♀️	woman biking: light skin tone
-🚴🏻‍♀	woman biking: light skin tone
-🚴🏼‍♀️	woman biking: medium-light skin tone
-🚴🏼‍♀	woman biking: medium-light skin tone
-🚴🏽‍♀️	woman biking: medium skin tone
-🚴🏽‍♀	woman biking: medium skin tone
-🚴🏾‍♀️	woman biking: medium-dark skin tone
-🚴🏾‍♀	woman biking: medium-dark skin tone
-🚴🏿‍♀️	woman biking: dark skin tone
-🚴🏿‍♀	woman biking: dark skin tone
-🚵	person mountain biking
-🚵🏻	person mountain biking: light skin tone
-🚵🏼	person mountain biking: medium-light skin tone
-🚵🏽	person mountain biking: medium skin tone
-🚵🏾	person mountain biking: medium-dark skin tone
-🚵🏿	person mountain biking: dark skin tone
-🚵‍♂️	man mountain biking
-🚵‍♂	man mountain biking
-🚵🏻‍♂️	man mountain biking: light skin tone
-🚵🏻‍♂	man mountain biking: light skin tone
-🚵🏼‍♂️	man mountain biking: medium-light skin tone
-🚵🏼‍♂	man mountain biking: medium-light skin tone
-🚵🏽‍♂️	man mountain biking: medium skin tone
-🚵🏽‍♂	man mountain biking: medium skin tone
-🚵🏾‍♂️	man mountain biking: medium-dark skin tone
-🚵🏾‍♂	man mountain biking: medium-dark skin tone
-🚵🏿‍♂️	man mountain biking: dark skin tone
-🚵🏿‍♂	man mountain biking: dark skin tone
-🚵‍♀️	woman mountain biking
-🚵‍♀	woman mountain biking
-🚵🏻‍♀️	woman mountain biking: light skin tone
-🚵🏻‍♀	woman mountain biking: light skin tone
-🚵🏼‍♀️	woman mountain biking: medium-light skin tone
-🚵🏼‍♀	woman mountain biking: medium-light skin tone
-🚵🏽‍♀️	woman mountain biking: medium skin tone
-🚵🏽‍♀	woman mountain biking: medium skin tone
-🚵🏾‍♀️	woman mountain biking: medium-dark skin tone
-🚵🏾‍♀	woman mountain biking: medium-dark skin tone
-🚵🏿‍♀️	woman mountain biking: dark skin tone
-🚵🏿‍♀	woman mountain biking: dark skin tone
-🏎️	racing car
-🏎	racing car
-🏍️	motorcycle
-🏍	motorcycle
-🤸	person cartwheeling
-🤸🏻	person cartwheeling: light skin tone
-🤸🏼	person cartwheeling: medium-light skin tone
-🤸🏽	person cartwheeling: medium skin tone
-🤸🏾	person cartwheeling: medium-dark skin tone
-🤸🏿	person cartwheeling: dark skin tone
-🤸‍♂️	man cartwheeling
-🤸‍♂	man cartwheeling
-🤸🏻‍♂️	man cartwheeling: light skin tone
-🤸🏻‍♂	man cartwheeling: light skin tone
-🤸🏼‍♂️	man cartwheeling: medium-light skin tone
-🤸🏼‍♂	man cartwheeling: medium-light skin tone
-🤸🏽‍♂️	man cartwheeling: medium skin tone
-🤸🏽‍♂	man cartwheeling: medium skin tone
-🤸🏾‍♂️	man cartwheeling: medium-dark skin tone
-🤸🏾‍♂	man cartwheeling: medium-dark skin tone
-🤸🏿‍♂️	man cartwheeling: dark skin tone
-🤸🏿‍♂	man cartwheeling: dark skin tone
-🤸‍♀️	woman cartwheeling
-🤸‍♀	woman cartwheeling
-🤸🏻‍♀️	woman cartwheeling: light skin tone
-🤸🏻‍♀	woman cartwheeling: light skin tone
-🤸🏼‍♀️	woman cartwheeling: medium-light skin tone
-🤸🏼‍♀	woman cartwheeling: medium-light skin tone
-🤸🏽‍♀️	woman cartwheeling: medium skin tone
-🤸🏽‍♀	woman cartwheeling: medium skin tone
-🤸🏾‍♀️	woman cartwheeling: medium-dark skin tone
-🤸🏾‍♀	woman cartwheeling: medium-dark skin tone
-🤸🏿‍♀️	woman cartwheeling: dark skin tone
-🤸🏿‍♀	woman cartwheeling: dark skin tone
-🤼	people wrestling
-🤼‍♂️	men wrestling
-🤼‍♂	men wrestling
-🤼‍♀️	women wrestling
-🤼‍♀	women wrestling
-🤽	person playing water polo
-🤽🏻	person playing water polo: light skin tone
-🤽🏼	person playing water polo: medium-light skin tone
-🤽🏽	person playing water polo: medium skin tone
-🤽🏾	person playing water polo: medium-dark skin tone
-🤽🏿	person playing water polo: dark skin tone
-🤽‍♂️	man playing water polo
-🤽‍♂	man playing water polo
-🤽🏻‍♂️	man playing water polo: light skin tone
-🤽🏻‍♂	man playing water polo: light skin tone
-🤽🏼‍♂️	man playing water polo: medium-light skin tone
-🤽🏼‍♂	man playing water polo: medium-light skin tone
-🤽🏽‍♂️	man playing water polo: medium skin tone
-🤽🏽‍♂	man playing water polo: medium skin tone
-🤽🏾‍♂️	man playing water polo: medium-dark skin tone
-🤽🏾‍♂	man playing water polo: medium-dark skin tone
-🤽🏿‍♂️	man playing water polo: dark skin tone
-🤽🏿‍♂	man playing water polo: dark skin tone
-🤽‍♀️	woman playing water polo
-🤽‍♀	woman playing water polo
-🤽🏻‍♀️	woman playing water polo: light skin tone
-🤽🏻‍♀	woman playing water polo: light skin tone
-🤽🏼‍♀️	woman playing water polo: medium-light skin tone
-🤽🏼‍♀	woman playing water polo: medium-light skin tone
-🤽🏽‍♀️	woman playing water polo: medium skin tone
-🤽🏽‍♀	woman playing water polo: medium skin tone
-🤽🏾‍♀️	woman playing water polo: medium-dark skin tone
-🤽🏾‍♀	woman playing water polo: medium-dark skin tone
-🤽🏿‍♀️	woman playing water polo: dark skin tone
-🤽🏿‍♀	woman playing water polo: dark skin tone
-🤾	person playing handball
-🤾🏻	person playing handball: light skin tone
-🤾🏼	person playing handball: medium-light skin tone
-🤾🏽	person playing handball: medium skin tone
-🤾🏾	person playing handball: medium-dark skin tone
-🤾🏿	person playing handball: dark skin tone
-🤾‍♂️	man playing handball
-🤾‍♂	man playing handball
-🤾🏻‍♂️	man playing handball: light skin tone
-🤾🏻‍♂	man playing handball: light skin tone
-🤾🏼‍♂️	man playing handball: medium-light skin tone
-🤾🏼‍♂	man playing handball: medium-light skin tone
-🤾🏽‍♂️	man playing handball: medium skin tone
-🤾🏽‍♂	man playing handball: medium skin tone
-🤾🏾‍♂️	man playing handball: medium-dark skin tone
-🤾🏾‍♂	man playing handball: medium-dark skin tone
-🤾🏿‍♂️	man playing handball: dark skin tone
-🤾🏿‍♂	man playing handball: dark skin tone
-🤾‍♀️	woman playing handball
-🤾‍♀	woman playing handball
-🤾🏻‍♀️	woman playing handball: light skin tone
-🤾🏻‍♀	woman playing handball: light skin tone
-🤾🏼‍♀️	woman playing handball: medium-light skin tone
-🤾🏼‍♀	woman playing handball: medium-light skin tone
-🤾🏽‍♀️	woman playing handball: medium skin tone
-🤾🏽‍♀	woman playing handball: medium skin tone
-🤾🏾‍♀️	woman playing handball: medium-dark skin tone
-🤾🏾‍♀	woman playing handball: medium-dark skin tone
-🤾🏿‍♀️	woman playing handball: dark skin tone
-🤾🏿‍♀	woman playing handball: dark skin tone
-🤹	person juggling
-🤹🏻	person juggling: light skin tone
-🤹🏼	person juggling: medium-light skin tone
-🤹🏽	person juggling: medium skin tone
-🤹🏾	person juggling: medium-dark skin tone
-🤹🏿	person juggling: dark skin tone
-🤹‍♂️	man juggling
-🤹‍♂	man juggling
-🤹🏻‍♂️	man juggling: light skin tone
-🤹🏻‍♂	man juggling: light skin tone
-🤹🏼‍♂️	man juggling: medium-light skin tone
-🤹🏼‍♂	man juggling: medium-light skin tone
-🤹🏽‍♂️	man juggling: medium skin tone
-🤹🏽‍♂	man juggling: medium skin tone
-🤹🏾‍♂️	man juggling: medium-dark skin tone
-🤹🏾‍♂	man juggling: medium-dark skin tone
-🤹🏿‍♂️	man juggling: dark skin tone
-🤹🏿‍♂	man juggling: dark skin tone
-🤹‍♀️	woman juggling
-🤹‍♀	woman juggling
-🤹🏻‍♀️	woman juggling: light skin tone
-🤹🏻‍♀	woman juggling: light skin tone
-🤹🏼‍♀️	woman juggling: medium-light skin tone
-🤹🏼‍♀	woman juggling: medium-light skin tone
-🤹🏽‍♀️	woman juggling: medium skin tone
-🤹🏽‍♀	woman juggling: medium skin tone
-🤹🏾‍♀️	woman juggling: medium-dark skin tone
-🤹🏾‍♀	woman juggling: medium-dark skin tone
-🤹🏿‍♀️	woman juggling: dark skin tone
-🤹🏿‍♀	woman juggling: dark skin tone
-👫	man and woman holding hands
-👬	two men holding hands
-👭	two women holding hands
-💏	kiss
-👩‍❤️‍💋‍👨	kiss: woman, man
-👩‍❤‍💋‍👨	kiss: woman, man
-👨‍❤️‍💋‍👨	kiss: man, man
-👨‍❤‍💋‍👨	kiss: man, man
-👩‍❤️‍💋‍👩	kiss: woman, woman
-👩‍❤‍💋‍👩	kiss: woman, woman
-💑	couple with heart
-👩‍❤️‍👨	couple with heart: woman, man
-👩‍❤‍👨	couple with heart: woman, man
-👨‍❤️‍👨	couple with heart: man, man
-👨‍❤‍👨	couple with heart: man, man
-👩‍❤️‍👩	couple with heart: woman, woman
-👩‍❤‍👩	couple with heart: woman, woman
-👪	family
-👨‍👩‍👦	family: man, woman, boy
-👨‍👩‍👧	family: man, woman, girl
-👨‍👩‍👧‍👦	family: man, woman, girl, boy
-👨‍👩‍👦‍👦	family: man, woman, boy, boy
-👨‍👩‍👧‍👧	family: man, woman, girl, girl
-👨‍👨‍👦	family: man, man, boy
-👨‍👨‍👧	family: man, man, girl
-👨‍👨‍👧‍👦	family: man, man, girl, boy
-👨‍👨‍👦‍👦	family: man, man, boy, boy
-👨‍👨‍👧‍👧	family: man, man, girl, girl
-👩‍👩‍👦	family: woman, woman, boy
-👩‍👩‍👧	family: woman, woman, girl
-👩‍👩‍👧‍👦	family: woman, woman, girl, boy
-👩‍👩‍👦‍👦	family: woman, woman, boy, boy
-👩‍👩‍👧‍👧	family: woman, woman, girl, girl
-👨‍👦	family: man, boy
-👨‍👦‍👦	family: man, boy, boy
-👨‍👧	family: man, girl
-👨‍👧‍👦	family: man, girl, boy
-👨‍👧‍👧	family: man, girl, girl
-👩‍👦	family: woman, boy
-👩‍👦‍👦	family: woman, boy, boy
-👩‍👧	family: woman, girl
-👩‍👧‍👦	family: woman, girl, boy
-👩‍👧‍👧	family: woman, girl, girl
-🤳	selfie
-🤳🏻	selfie: light skin tone
-🤳🏼	selfie: medium-light skin tone
-🤳🏽	selfie: medium skin tone
-🤳🏾	selfie: medium-dark skin tone
-🤳🏿	selfie: dark skin tone
-💪	flexed biceps
-💪🏻	flexed biceps: light skin tone
-💪🏼	flexed biceps: medium-light skin tone
-💪🏽	flexed biceps: medium skin tone
-💪🏾	flexed biceps: medium-dark skin tone
-💪🏿	flexed biceps: dark skin tone
-🦵	leg
-🦵🏻	leg: light skin tone
-🦵🏼	leg: medium-light skin tone
-🦵🏽	leg: medium skin tone
-🦵🏾	leg: medium-dark skin tone
-🦵🏿	leg: dark skin tone
-🦶	foot
-🦶🏻	foot: light skin tone
-🦶🏼	foot: medium-light skin tone
-🦶🏽	foot: medium skin tone
-🦶🏾	foot: medium-dark skin tone
-🦶🏿	foot: dark skin tone
-👈	backhand index pointing left
-👈🏻	backhand index pointing left: light skin tone
-👈🏼	backhand index pointing left: medium-light skin tone
-👈🏽	backhand index pointing left: medium skin tone
-👈🏾	backhand index pointing left: medium-dark skin tone
-👈🏿	backhand index pointing left: dark skin tone
-👉	backhand index pointing right
-👉🏻	backhand index pointing right: light skin tone
-👉🏼	backhand index pointing right: medium-light skin tone
-👉🏽	backhand index pointing right: medium skin tone
-👉🏾	backhand index pointing right: medium-dark skin tone
-👉🏿	backhand index pointing right: dark skin tone
-☝️	index pointing up
-☝	index pointing up
-☝🏻	index pointing up: light skin tone
-☝🏼	index pointing up: medium-light skin tone
-☝🏽	index pointing up: medium skin tone
-☝🏾	index pointing up: medium-dark skin tone
-☝🏿	index pointing up: dark skin tone
-👆	backhand index pointing up
-👆🏻	backhand index pointing up: light skin tone
-👆🏼	backhand index pointing up: medium-light skin tone
-👆🏽	backhand index pointing up: medium skin tone
-👆🏾	backhand index pointing up: medium-dark skin tone
-👆🏿	backhand index pointing up: dark skin tone
-🖕	middle finger
-🖕🏻	middle finger: light skin tone
-🖕🏼	middle finger: medium-light skin tone
-🖕🏽	middle finger: medium skin tone
-🖕🏾	middle finger: medium-dark skin tone
-🖕🏿	middle finger: dark skin tone
-👇	backhand index pointing down
-👇🏻	backhand index pointing down: light skin tone
-👇🏼	backhand index pointing down: medium-light skin tone
-👇🏽	backhand index pointing down: medium skin tone
-👇🏾	backhand index pointing down: medium-dark skin tone
-👇🏿	backhand index pointing down: dark skin tone
-✌️	victory hand
-✌	victory hand
-✌🏻	victory hand: light skin tone
-✌🏼	victory hand: medium-light skin tone
-✌🏽	victory hand: medium skin tone
-✌🏾	victory hand: medium-dark skin tone
-✌🏿	victory hand: dark skin tone
-🤞	crossed fingers
-🤞🏻	crossed fingers: light skin tone
-🤞🏼	crossed fingers: medium-light skin tone
-🤞🏽	crossed fingers: medium skin tone
-🤞🏾	crossed fingers: medium-dark skin tone
-🤞🏿	crossed fingers: dark skin tone
-🖖	vulcan salute
-🖖🏻	vulcan salute: light skin tone
-🖖🏼	vulcan salute: medium-light skin tone
-🖖🏽	vulcan salute: medium skin tone
-🖖🏾	vulcan salute: medium-dark skin tone
-🖖🏿	vulcan salute: dark skin tone
-🤘	sign of the horns
-🤘🏻	sign of the horns: light skin tone
-🤘🏼	sign of the horns: medium-light skin tone
-🤘🏽	sign of the horns: medium skin tone
-🤘🏾	sign of the horns: medium-dark skin tone
-🤘🏿	sign of the horns: dark skin tone
-🤙	call me hand
-🤙🏻	call me hand: light skin tone
-🤙🏼	call me hand: medium-light skin tone
-🤙🏽	call me hand: medium skin tone
-🤙🏾	call me hand: medium-dark skin tone
-🤙🏿	call me hand: dark skin tone
-🖐️	hand with fingers splayed
-🖐	hand with fingers splayed
-🖐🏻	hand with fingers splayed: light skin tone
-🖐🏼	hand with fingers splayed: medium-light skin tone
-🖐🏽	hand with fingers splayed: medium skin tone
-🖐🏾	hand with fingers splayed: medium-dark skin tone
-🖐🏿	hand with fingers splayed: dark skin tone
-✋	raised hand
-✋🏻	raised hand: light skin tone
-✋🏼	raised hand: medium-light skin tone
-✋🏽	raised hand: medium skin tone
-✋🏾	raised hand: medium-dark skin tone
-✋🏿	raised hand: dark skin tone
-👌	OK hand
-👌🏻	OK hand: light skin tone
-👌🏼	OK hand: medium-light skin tone
-👌🏽	OK hand: medium skin tone
-👌🏾	OK hand: medium-dark skin tone
-👌🏿	OK hand: dark skin tone
-👍	thumbs up
-👍🏻	thumbs up: light skin tone
-👍🏼	thumbs up: medium-light skin tone
-👍🏽	thumbs up: medium skin tone
-👍🏾	thumbs up: medium-dark skin tone
-👍🏿	thumbs up: dark skin tone
-👎	thumbs down
-👎🏻	thumbs down: light skin tone
-👎🏼	thumbs down: medium-light skin tone
-👎🏽	thumbs down: medium skin tone
-👎🏾	thumbs down: medium-dark skin tone
-👎🏿	thumbs down: dark skin tone
-✊	raised fist
-✊🏻	raised fist: light skin tone
-✊🏼	raised fist: medium-light skin tone
-✊🏽	raised fist: medium skin tone
-✊🏾	raised fist: medium-dark skin tone
-✊🏿	raised fist: dark skin tone
-👊	oncoming fist
-👊🏻	oncoming fist: light skin tone
-👊🏼	oncoming fist: medium-light skin tone
-👊🏽	oncoming fist: medium skin tone
-👊🏾	oncoming fist: medium-dark skin tone
-👊🏿	oncoming fist: dark skin tone
-🤛	left-facing fist
-🤛🏻	left-facing fist: light skin tone
-🤛🏼	left-facing fist: medium-light skin tone
-🤛🏽	left-facing fist: medium skin tone
-🤛🏾	left-facing fist: medium-dark skin tone
-🤛🏿	left-facing fist: dark skin tone
-🤜	right-facing fist
-🤜🏻	right-facing fist: light skin tone
-🤜🏼	right-facing fist: medium-light skin tone
-🤜🏽	right-facing fist: medium skin tone
-🤜🏾	right-facing fist: medium-dark skin tone
-🤜🏿	right-facing fist: dark skin tone
-🤚	raised back of hand
-🤚🏻	raised back of hand: light skin tone
-🤚🏼	raised back of hand: medium-light skin tone
-🤚🏽	raised back of hand: medium skin tone
-🤚🏾	raised back of hand: medium-dark skin tone
-🤚🏿	raised back of hand: dark skin tone
-👋	waving hand
-👋🏻	waving hand: light skin tone
-👋🏼	waving hand: medium-light skin tone
-👋🏽	waving hand: medium skin tone
-👋🏾	waving hand: medium-dark skin tone
-👋🏿	waving hand: dark skin tone
-🤟	love-you gesture
-🤟🏻	love-you gesture: light skin tone
-🤟🏼	love-you gesture: medium-light skin tone
-🤟🏽	love-you gesture: medium skin tone
-🤟🏾	love-you gesture: medium-dark skin tone
-🤟🏿	love-you gesture: dark skin tone
-✍️	writing hand
-✍	writing hand
-✍🏻	writing hand: light skin tone
-✍🏼	writing hand: medium-light skin tone
-✍🏽	writing hand: medium skin tone
-✍🏾	writing hand: medium-dark skin tone
-✍🏿	writing hand: dark skin tone
-👏	clapping hands
-👏🏻	clapping hands: light skin tone
-👏🏼	clapping hands: medium-light skin tone
-👏🏽	clapping hands: medium skin tone
-👏🏾	clapping hands: medium-dark skin tone
-👏🏿	clapping hands: dark skin tone
-👐	open hands
-👐🏻	open hands: light skin tone
-👐🏼	open hands: medium-light skin tone
-👐🏽	open hands: medium skin tone
-👐🏾	open hands: medium-dark skin tone
-👐🏿	open hands: dark skin tone
-🙌	raising hands
-🙌🏻	raising hands: light skin tone
-🙌🏼	raising hands: medium-light skin tone
-🙌🏽	raising hands: medium skin tone
-🙌🏾	raising hands: medium-dark skin tone
-🙌🏿	raising hands: dark skin tone
-🤲	palms up together
-🤲🏻	palms up together: light skin tone
-🤲🏼	palms up together: medium-light skin tone
-🤲🏽	palms up together: medium skin tone
-🤲🏾	palms up together: medium-dark skin tone
-🤲🏿	palms up together: dark skin tone
-🙏	folded hands
-🙏🏻	folded hands: light skin tone
-🙏🏼	folded hands: medium-light skin tone
-🙏🏽	folded hands: medium skin tone
-🙏🏾	folded hands: medium-dark skin tone
-🙏🏿	folded hands: dark skin tone
-🤝	handshake
-💅	nail polish
-💅🏻	nail polish: light skin tone
-💅🏼	nail polish: medium-light skin tone
-💅🏽	nail polish: medium skin tone
-💅🏾	nail polish: medium-dark skin tone
-💅🏿	nail polish: dark skin tone
-👂	ear
-👂🏻	ear: light skin tone
-👂🏼	ear: medium-light skin tone
-👂🏽	ear: medium skin tone
-👂🏾	ear: medium-dark skin tone
-👂🏿	ear: dark skin tone
-👃	nose
-👃🏻	nose: light skin tone
-👃🏼	nose: medium-light skin tone
-👃🏽	nose: medium skin tone
-👃🏾	nose: medium-dark skin tone
-👃🏿	nose: dark skin tone
-🦰	red-haired
-🦱	curly-haired
-🦲	bald
-🦳	white-haired
-👣	footprints
-👀	eyes
-👁️	eye
-👁	eye
-👁️‍🗨️	eye in speech bubble
-👁‍🗨️	eye in speech bubble
-👁️‍🗨	eye in speech bubble
-👁‍🗨	eye in speech bubble
-🧠	brain
-🦴	bone
-🦷	tooth
-👅	tongue
-👄	mouth
-💋	kiss mark
-💘	heart with arrow
-❤️	red heart
-❤	red heart
-💓	beating heart
-💔	broken heart
-💕	two hearts
-💖	sparkling heart
-💗	growing heart
-💙	blue heart
-💚	green heart
-💛	yellow heart
-🧡	orange heart
-💜	purple heart
-🖤	black heart
-💝	heart with ribbon
-💞	revolving hearts
-💟	heart decoration
-❣️	heavy heart exclamation
-❣	heavy heart exclamation
-💌	love letter
-💤	zzz
-💢	anger symbol
-💣	bomb
-💥	collision
-💦	sweat droplets
-💨	dashing away
-💫	dizzy
-💬	speech balloon
-🗨️	left speech bubble
-🗨	left speech bubble
-🗯️	right anger bubble
-🗯	right anger bubble
-💭	thought balloon
-🕳️	hole
-🕳	hole
-👓	glasses
-🕶️	sunglasses
-🕶	sunglasses
-🥽	goggles
-🥼	lab coat
-👔	necktie
-👕	t-shirt
-👖	jeans
-🧣	scarf
-🧤	gloves
-🧥	coat
-🧦	socks
-👗	dress
-👘	kimono
-👙	bikini
-👚	woman’s clothes
-👛	purse
-👜	handbag
-👝	clutch bag
-🛍️	shopping bags
-🛍	shopping bags
-🎒	school backpack
-👞	man’s shoe
-👟	running shoe
-🥾	hiking boot
-🥿	woman’s flat shoe
-👠	high-heeled shoe
-👡	woman’s sandal
-👢	woman’s boot
-👑	crown
-👒	woman’s hat
-🎩	top hat
-🎓	graduation cap
-🧢	billed cap
-⛑️	rescue worker’s helmet
-⛑	rescue worker’s helmet
-📿	prayer beads
-💄	lipstick
-💍	ring
-💎	gem stone
-🐵	monkey face
-🐒	monkey
-🦍	gorilla
-🐶	dog face
-🐕	dog
-🐩	poodle
-🐺	wolf face
-🦊	fox face
-🦝	raccoon
-🐱	cat face
-🐈	cat
-🦁	lion face
-🐯	tiger face
-🐅	tiger
-🐆	leopard
-🐴	horse face
-🐎	horse
-🦄	unicorn face
-🦓	zebra
-🦌	deer
-🐮	cow face
-🐂	ox
-🐃	water buffalo
-🐄	cow
-🐷	pig face
-🐖	pig
-🐗	boar
-🐽	pig nose
-🐏	ram
-🐑	ewe
-🐐	goat
-🐪	camel
-🐫	two-hump camel
-🦙	llama
-🦒	giraffe
-🐘	elephant
-🦏	rhinoceros
-🦛	hippopotamus
-🐭	mouse face
-🐁	mouse
-🐀	rat
-🐹	hamster face
-🐰	rabbit face
-🐇	rabbit
-🐿️	chipmunk
-🐿	chipmunk
-🦔	hedgehog
-🦇	bat
-🐻	bear face
-🐨	koala
-🐼	panda face
-🦘	kangaroo
-🦡	badger
-🐾	paw prints
-🦃	turkey
-🐔	chicken
-🐓	rooster
-🐣	hatching chick
-🐤	baby chick
-🐥	front-facing baby chick
-🐦	bird
-🐧	penguin
-🕊️	dove
-🕊	dove
-🦅	eagle
-🦆	duck
-🦢	swan
-🦉	owl
-🦚	peacock
-🦜	parrot
-🐸	frog face
-🐊	crocodile
-🐢	turtle
-🦎	lizard
-🐍	snake
-🐲	dragon face
-🐉	dragon
-🦕	sauropod
-🦖	T-Rex
-🐳	spouting whale
-🐋	whale
-🐬	dolphin
-🐟	fish
-🐠	tropical fish
-🐡	blowfish
-🦈	shark
-🐙	octopus
-🐚	spiral shell
-🦀	crab
-🦞	lobster
-🦐	shrimp
-🦑	squid
-🐌	snail
-🦋	butterfly
-🐛	bug
-🐜	ant
-🐝	honeybee
-🐞	lady beetle
-🦗	cricket
-🕷️	spider
-🕷	spider
-🕸️	spider web
-🕸	spider web
-🦂	scorpion
-🦟	mosquito
-🦠	microbe
-💐	bouquet
-🌸	cherry blossom
-💮	white flower
-🏵️	rosette
-🏵	rosette
-🌹	rose
-🥀	wilted flower
-🌺	hibiscus
-🌻	sunflower
-🌼	blossom
-🌷	tulip
-🌱	seedling
-🌲	evergreen tree
-🌳	deciduous tree
-🌴	palm tree
-🌵	cactus
-🌾	sheaf of rice
-🌿	herb
-☘️	shamrock
-☘	shamrock
-🍀	four leaf clover
-🍁	maple leaf
-🍂	fallen leaf
-🍃	leaf fluttering in wind
-🍇	grapes
-🍈	melon
-🍉	watermelon
-🍊	tangerine
-🍋	lemon
-🍌	banana
-🍍	pineapple
-🥭	mango
-🍎	red apple
-🍏	green apple
-🍐	pear
-🍑	peach
-🍒	cherries
-🍓	strawberry
-🥝	kiwi fruit
-🍅	tomato
-🥥	coconut
-🥑	avocado
-🍆	eggplant
-🥔	potato
-🥕	carrot
-🌽	ear of corn
-🌶️	hot pepper
-🌶	hot pepper
-🥒	cucumber
-🥬	leafy green
-🥦	broccoli
-🍄	mushroom
-🥜	peanuts
-🌰	chestnut
-🍞	bread
-🥐	croissant
-🥖	baguette bread
-🥨	pretzel
-🥯	bagel
-🥞	pancakes
-🧀	cheese wedge
-🍖	meat on bone
-🍗	poultry leg
-🥩	cut of meat
-🥓	bacon
-🍔	hamburger
-🍟	french fries
-🍕	pizza
-🌭	hot dog
-🥪	sandwich
-🌮	taco
-🌯	burrito
-🥙	stuffed flatbread
-🥚	egg
-🍳	cooking
-🥘	shallow pan of food
-🍲	pot of food
-🥣	bowl with spoon
-🥗	green salad
-🍿	popcorn
-🧂	salt
-🥫	canned food
-🍱	bento box
-🍘	rice cracker
-🍙	rice ball
-🍚	cooked rice
-🍛	curry rice
-🍜	steaming bowl
-🍝	spaghetti
-🍠	roasted sweet potato
-🍢	oden
-🍣	sushi
-🍤	fried shrimp
-🍥	fish cake with swirl
-🥮	moon cake
-🍡	dango
-🥟	dumpling
-🥠	fortune cookie
-🥡	takeout box
-🍦	soft ice cream
-🍧	shaved ice
-🍨	ice cream
-🍩	doughnut
-🍪	cookie
-🎂	birthday cake
-🍰	shortcake
-🧁	cupcake
-🥧	pie
-🍫	chocolate bar
-🍬	candy
-🍭	lollipop
-🍮	custard
-🍯	honey pot
-🍼	baby bottle
-🥛	glass of milk
-☕	hot beverage
-🍵	teacup without handle
-🍶	sake
-🍾	bottle with popping cork
-🍷	wine glass
-🍸	cocktail glass
-🍹	tropical drink
-🍺	beer mug
-🍻	clinking beer mugs
-🥂	clinking glasses
-🥃	tumbler glass
-🥤	cup with straw
-🥢	chopsticks
-🍽️	fork and knife with plate
-🍽	fork and knife with plate
-🍴	fork and knife
-🥄	spoon
-🔪	kitchen knife
-🏺	amphora
-🌍	globe showing Europe-Africa
-🌎	globe showing Americas
-🌏	globe showing Asia-Australia
-🌐	globe with meridians
-🗺️	world map
-🗺	world map
-🗾	map of Japan
-🧭	compass
-🏔️	snow-capped mountain
-🏔	snow-capped mountain
-⛰️	mountain
-⛰	mountain
-🌋	volcano
-🗻	mount fuji
-🏕️	camping
-🏕	camping
-🏖️	beach with umbrella
-🏖	beach with umbrella
-🏜️	desert
-🏜	desert
-🏝️	desert island
-🏝	desert island
-🏞️	national park
-🏞	national park
-🏟️	stadium
-🏟	stadium
-🏛️	classical building
-🏛	classical building
-🏗️	building construction
-🏗	building construction
-🧱	bricks
-🏘️	houses
-🏘	houses
-🏚️	derelict house
-🏚	derelict house
-🏠	house
-🏡	house with garden
-🏢	office building
-🏣	Japanese post office
-🏤	post office
-🏥	hospital
-🏦	bank
-🏨	hotel
-🏩	love hotel
-🏪	convenience store
-🏫	school
-🏬	department store
-🏭	factory
-🏯	Japanese castle
-🏰	castle
-💒	wedding
-🗼	Tokyo tower
-🗽	Statue of Liberty
-⛪	church
-🕌	mosque
-🕍	synagogue
-⛩️	shinto shrine
-⛩	shinto shrine
-🕋	kaaba
-⛲	fountain
-⛺	tent
-🌁	foggy
-🌃	night with stars
-🏙️	cityscape
-🏙	cityscape
-🌄	sunrise over mountains
-🌅	sunrise
-🌆	cityscape at dusk
-🌇	sunset
-🌉	bridge at night
-♨️	hot springs
-♨	hot springs
-🌌	milky way
-🎠	carousel horse
-🎡	ferris wheel
-🎢	roller coaster
-💈	barber pole
-🎪	circus tent
-🚂	locomotive
-🚃	railway car
-🚄	high-speed train
-🚅	bullet train
-🚆	train
-🚇	metro
-🚈	light rail
-🚉	station
-🚊	tram
-🚝	monorail
-🚞	mountain railway
-🚋	tram car
-🚌	bus
-🚍	oncoming bus
-🚎	trolleybus
-🚐	minibus
-🚑	ambulance
-🚒	fire engine
-🚓	police car
-🚔	oncoming police car
-🚕	taxi
-🚖	oncoming taxi
-🚗	automobile
-🚘	oncoming automobile
-🚙	sport utility vehicle
-🚚	delivery truck
-🚛	articulated lorry
-🚜	tractor
-🚲	bicycle
-🛴	kick scooter
-🛹	skateboard
-🛵	motor scooter
-🚏	bus stop
-🛣️	motorway
-🛣	motorway
-🛤️	railway track
-🛤	railway track
-🛢️	oil drum
-🛢	oil drum
-⛽	fuel pump
-🚨	police car light
-🚥	horizontal traffic light
-🚦	vertical traffic light
-🛑	stop sign
-🚧	construction
-⚓	anchor
-⛵	sailboat
-🛶	canoe
-🚤	speedboat
-🛳️	passenger ship
-🛳	passenger ship
-⛴️	ferry
-⛴	ferry
-🛥️	motor boat
-🛥	motor boat
-🚢	ship
-✈️	airplane
-✈	airplane
-🛩️	small airplane
-🛩	small airplane
-🛫	airplane departure
-🛬	airplane arrival
-💺	seat
-🚁	helicopter
-🚟	suspension railway
-🚠	mountain cableway
-🚡	aerial tramway
-🛰️	satellite
-🛰	satellite
-🚀	rocket
-🛸	flying saucer
-🛎️	bellhop bell
-🛎	bellhop bell
-🧳	luggage
-⌛	hourglass done
-⏳	hourglass not done
-⌚	watch
-⏰	alarm clock
-⏱️	stopwatch
-⏱	stopwatch
-⏲️	timer clock
-⏲	timer clock
-🕰️	mantelpiece clock
-🕰	mantelpiece clock
-🕛	twelve o’clock
-🕧	twelve-thirty
-🕐	one o’clock
-🕜	one-thirty
-🕑	two o’clock
-🕝	two-thirty
-🕒	three o’clock
-🕞	three-thirty
-🕓	four o’clock
-🕟	four-thirty
-🕔	five o’clock
-🕠	five-thirty
-🕕	six o’clock
-🕡	six-thirty
-🕖	seven o’clock
-🕢	seven-thirty
-🕗	eight o’clock
-🕣	eight-thirty
-🕘	nine o’clock
-🕤	nine-thirty
-🕙	ten o’clock
-🕥	ten-thirty
-🕚	eleven o’clock
-🕦	eleven-thirty
-🌑	new moon
-🌒	waxing crescent moon
-🌓	first quarter moon
-🌔	waxing gibbous moon
-🌕	full moon
-🌖	waning gibbous moon
-🌗	last quarter moon
-🌘	waning crescent moon
-🌙	crescent moon
-🌚	new moon face
-🌛	first quarter moon face
-🌜	last quarter moon face
-🌡️	thermometer
-🌡	thermometer
-☀️	sun
-☀	sun
-🌝	full moon face
-🌞	sun with face
-⭐	star
-🌟	glowing star
-🌠	shooting star
-☁️	cloud
-☁	cloud
-⛅	sun behind cloud
-⛈️	cloud with lightning and rain
-⛈	cloud with lightning and rain
-🌤️	sun behind small cloud
-🌤	sun behind small cloud
-🌥️	sun behind large cloud
-🌥	sun behind large cloud
-🌦️	sun behind rain cloud
-🌦	sun behind rain cloud
-🌧️	cloud with rain
-🌧	cloud with rain
-🌨️	cloud with snow
-🌨	cloud with snow
-🌩️	cloud with lightning
-🌩	cloud with lightning
-🌪️	tornado
-🌪	tornado
-🌫️	fog
-🌫	fog
-🌬️	wind face
-🌬	wind face
-🌀	cyclone
-🌈	rainbow
-🌂	closed umbrella
-☂️	umbrella
-☂	umbrella
-☔	umbrella with rain drops
-⛱️	umbrella on ground
-⛱	umbrella on ground
-⚡	high voltage
-❄️	snowflake
-❄	snowflake
-☃️	snowman
-☃	snowman
-⛄	snowman without snow
-☄️	comet
-☄	comet
-🔥	fire
-💧	droplet
-🌊	water wave
-🎃	jack-o-lantern
-🎄	Christmas tree
-🎆	fireworks
-🎇	sparkler
-🧨	firecracker
-✨	sparkles
-🎈	balloon
-🎉	party popper
-🎊	confetti ball
-🎋	tanabata tree
-🎍	pine decoration
-🎎	Japanese dolls
-🎏	carp streamer
-🎐	wind chime
-🎑	moon viewing ceremony
-🧧	red envelope
-🎀	ribbon
-🎁	wrapped gift
-🎗️	reminder ribbon
-🎗	reminder ribbon
-🎟️	admission tickets
-🎟	admission tickets
-🎫	ticket
-🎖️	military medal
-🎖	military medal
-🏆	trophy
-🏅	sports medal
-🥇	1st place medal
-🥈	2nd place medal
-🥉	3rd place medal
-⚽	soccer ball
-⚾	baseball
-🥎	softball
-🏀	basketball
-🏐	volleyball
-🏈	american football
-🏉	rugby football
-🎾	tennis
-🥏	flying disc
-🎳	bowling
-🏏	cricket game
-🏑	field hockey
-🏒	ice hockey
-🥍	lacrosse
-🏓	ping pong
-🏸	badminton
-🥊	boxing glove
-🥋	martial arts uniform
-🥅	goal net
-⛳	flag in hole
-⛸️	ice skate
-⛸	ice skate
-🎣	fishing pole
-🎽	running shirt
-🎿	skis
-🛷	sled
-🥌	curling stone
-🎯	direct hit
-🎱	pool 8 ball
-🔮	crystal ball
-🧿	nazar amulet
-🎮	video game
-🕹️	joystick
-🕹	joystick
-🎰	slot machine
-🎲	game die
-🧩	jigsaw
-🧸	teddy bear
-♠️	spade suit
-♠	spade suit
-♥️	heart suit
-♥	heart suit
-♦️	diamond suit
-♦	diamond suit
-♣️	club suit
-♣	club suit
-♟️	chess pawn
-♟	chess pawn
-🃏	joker
-🀄	mahjong red dragon
-🎴	flower playing cards
-🎭	performing arts
-🖼️	framed picture
-🖼	framed picture
-🎨	artist palette
-🧵	thread
-🧶	yarn
-🔇	muted speaker
-🔈	speaker low volume
-🔉	speaker medium volume
-🔊	speaker high volume
-📢	loudspeaker
-📣	megaphone
-📯	postal horn
-🔔	bell
-🔕	bell with slash
-🎼	musical score
-🎵	musical note
-🎶	musical notes
-🎙️	studio microphone
-🎙	studio microphone
-🎚️	level slider
-🎚	level slider
-🎛️	control knobs
-🎛	control knobs
-🎤	microphone
-🎧	headphone
-📻	radio
-🎷	saxophone
-🎸	guitar
-🎹	musical keyboard
-🎺	trumpet
-🎻	violin
-🥁	drum
-📱	mobile phone
-📲	mobile phone with arrow
-☎️	telephone
-☎	telephone
-📞	telephone receiver
-📟	pager
-📠	fax machine
-🔋	battery
-🔌	electric plug
-💻	laptop computer
-🖥️	desktop computer
-🖥	desktop computer
-🖨️	printer
-🖨	printer
-⌨️	keyboard
-⌨	keyboard
-🖱️	computer mouse
-🖱	computer mouse
-🖲️	trackball
-🖲	trackball
-💽	computer disk
-💾	floppy disk
-💿	optical disk
-📀	dvd
-🧮	abacus
-🎥	movie camera
-🎞️	film frames
-🎞	film frames
-📽️	film projector
-📽	film projector
-🎬	clapper board
-📺	television
-📷	camera
-📸	camera with flash
-📹	video camera
-📼	videocassette
-🔍	magnifying glass tilted left
-🔎	magnifying glass tilted right
-🕯️	candle
-🕯	candle
-💡	light bulb
-🔦	flashlight
-🏮	red paper lantern
-📔	notebook with decorative cover
-📕	closed book
-📖	open book
-📗	green book
-📘	blue book
-📙	orange book
-📚	books
-📓	notebook
-📒	ledger
-📃	page with curl
-📜	scroll
-📄	page facing up
-📰	newspaper
-🗞️	rolled-up newspaper
-🗞	rolled-up newspaper
-📑	bookmark tabs
-🔖	bookmark
-🏷️	label
-🏷	label
-💰	money bag
-💴	yen banknote
-💵	dollar banknote
-💶	euro banknote
-💷	pound banknote
-💸	money with wings
-💳	credit card
-🧾	receipt
-💹	chart increasing with yen
-💱	currency exchange
-💲	heavy dollar sign
-✉️	envelope
-✉	envelope
-📧	e-mail
-📨	incoming envelope
-📩	envelope with arrow
-📤	outbox tray
-📥	inbox tray
-📦	package
-📫	closed mailbox with raised flag
-📪	closed mailbox with lowered flag
-📬	open mailbox with raised flag
-📭	open mailbox with lowered flag
-📮	postbox
-🗳️	ballot box with ballot
-🗳	ballot box with ballot
-✏️	pencil
-✏	pencil
-✒️	black nib
-✒	black nib
-🖋️	fountain pen
-🖋	fountain pen
-🖊️	pen
-🖊	pen
-🖌️	paintbrush
-🖌	paintbrush
-🖍️	crayon
-🖍	crayon
-📝	memo
-💼	briefcase
-📁	file folder
-📂	open file folder
-🗂️	card index dividers
-🗂	card index dividers
-📅	calendar
-📆	tear-off calendar
-🗒️	spiral notepad
-🗒	spiral notepad
-🗓️	spiral calendar
-🗓	spiral calendar
-📇	card index
-📈	chart increasing
-📉	chart decreasing
-📊	bar chart
-📋	clipboard
-📌	pushpin
-📍	round pushpin
-📎	paperclip
-🖇️	linked paperclips
-🖇	linked paperclips
-📏	straight ruler
-📐	triangular ruler
-✂️	scissors
-✂	scissors
-🗃️	card file box
-🗃	card file box
-🗄️	file cabinet
-🗄	file cabinet
-🗑️	wastebasket
-🗑	wastebasket
-🔒	locked
-🔓	unlocked
-🔏	locked with pen
-🔐	locked with key
-🔑	key
-🗝️	old key
-🗝	old key
-🔨	hammer
-⛏️	pick
-⛏	pick
-⚒️	hammer and pick
-⚒	hammer and pick
-🛠️	hammer and wrench
-🛠	hammer and wrench
-🗡️	dagger
-🗡	dagger
-⚔️	crossed swords
-⚔	crossed swords
-🔫	pistol
-🏹	bow and arrow
-🛡️	shield
-🛡	shield
-🔧	wrench
-🔩	nut and bolt
-⚙️	gear
-⚙	gear
-🗜️	clamp
-🗜	clamp
-⚖️	balance scale
-⚖	balance scale
-🔗	link
-⛓️	chains
-⛓	chains
-🧰	toolbox
-🧲	magnet
-⚗️	alembic
-⚗	alembic
-🧪	test tube
-🧫	petri dish
-🧬	dna
-🔬	microscope
-🔭	telescope
-📡	satellite antenna
-💉	syringe
-💊	pill
-🚪	door
-🛏️	bed
-🛏	bed
-🛋️	couch and lamp
-🛋	couch and lamp
-🚽	toilet
-🚿	shower
-🛁	bathtub
-🧴	lotion bottle
-🧷	safety pin
-🧹	broom
-🧺	basket
-🧻	roll of paper
-🧼	soap
-🧽	sponge
-🧯	fire extinguisher
-🛒	shopping cart
-🚬	cigarette
-⚰️	coffin
-⚰	coffin
-⚱️	funeral urn
-⚱	funeral urn
-🗿	moai
-🏧	ATM sign
-🚮	litter in bin sign
-🚰	potable water
-♿	wheelchair symbol
-🚹	men’s room
-🚺	women’s room
-🚻	restroom
-🚼	baby symbol
-🚾	water closet
-🛂	passport control
-🛃	customs
-🛄	baggage claim
-🛅	left luggage
-⚠️	warning
-⚠	warning
-🚸	children crossing
-⛔	no entry
-🚫	prohibited
-🚳	no bicycles
-🚭	no smoking
-🚯	no littering
-🚱	non-potable water
-🚷	no pedestrians
-📵	no mobile phones
-🔞	no one under eighteen
-☢️	radioactive
-☢	radioactive
-☣️	biohazard
-☣	biohazard
-⬆️	up arrow
-⬆	up arrow
-↗️	up-right arrow
-↗	up-right arrow
-➡️	right arrow
-➡	right arrow
-↘️	down-right arrow
-↘	down-right arrow
-⬇️	down arrow
-⬇	down arrow
-↙️	down-left arrow
-↙	down-left arrow
-⬅️	left arrow
-⬅	left arrow
-↖️	up-left arrow
-↖	up-left arrow
-↕️	up-down arrow
-↕	up-down arrow
-↔️	left-right arrow
-↔	left-right arrow
-↩️	right arrow curving left
-↩	right arrow curving left
-↪️	left arrow curving right
-↪	left arrow curving right
-⤴️	right arrow curving up
-⤴	right arrow curving up
-⤵️	right arrow curving down
-⤵	right arrow curving down
-🔃	clockwise vertical arrows
-🔄	counterclockwise arrows button
-🔙	BACK arrow
-🔚	END arrow
-🔛	ON! arrow
-🔜	SOON arrow
-🔝	TOP arrow
-🛐	place of worship
-⚛️	atom symbol
-⚛	atom symbol
-🕉️	om
-🕉	om
-✡️	star of David
-✡	star of David
-☸️	wheel of dharma
-☸	wheel of dharma
-☯️	yin yang
-☯	yin yang
-✝️	latin cross
-✝	latin cross
-☦️	orthodox cross
-☦	orthodox cross
-☪️	star and crescent
-☪	star and crescent
-☮️	peace symbol
-☮	peace symbol
-🕎	menorah
-🔯	dotted six-pointed star
-♈	Aries
-♉	Taurus
-♊	Gemini
-♋	Cancer
-♌	Leo
-♍	Virgo
-♎	Libra
-♏	Scorpio
-♐	Sagittarius
-♑	Capricorn
-♒	Aquarius
-♓	Pisces
-⛎	Ophiuchus
-🔀	shuffle tracks button
-🔁	repeat button
-🔂	repeat single button
-▶️	play button
-▶	play button
-⏩	fast-forward button
-⏭️	next track button
-⏭	next track button
-⏯️	play or pause button
-⏯	play or pause button
-◀️	reverse button
-◀	reverse button
-⏪	fast reverse button
-⏮️	last track button
-⏮	last track button
-🔼	upwards button
-⏫	fast up button
-🔽	downwards button
-⏬	fast down button
-⏸️	pause button
-⏸	pause button
-⏹️	stop button
-⏹	stop button
-⏺️	record button
-⏺	record button
-⏏️	eject button
-⏏	eject button
-🎦	cinema
-🔅	dim button
-🔆	bright button
-📶	antenna bars
-📳	vibration mode
-📴	mobile phone off
-♀️	female sign
-♀	female sign
-♂️	male sign
-♂	male sign
-⚕️	medical symbol
-⚕	medical symbol
-♾️	infinity
-♾	infinity
-♻️	recycling symbol
-♻	recycling symbol
-⚜️	fleur-de-lis
-⚜	fleur-de-lis
-🔱	trident emblem
-📛	name badge
-🔰	Japanese symbol for beginner
-⭕	heavy large circle
-✅	white heavy check mark
-☑️	ballot box with check
-☑	ballot box with check
-✔️	heavy check mark
-✔	heavy check mark
-✖️	heavy multiplication x
-✖	heavy multiplication x
-❌	cross mark
-❎	cross mark button
-➕	heavy plus sign
-➖	heavy minus sign
-➗	heavy division sign
-➰	curly loop
-➿	double curly loop
-〽️	part alternation mark
-〽	part alternation mark
-✳️	eight-spoked asterisk
-✳	eight-spoked asterisk
-✴️	eight-pointed star
-✴	eight-pointed star
-❇️	sparkle
-❇	sparkle
-‼️	double exclamation mark
-‼	double exclamation mark
-⁉️	exclamation question mark
-⁉	exclamation question mark
-❓	question mark
-❔	white question mark
-❕	white exclamation mark
-❗	exclamation mark
-〰️	wavy dash
-〰	wavy dash
-©️	copyright
-©	copyright
-®️	registered
-®	registered
-™️	trade mark
-™	trade mark
-#️⃣	keycap: #
-#⃣	keycap: #
-*️⃣	keycap: *
-*⃣	keycap: *
-0️⃣	keycap: 0
-0⃣	keycap: 0
-1️⃣	keycap: 1
-1⃣	keycap: 1
-2️⃣	keycap: 2
-2⃣	keycap: 2
-3️⃣	keycap: 3
-3⃣	keycap: 3
-4️⃣	keycap: 4
-4⃣	keycap: 4
-5️⃣	keycap: 5
-5⃣	keycap: 5
-6️⃣	keycap: 6
-6⃣	keycap: 6
-7️⃣	keycap: 7
-7⃣	keycap: 7
-8️⃣	keycap: 8
-8⃣	keycap: 8
-9️⃣	keycap: 9
-9⃣	keycap: 9
-🔟	keycap: 10
-💯	hundred points
-🔠	input latin uppercase
-🔡	input latin lowercase
-🔢	input numbers
-🔣	input symbols
-🔤	input latin letters
-🅰️	A button (blood type)
-🅰	A button (blood type)
-🆎	AB button (blood type)
-🅱️	B button (blood type)
-🅱	B button (blood type)
-🆑	CL button
-🆒	COOL button
-🆓	FREE button
-ℹ️	information
-ℹ	information
-🆔	ID button
-Ⓜ️	circled M
-Ⓜ	circled M
-🆕	NEW button
-🆖	NG button
-🅾️	O button (blood type)
-🅾	O button (blood type)
-🆗	OK button
-🅿️	P button
-🅿	P button
-🆘	SOS button
-🆙	UP! button
-🆚	VS button
-🈁	Japanese “here” button
-🈂️	Japanese “service charge” button
-🈂	Japanese “service charge” button
-🈷️	Japanese “monthly amount” button
-🈷	Japanese “monthly amount” button
-🈶	Japanese “not free of charge” button
-🈯	Japanese “reserved” button
-🉐	Japanese “bargain” button
-🈹	Japanese “discount” button
-🈚	Japanese “free of charge” button
-🈲	Japanese “prohibited” button
-🉑	Japanese “acceptable” button
-🈸	Japanese “application” button
-🈴	Japanese “passing grade” button
-🈳	Japanese “vacancy” button
-㊗️	Japanese “congratulations” button
-㊗	Japanese “congratulations” button
-㊙️	Japanese “secret” button
-㊙	Japanese “secret” button
-🈺	Japanese “open for business” button
-🈵	Japanese “no vacancy” button
-▪️	black small square
-▪	black small square
-▫️	white small square
-▫	white small square
-◻️	white medium square
-◻	white medium square
-◼️	black medium square
-◼	black medium square
-◽	white medium-small square
-◾	black medium-small square
-⬛	black large square
-⬜	white large square
-🔶	large orange diamond
-🔷	large blue diamond
-🔸	small orange diamond
-🔹	small blue diamond
-🔺	red triangle pointed up
-🔻	red triangle pointed down
-💠	diamond with a dot
-🔘	radio button
-🔲	black square button
-🔳	white square button
-⚪	white circle
-⚫	black circle
-🔴	red circle
-🔵	blue circle
-🏁	chequered flag
-🚩	triangular flag
-🎌	crossed flags
-🏴	black flag
-🏳️	white flag
-🏳	white flag
-🏳️‍🌈	rainbow flag
-🏳‍🌈	rainbow flag
-🏴‍☠️	pirate flag
-🏴‍☠	pirate flag
-🇦🇨	Ascension Island
-🇦🇩	Andorra
-🇦🇪	United Arab Emirates
-🇦🇫	Afghanistan
-🇦🇬	Antigua & Barbuda
-🇦🇮	Anguilla
-🇦🇱	Albania
-🇦🇲	Armenia
-🇦🇴	Angola
-🇦🇶	Antarctica
-🇦🇷	Argentina
-🇦🇸	American Samoa
-🇦🇹	Austria
-🇦🇺	Australia
-🇦🇼	Aruba
-🇦🇽	Åland Islands
-🇦🇿	Azerbaijan
-🇧🇦	Bosnia & Herzegovina
-🇧🇧	Barbados
-🇧🇩	Bangladesh
-🇧🇪	Belgium
-🇧🇫	Burkina Faso
-🇧🇬	Bulgaria
-🇧🇭	Bahrain
-🇧🇮	Burundi
-🇧🇯	Benin
-🇧🇱	St. Barthélemy
-🇧🇲	Bermuda
-🇧🇳	Brunei
-🇧🇴	Bolivia
-🇧🇶	Caribbean Netherlands
-🇧🇷	Brazil
-🇧🇸	Bahamas
-🇧🇹	Bhutan
-🇧🇻	Bouvet Island
-🇧🇼	Botswana
-🇧🇾	Belarus
-🇧🇿	Belize
-🇨🇦	Canada
-🇨🇨	Cocos (Keeling) Islands
-🇨🇩	Congo - Kinshasa
-🇨🇫	Central African Republic
-🇨🇬	Congo - Brazzaville
-🇨🇭	Switzerland
-🇨🇮	Côte d’Ivoire
-🇨🇰	Cook Islands
-🇨🇱	Chile
-🇨🇲	Cameroon
-🇨🇳	China
-🇨🇴	Colombia
-🇨🇵	Clipperton Island
-🇨🇷	Costa Rica
-🇨🇺	Cuba
-🇨🇻	Cape Verde
-🇨🇼	Curaçao
-🇨🇽	Christmas Island
-🇨🇾	Cyprus
-🇨🇿	Czechia
-🇩🇪	Germany
-🇩🇬	Diego Garcia
-🇩🇯	Djibouti
-🇩🇰	Denmark
-🇩🇲	Dominica
-🇩🇴	Dominican Republic
-🇩🇿	Algeria
-🇪🇦	Ceuta & Melilla
-🇪🇨	Ecuador
-🇪🇪	Estonia
-🇪🇬	Egypt
-🇪🇭	Western Sahara
-🇪🇷	Eritrea
-🇪🇸	Spain
-🇪🇹	Ethiopia
-🇪🇺	European Union
-🇫🇮	Finland
-🇫🇯	Fiji
-🇫🇰	Falkland Islands
-🇫🇲	Micronesia
-🇫🇴	Faroe Islands
-🇫🇷	France
-🇬🇦	Gabon
-🇬🇧	United Kingdom
-🇬🇩	Grenada
-🇬🇪	Georgia
-🇬🇫	French Guiana
-🇬🇬	Guernsey
-🇬🇭	Ghana
-🇬🇮	Gibraltar
-🇬🇱	Greenland
-🇬🇲	Gambia
-🇬🇳	Guinea
-🇬🇵	Guadeloupe
-🇬🇶	Equatorial Guinea
-🇬🇷	Greece
-🇬🇸	South Georgia & South Sandwich Islands
-🇬🇹	Guatemala
-🇬🇺	Guam
-🇬🇼	Guinea-Bissau
-🇬🇾	Guyana
-🇭🇰	Hong Kong SAR China
-🇭🇲	Heard & McDonald Islands
-🇭🇳	Honduras
-🇭🇷	Croatia
-🇭🇹	Haiti
-🇭🇺	Hungary
-🇮🇨	Canary Islands
-🇮🇩	Indonesia
-🇮🇪	Ireland
-🇮🇱	Israel
-🇮🇲	Isle of Man
-🇮🇳	India
-🇮🇴	British Indian Ocean Territory
-🇮🇶	Iraq
-🇮🇷	Iran
-🇮🇸	Iceland
-🇮🇹	Italy
-🇯🇪	Jersey
-🇯🇲	Jamaica
-🇯🇴	Jordan
-🇯🇵	Japan
-🇰🇪	Kenya
-🇰🇬	Kyrgyzstan
-🇰🇭	Cambodia
-🇰🇮	Kiribati
-🇰🇲	Comoros
-🇰🇳	St. Kitts & Nevis
-🇰🇵	North Korea
-🇰🇷	South Korea
-🇰🇼	Kuwait
-🇰🇾	Cayman Islands
-🇰🇿	Kazakhstan
-🇱🇦	Laos
-🇱🇧	Lebanon
-🇱🇨	St. Lucia
-🇱🇮	Liechtenstein
-🇱🇰	Sri Lanka
-🇱🇷	Liberia
-🇱🇸	Lesotho
-🇱🇹	Lithuania
-🇱🇺	Luxembourg
-🇱🇻	Latvia
-🇱🇾	Libya
-🇲🇦	Morocco
-🇲🇨	Monaco
-🇲🇩	Moldova
-🇲🇪	Montenegro
-🇲🇫	St. Martin
-🇲🇬	Madagascar
-🇲🇭	Marshall Islands
-🇲🇰	Macedonia
-🇲🇱	Mali
-🇲🇲	Myanmar (Burma)
-🇲🇳	Mongolia
-🇲🇴	Macau SAR China
-🇲🇵	Northern Mariana Islands
-🇲🇶	Martinique
-🇲🇷	Mauritania
-🇲🇸	Montserrat
-🇲🇹	Malta
-🇲🇺	Mauritius
-🇲🇻	Maldives
-🇲🇼	Malawi
-🇲🇽	Mexico
-🇲🇾	Malaysia
-🇲🇿	Mozambique
-🇳🇦	Namibia
-🇳🇨	New Caledonia
-🇳🇪	Niger
-🇳🇫	Norfolk Island
-🇳🇬	Nigeria
-🇳🇮	Nicaragua
-🇳🇱	Netherlands
-🇳🇴	Norway
-🇳🇵	Nepal
-🇳🇷	Nauru
-🇳🇺	Niue
-🇳🇿	New Zealand
-🇴🇲	Oman
-🇵🇦	Panama
-🇵🇪	Peru
-🇵🇫	French Polynesia
-🇵🇬	Papua New Guinea
-🇵🇭	Philippines
-🇵🇰	Pakistan
-🇵🇱	Poland
-🇵🇲	St. Pierre & Miquelon
-🇵🇳	Pitcairn Islands
-🇵🇷	Puerto Rico
-🇵🇸	Palestinian Territories
-🇵🇹	Portugal
-🇵🇼	Palau
-🇵🇾	Paraguay
-🇶🇦	Qatar
-🇷🇪	Réunion
-🇷🇴	Romania
-🇷🇸	Serbia
-🇷🇺	Russia
-🇷🇼	Rwanda
-🇸🇦	Saudi Arabia
-🇸🇧	Solomon Islands
-🇸🇨	Seychelles
-🇸🇩	Sudan
-🇸🇪	Sweden
-🇸🇬	Singapore
-🇸🇭	St. Helena
-🇸🇮	Slovenia
-🇸🇯	Svalbard & Jan Mayen
-🇸🇰	Slovakia
-🇸🇱	Sierra Leone
-🇸🇲	San Marino
-🇸🇳	Senegal
-🇸🇴	Somalia
-🇸🇷	Suriname
-🇸🇸	South Sudan
-🇸🇹	São Tomé & Príncipe
-🇸🇻	El Salvador
-🇸🇽	Sint Maarten
-🇸🇾	Syria
-🇸🇿	Swaziland
-🇹🇦	Tristan da Cunha
-🇹🇨	Turks & Caicos Islands
-🇹🇩	Chad
-🇹🇫	French Southern Territories
-🇹🇬	Togo
-🇹🇭	Thailand
-🇹🇯	Tajikistan
-🇹🇰	Tokelau
-🇹🇱	Timor-Leste
-🇹🇲	Turkmenistan
-🇹🇳	Tunisia
-🇹🇴	Tonga
-🇹🇷	Turkey
-🇹🇹	Trinidad & Tobago
-🇹🇻	Tuvalu
-🇹🇼	Taiwan
-🇹🇿	Tanzania
-🇺🇦	Ukraine
-🇺🇬	Uganda
-🇺🇲	U.S. Outlying Islands
-🇺🇳	United Nations
-🇺🇸	United States
-🇺🇾	Uruguay
-🇺🇿	Uzbekistan
-🇻🇦	Vatican City
-🇻🇨	St. Vincent & Grenadines
-🇻🇪	Venezuela
-🇻🇬	British Virgin Islands
-🇻🇮	U.S. Virgin Islands
-🇻🇳	Vietnam
-🇻🇺	Vanuatu
-🇼🇫	Wallis & Futuna
-🇼🇸	Samoa
-🇽🇰	Kosovo
-🇾🇪	Yemen
-🇾🇹	Mayotte
-🇿🇦	South Africa
-🇿🇲	Zambia
-🇿🇼	Zimbabwe
-🏴󠁧󠁢󠁥󠁮󠁧󠁿	England
-🏴󠁧󠁢󠁳󠁣󠁴󠁿	Scotland
-🏴󠁧󠁢󠁷󠁬󠁳󠁿	Wales
+encode('unicode_escape') 
+Source: EmoTag https://abushoeb.github.io/emotag/emotion/
+        https://abushoeb.github.io/emotag/
+Here is a tracker, that tracks the usage of emojis: http://emojitracker.com/
+"""
+1   🏄 1    F3C4       	surfer	                                              0.12 	0.195	0.088	0.222
+2   🔒 1    F512       	lock	                                                0.146	0.141	0.196	0.212
+3   🔨 1    F528       	hammer	                                              0.333	0.427	0.221	0.186
+4   😕 1    F615       	confused face	                                       0.331	0.343	0.105	0.34
+5   ⏩  2300	black       right-pointing double triangle	                      0.327	0.322	0.17 	0.265
+6   🏢 1    F3E2       	office building	                                     0.181	0.359	0.22 	0.19
+7   📻 1    F4FB       	radio	                                               0.187	0.222	0.316	0.361
+8   🎸 1    F3B8       	guitar	                                              0.144	0.125	0.257	0.304
+9   🐷 1    F437       	pig face	                                            0.179	0.214	0.165	0.337
+10  🐹 1    F439       	hamster face	                                        0.215	0.196	0.305	0.194
+11  👮 1    F46E       	police officer	                                      0.34 	0.493	0.161	0.27
+12  💚 1    F49A       	green heart	                                         0.126	0.159	0.373	0.19
+13  🔤 1    F524       	input symbol for latin letters	                      0.134	0.126	0.166	0.121
+14  😩 1    F629       	weary face	                                          0.236	0.274	0.186	0.234
+15  ♻  267  B          	black universal recycling symbol	                    0.261	0.271	0.334	0.152
+16  🌕 1    F315       	full moon symbol	                                    0.176	0.284	0.312	0.208
+17  🎃 1    F383       	jack-o-lantern	                                      0.129	0.327	0.09 	0.092
+18  🎐 1    F390       	wind chime	                                          0.214	0.176	0.271	0.166
+19  👐 1    F450       	open hands sign	                                     0.203	0.189	0.167	0.23
+20  💪 1    F4AA       	flexed biceps	                                       0.225	0.251	0.231	0.204
+21  ⬇  2    B07        	downwards black arrow	                               0.339	0.268	0.142	0.252
+22  🏂 1    F3C2       	snowboarder	                                         0.137	0.132	0.029	0.206
+23  💥 1    F4A5       	collision symbol	                                    0.169	0.164	0.048	0.2
+24  🔏 1    F50F       	lock with ink pen	                                   0.168	0.138	0.199	0.123
+25  😫 1    F62B       	tired face	                                          0.264	0.376	0.155	0.303
+26  🍎 1    F34E       	red apple	                                           0.251	0.182	0.195	0.121
+27  🔫 1    F52B       	pistol	                                              0.259	0.388	0.081	0.128
+28  ㊙  3299	circled     ideograph secret	                                    0.197	0.2  	0.221	0.24
+29  🏧 1    F3E7       	automated teller machine	                            0.128	0.179	0.135	0.171
+30  🔘 1    F518       	radio button	                                        0.218	0.209	0.158	0.261
+31  📋 1    F4CB       	clipboard	                                           0.157	0.233	0.331	0.211
+32  😣 1    F623       	persevering face	                                    0.327	0.516	0.175	0.416
+33  ↙  2199	south       west arrow	                                          0.137	0.171	0.151	0.12
+34  🍡 1    F361       	dango	                                               0.279	0.193	0.139	0.054
+35  🍩 1    F369       	doughnut	                                            0.152	0.259	0.136	0.15
+36  🔥 1    F525       	fire	                                                0.306	0.225	0.103	0.179
+37  🍢 1    F362       	oden	                                                0.123	0.077	0.069	0.166
+38  👿 1    F47F       	imp	                                                 0.385	0.257	0.03 	0.211
+39  😙 1    F619       	kissing face with smiling eyes	                      0.203	0.126	0.256	0.138
+40  👒 1    F452       	womans hat	                                          0.175	0.17 	0.281	0.151
+41  🔛 1    F51B       	on with exclamation mark with left right arrow above	0.126	0.139	0.068	0.211
+42  🍚 1    F35A       	cooked rice	                                         0.203	0.126	0.222	0.289
+43  🎷 1    F3B7       	saxophone	                                           0.107	0.16 	0.244	0.216
+44  🙌 1    F64C       	person raising both hands in celebration	            0.122	0.101	0.254	0.236
+45  ⬆  2    B06        	upwards black arrow	                                 0.382	0.293	0.219	0.284
+46  🍵 1    F375       	teacup without handle	                               0.156	0.237	0.429	0.07
+47  📃 1    F4C3       	page with curl	                                      0.201	0.294	0.282	0.27
+48  🔙 1    F519       	back with leftwards arrow above	                     0.075	0.166	0.062	0.202
+49  😜 1    F61C       	face with stuck-out tongue and winking eye	          0.126	0.059	0.139	0.129
+50  ♈  2648	aries      	                                                     0.214	0.212	0.284	0.196
+51  🍖 1    F356       	meat on bone	                                        0.177	0.218	0.213	0.106
+52  📍 1    F4CD       	round pushpin	                                       0.164	0.269	0.148	0.29
+53  📺 1    F4FA       	television	                                          0.322	0.247	0.227	0.222
+54  😘 1    F618       	face throwing a kiss	                                0.233	0.022	0.215	0.144
+55  ℹ  2139	information source	                                              0.178	0.259	0.264	0.284
+56  🎴 1    F3B4       	flower playing cards	                                0.181	0.211	0.067	0.134
+57  💗 1    F497       	growing heart	                                       0.151	0.067	0.348	0.13
+58  😍 1    F60D       	smiling face with heart-shaped eyes	                 0.307	0.18 	0.308	0.137
+59  😗 1    F617       	kissing face	                                        0.215	0.171	0.159	0.272
+60  🌟 1    F31F       	glowing star	                                        0.191	0.215	0.38 	0.134
+61  🏊 1    F3CA       	swimmer	                                             0.175	0.159	0.086	0.245
+62  👹 1    F479       	japanese ogre	                                       0.37 	0.419	0.109	0.257
+63  📈 1    F4C8       	chart with upwards trend	                            0.224	0.259	0.427	0.215
+64  😡 1    F621       	pouting face	                                        0.468	0.362	0.074	0.401
+65  🍥 1    F365       	fish cake with swirl design	                         0.108	0.216	0.355	0.149
+66  🍪 1    F36A       	cookie	                                              0.117	0.18 	0.168	0.1
+67  🎽 1    F3BD       	running shirt with sash	                             0.138	0.081	0.202	0.203
+68  💟 1    F49F       	heart decoration	                                    0.137	0.046	0.315	0.141
+69  📜 1    F4DC       	scroll	                                              0.254	0.267	0.276	0.235
+70  🔝 1    F51D       	top with upwards arrow above	                        0.162	0.185	0.205	0.191
+71  😨 1    F628       	fearful face	                                        0.344	0.389	0.088	0.332
+72  🏠 1    F3E0       	house building	                                      0.137	0.274	0.186	0.235
+73  🍑 1    F351       	peach	                                               0.344	0.204	0.128	0.119
+74  🎢 1    F3A2       	roller coaster	                                      0.065	0.133	0.111	0.189
+75  🎺 1    F3BA       	trumpet	                                             0.128	0.178	0.206	0.221
+76  👄 1    F444       	mouth	                                               0.245	0.136	0.321	0.121
+77  🐸 1    F438       	frog face	                                           0.408	0.291	0.197	0.167
+78  🔦 1    F526       	electric torch	                                      0.074	0.197	0.143	0.131
+79  😓 1    F613       	face with cold sweat	                                0.321	0.496	0.173	0.447
+80  🍮 1    F36E       	custard	                                             0.164	0.176	0.158	0.131
+81  🍸 1    F378       	cocktail glass	                                      0.032	0.143	0.146	0.046
+82  🎎 1    F38E       	japanese dolls	                                      0.053	0.14 	0.07 	0.08
+83  📉 1    F4C9       	chart with downwards trend	                          0.288	0.396	0.294	0.383
+84  🔼 1    F53C       	up-pointing small red triangle	                      0.264	0.261	0.238	0.295
+85  💛 1    F49B       	yellow heart	                                        0.158	0.177	0.27 	0.262
+86  ♊  264  A          	gemini	                                              0.228	0.132	0.262	0.177
+87  🌺 1    F33A       	hibiscus	                                            0.085	0.218	0.316	0.151
+88  📔 1    F4D4       	notebook with decorative cover	                      0.139	0.15 	0.278	0.185
+89  🀄 1    F004       	mahjong tile red dragon	                             0.171	0.263	0.128	0.212
+90  🍣 1    F363       	sushi	                                               0.134	0.196	0.137	0.214
+91  🐫 1    F42B       	bactrian camel	                                      0.151	0.263	0.131	0.154
+92  💮 1    F4AE       	white flower	                                        0.187	0.141	0.19 	0.144
+93  🙀 1    F640       	weary cat face	                                      0.251	0.27 	0.095	0.242
+94  🍻 1    F37B       	clinking beer mugs	                                  0.096	0.101	0.179	0.132
+95  😎 1    F60E       	smiling face with sunglasses	                        0.036	0.092	0.026	0.093
+96  ▫  25   AB         	white small square	                                  0.276	0.227	0.125	0.161
+97  ⭕  2    B55        	heavy large circle	                                  0.154	0.178	0.122	0.315
+98  🌆 1    F306       	cityscape at dusk	                                   0.053	0.24 	0.259	0.234
+99  🍜 1    F35C       	steaming bowl	                                       0.183	0.129	0.167	0.226
+100	🏭 1    F3ED       	factory	                                             0.205	0.306	0.246	0.21
+101	😞 1    F61E       	disappointed face	                                   0.318	0.467	0.131	0.394
+102	🎆 1    F386       	fireworks	                                           0.051	0.165	0.191	0.165
+103	👅 1    F445       	tongue	                                              0.316	0.062	0.136	0.133
+104	📼 1    F4FC       	videocassette	                                       0.213	0.25 	0.312	0.208
+105	🕗 1    F557       	clock face eight oclock	                             0.118	0.341	0.222	0.246
+106	🌃 1    F303       	night with stars	                                    0.09 	0.174	0.298	0.289
+107	🌷 1    F337       	tulip	                                               0.175	0.245	0.37 	0.188
+108	🐍 1    F40D       	snake	                                               0.37 	0.352	0.169	0.166
+109	💾 1    F4BE       	floppy disk	                                         0.168	0.324	0.341	0.308
+110	📙 1    F4D9       	orange book	                                         0.181	0.193	0.186	0.217
+111	🏯 1    F3EF       	japanese castle	                                     0.092	0.232	0.164	0.149
+112	🌰 1    F330       	chestnut	                                            0.212	0.167	0.169	0.078
+113	🍛 1    F35B       	curry and rice	                                      0.161	0.172	0.175	0.145
+114	🎒 1    F392       	school satchel	                                      0.127	0.154	0.174	0.094
+115	💠 1    F4A0       	diamond shape with a dot inside	                     0.222	0.179	0.32 	0.249
+116	📶 1    F4F6       	antenna with bars	                                   0.164	0.122	0.151	0.132
+117	😾 1    F63E       	pouting cat face	                                    0.454	0.268	0.119	0.295
+118	☝  261  D          	white up pointing index	                             0.254	0.233	0.492	0.36
+119	💹 1    F4B9       	chart with upwards trend and yen sign	               0.175	0.248	0.305	0.208
+120	📡 1    F4E1       	satellite antenna	                                   0.204	0.259	0.303	0.27
+121	📱 1    F4F1       	mobile phone	                                        0.127	0.269	0.172	0.309
+122	◽  25   FD         	white medium small square	                           0.305	0.227	0.126	0.187
+123	⬜  2    B1C        	white large square	                                  0.348	0.194	0.155	0.229
+124	🎇 1    F387       	firework sparkler	                                   0.103	0.209	0.221	0.206
+125	🐟 1    F41F       	fish	                                                0.131	0.167	0.147	0.102
+126	👳 1    F473       	man with turban	                                     0.212	0.293	0.302	0.239
+127	🔮 1    F52E       	crystal ball	                                        0.169	0.22 	0.354	0.196
+128	🎑 1    F391       	moon viewing ceremony	                               0.149	0.143	0.437	0.231
+129	🐠 1    F420       	tropical fish	                                       0.063	0.271	0.14 	0.122
+130	🐾 1    F43E       	paw prints	                                          0.266	0.249	0.129	0.155
+131	👟 1    F45F       	athletic shoe	                                       0.232	0.094	0.089	0.185
+132	😥 1    F625       	disappointed but relieved face	                      0.3  	0.474	0.145	0.391
+133	🎄 1    F384       	christmas tree	                                      0.137	0.17 	0.285	0.081
+134	🐔 1    F414       	chicken	                                             0.169	0.192	0.218	0.127
+135	💖 1    F496       	sparkling heart	                                     0.217	0.068	0.422	0.163
+136	💘 1    F498       	heart with arrow	                                    0.22 	0.074	0.373	0.101
+137	😵 1    F635       	dizzy face	                                          0.347	0.458	0.123	0.361
+138	👣 1    F463       	footprints	                                          0.21 	0.21 	0.163	0.179
+139	📮 1    F4EE       	postbox	                                             0.269	0.171	0.219	0.175
+140	🕐 1    F550       	clock face one oclock	                               0.144	0.341	0.209	0.198
+141	😽 1    F63D       	kissing cat face with closed eyes	                   0.189	0.119	0.215	0.21
+142	👇 1    F447       	white down pointing backhand index	                  0.393	0.196	0.317	0.286
+143	⛵  26   F5         	sailboat	                                            0.104	0.225	0.142	0.205
+144	🐴 1    F434       	horse face	                                          0.254	0.164	0.078	0.159
+145	↪  21   AA         	rightwards arrow with hook	                          0.138	0.275	0.228	0.229
+146	🌴 1    F334       	palm tree	                                           0.035	0.343	0.129	0.238
+147	🐝 1    F41D       	honeybee	                                            0.381	0.285	0.128	0.111
+148	🐰 1    F430       	rabbit face	                                         0.165	0.222	0.217	0.037
+149	😔 1    F614       	pensive face	                                        0.261	0.404	0.145	0.313
+150	⚓  2693	anchor     	                                                     0.22 	0.179	0.245	0.243
+151	🍨 1    F368       	ice cream	                                           0.228	0.189	0.232	0.114
+152	🍱 1    F371       	bento box	                                           0.136	0.16 	0.159	0.212
+153	👚 1    F45A       	womans clothes	                                      0.208	0.154	0.179	0.242
+154	👺 1    F47A       	japanese goblin	                                     0.42 	0.35 	0.149	0.301
+155	💇 1    F487       	haircut	                                             0.237	0.215	0.266	0.153
+156	♋  264  B          	cancer	                                              0.209	0.219	0.201	0.255
+157	😑 1    F611       	expressionless face	                                 0.415	0.308	0.11 	0.319
+158	🙋 1    F64B       	happy person raising one hand	                       0.068	0.084	0.08 	0.156
+159	💦 1    F4A6       	splashing sweat symbol	                              0.26 	0.119	0.081	0.169
+160	🍒 1    F352       	cherries	                                            0.171	0.139	0.155	0.087
+161	🔌 1    F50C       	electric plug	                                       0.124	0.14 	0.078	0.139
+162	☁  2601	cloud      	                                                     0.18 	0.231	0.266	0.295
+163	⌚  231  A          	watch	                                               0.183	0.276	0.172	0.235
+164	⛪  26E  A          	church	                                              0.208	0.276	0.773	0.366
+165	🌀 1    F300       	cyclone	                                             0.169	0.288	0.177	0.214
+166	⬛  2    B1B        	black large square	                                  0.396	0.159	0.222	0.263
+167	🌓 1    F313       	first quarter moon symbol	                           0.241	0.233	0.265	0.284
+168	👀 1    F440       	eyes	                                                0.272	0.218	0.049	0.063
+169	📲 1    F4F2       	mobile phone with rightwards arrow at left	          0.098	0.142	0.156	0.206
+170	▪  25   AA         	black small square	                                  0.319	0.249	0.141	0.227
+171	♠  2660	black       spade suit	                                          0.246	0.213	0.187	0.279
+172	🎭 1    F3AD       	performing arts	                                     0.159	0.108	0.204	0.162
+173	🐤 1    F424       	baby chick	                                          0.156	0.238	0.125	0.057
+174	🐌 1    F40C       	snail	                                               0.162	0.239	0.199	0.17
+175	🐱 1    F431       	cat face	                                            0.147	0.185	0.197	0.167
+176	🐼 1    F43C       	panda face	                                          0.069	0.232	0.091	0.153
+177	🕓 1    F553       	clock face four oclock	                              0.165	0.361	0.171	0.282
+178	👖 1    F456       	jeans	                                               0.2  	0.109	0.134	0.209
+179	🌼 1    F33C       	blossom	                                             0.202	0.299	0.314	0.242
+180	🎣 1    F3A3       	fishing pole and fish	                               0.174	0.148	0.075	0.128
+181	📐 1    F4D0       	triangular ruler	                                    0.198	0.201	0.284	0.168
+182	🕒 1    F552       	clock face three oclock	                             0.167	0.369	0.209	0.282
+183	🌻 1    F33B       	sunflower	                                           0.203	0.243	0.354	0.212
+184	🐞 1    F41E       	lady beetle	                                         0.228	0.22 	0.208	0.153
+185	🐣 1    F423       	hatching chick	                                      0.099	0.171	0.16 	0.125
+186	💲 1    F4B2       	heavy dollar sign	                                   0.203	0.149	0.113	0.228
+187	♉  2649	taurus     	                                                     0.22 	0.2  	0.257	0.253
+188	⤵  2935	arrow       pointing rightwards then curving downwards	          0.257	0.276	0.287	0.245
+189	🍠 1    F360       	roasted sweet potato	                                0.191	0.219	0.25 	0.121
+190	🎌 1    F38C       	crossed flags	                                       0.114	0.048	0.039	0.207
+191	🔠 1    F520       	input symbol for latin capital letters	              0.182	0.175	0.161	0.182
+192	🔪 1    F52A       	hocho	                                               0.321	0.449	0.075	0.125
+193	📏 1    F4CF       	straight ruler	                                      0.249	0.206	0.215	0.155
+194	😝 1    F61D       	face with stuck-out tongue and tightly-closed eyes	  0.083	0.14 	0.027	0.143
+195	📚 1    F4DA       	books	                                               0.167	0.157	0.351	0.141
+196	🌌 1    F30C       	milky way	                                           0.167	0.201	0.437	0.22
+197	🎫 1    F3AB       	ticket	                                              0.108	0.082	0.101	0.327
+198	📳 1    F4F3       	vibration mode	                                      0.075	0.176	0.083	0.134
+199	🙆 1    F646       	face with ok gesture	                                0.155	0.142	0.141	0.23
+200	🌋 1    F30B       	volcano	                                             0.207	0.247	0.141	0.22
+201	🏬 1    F3EC       	department store	                                    0.081	0.231	0.199	0.18
+202	👲 1    F472       	man with gua pi mao	                                 0.255	0.262	0.126	0.176
+203	💏 1    F48F       	kiss	                                                0.188	0.122	0.358	0.227
+204	🌂 1    F302       	closed umbrella	                                     0.136	0.202	0.201	0.295
+205	👋 1    F44B       	waving hand sign	                                    0.256	0.252	0.146	0.199
+206	🍘 1    F358       	rice cracker	                                        0.241	0.156	0.111	0.153
+207	🙊 1    F64A       	speak-no-evil monkey	                                0.214	0.2  	0.081	0.147
+208	♨  2668	hot         springs	                                             0.21 	0.228	0.128	0.173
+209	⛺  26   FA         	tent	                                                0.105	0.189	0.247	0.151
+210	🍍 1    F34D       	pineapple	                                           0.117	0.194	0.133	0.123
+211	👷 1    F477       	construction worker	                                 0.204	0.298	0.241	0.197
+212	🙇 1    F647       	person bowing deeply	                                0.256	0.331	0.262	0.299
+213	🎾 1    F3BE       	tennis racquet and ball	                             0.174	0.198	0.174	0.327
+214	😴 1    F634       	sleeping face	                                       0.266	0.234	0.33 	0.255
+215	🏮 1    F3EE       	izakaya lantern	                                     0.111	0.235	0.225	0.163
+216	🎀 1    F380       	ribbon	                                              0.202	0.203	0.345	0.193
+217	🔗 1    F517       	link symbol	                                         0.258	0.217	0.179	0.262
+218	😄 1    F604       	smiling face with open mouth and smiling eyes	       0.184	0.197	0.188	0.149
+219	🙏 1    F64F       	person with folded hands	                            0.187	0.178	0.485	0.351
+220	🎵 1    F3B5       	musical note	                                        0.26 	0.191	0.341	0.328
+221	🐒 1    F412       	monkey	                                              0.179	0.379	0.083	0.032
+222	🐭 1    F42D       	mouse face	                                          0.189	0.208	0.136	0.094
+223	💆 1    F486       	face massage	                                        0.264	0.232	0.258	0.282
+224	☑  2611	ballot      box with check	                                      0.305	0.295	0.206	0.251
+225	🍀 1    F340       	four leaf clover	                                    0.17 	0.16 	0.324	0.156
+226	🎁 1    F381       	wrapped present	                                     0.076	0.188	0.326	0.058
+227	😶 1    F636       	face without mouth	                                  0.34 	0.335	0.15 	0.359
+228	💙 1    F499       	blue heart	                                          0.148	0.064	0.286	0.281
+229	🔰 1    F530       	japanese symbol for beginner	                        0.222	0.121	0.237	0.28
+230	🗿 1    F5FF       	moyai	                                               0.131	0.153	0.118	0.095
+231	🐺 1    F43A       	wolf face	                                           0.185	0.289	0.083	0.172
+232	💻 1    F4BB       	personal computer	                                   0.127	0.234	0.35 	0.255
+233	🍄 1    F344       	mushroom	                                            0.188	0.239	0.21 	0.084
+234	😃 1    F603       	smiling face with open mouth	                        0.194	0.177	0.216	0.17
+235	♦  2666	black       diamond suit	                                        0.305	0.178	0.226	0.213
+236	👠 1    F460       	high-heeled shoe	                                    0.278	0.119	0.232	0.195
+237	🔣 1    F523       	input symbol for symbols	                            0.108	0.195	0.138	0.17
+238	🎋 1    F38B       	tanabata tree	                                       0.164	0.239	0.288	0.122
+239	💱 1    F4B1       	currency exchange	                                   0.159	0.208	0.127	0.226
+240	🏡 1    F3E1       	house with garden	                                   0.115	0.24 	0.268	0.153
+241	🐚 1    F41A       	spiral shell	                                        0.106	0.301	0.316	0.174
+242	👉 1    F449       	white right pointing backhand index	                 0.197	0.258	0.249	0.258
+243	👜 1    F45C       	handbag	                                             0.099	0.154	0.223	0.293
+244	♎  264E	libra      	                                                     0.144	0.193	0.275	0.161
+245	🍉 1    F349       	watermelon	                                          0.152	0.143	0.133	0.071
+246	👓 1    F453       	eyeglasses	                                          0.157	0.178	0.123	0.149
+247	😷 1    F637       	face with medical mask	                              0.436	0.346	0.159	0.406
+248	☎  260E	black       telephone	                                           0.257	0.204	0.221	0.267
+249	🏆 1    F3C6       	trophy	                                              0.131	0.194	0.101	0.274
+250	🏈 1    F3C8       	american football	                                   0.185	0.21 	0.165	0.354
+251	🏦 1    F3E6       	bank	                                                0.236	0.284	0.238	0.233
+252	👼 1    F47C       	baby angel	                                          0.206	0.197	0.414	0.371
+253	📊 1    F4CA       	bar chart	                                           0.213	0.255	0.41 	0.228
+254	🔐 1    F510       	closed lock with key	                                0.206	0.095	0.28 	0.16
+255	🕙 1    F559       	clock face ten oclock	                               0.141	0.304	0.191	0.309
+256	🔺 1    F53A       	up-pointing red triangle	                            0.321	0.243	0.25 	0.214
+257	😅 1    F605       	smiling face with open mouth and cold sweat	         0.19 	0.307	0.232	0.277
+258	😭 1    F62D       	loudly crying face	                                  0.246	0.276	0.198	0.272
+259	🍔 1    F354       	hamburger	                                           0.177	0.122	0.186	0.113
+260	👔 1    F454       	necktie	                                             0.202	0.094	0.112	0.147
+261	📇 1    F4C7       	card index	                                          0.147	0.196	0.249	0.212
+262	🔻 1    F53B       	down-pointing red triangle	                          0.304	0.242	0.207	0.185
+263	🎍 1    F38D       	pine decoration	                                     0.115	0.271	0.336	0.17
+264	😺 1    F63A       	smiling cat face with open mouth	                    0.149	0.192	0.145	0.25
+265	⏳  23   F3         	hourglass with flowing sand	                         0.197	0.31 	0.266	0.25
+266	⛅  26   C5         	sun behind cloud	                                    0.112	0.279	0.345	0.252
+267	🎈 1    F388       	balloon	                                             0.042	0.128	0.102	0.077
+268	👪 1    F46A       	family	                                              0.249	0.132	0.418	0.215
+269	⁉  2049	exclamation question mark	                                       0.188	0.248	0.085	0.219
+270	🍗 1    F357       	poultry leg	                                         0.121	0.183	0.215	0.122
+271	🌇 1    F307       	sunset over buildings	                               0.065	0.199	0.286	0.201
+272	🎏 1    F38F       	carp streamer	                                       0.125	0.212	0.131	0.095
+273	😊 1    F60A       	smiling face with smiling eyes	                      0.067	0.073	0.248	0.247
+274	🗻 1    F5FB       	mount fuji	                                          0.196	0.225	0.253	0.172
+275	▶  25   B6         	black right-pointing triangle	                       0.168	0.284	0.17 	0.178
+276	⚡  26   A1         	high voltage sign	                                   0.252	0.244	0.147	0.228
+277	🍌 1    F34C       	banana	                                              0.219	0.296	0.184	0.086
+278	👎 1    F44E       	thumbs down sign	                                    0.442	0.465	0.137	0.471
+279	💁 1    F481       	information desk person	                             0.361	0.099	0.197	0.112
+280	↘  2198	south       east arrow	                                          0.23 	0.242	0.103	0.175
+281	💒 1    F492       	wedding	                                             0.092	0.139	0.631	0.252
+282	💰 1    F4B0       	money bag	                                           0.185	0.173	0.143	0.177
+283	📒 1    F4D2       	ledger	                                              0.115	0.17 	0.256	0.182
+284	🌠 1    F320       	shooting star	                                       0.176	0.16 	0.377	0.2
+285	🌱 1    F331       	seedling	                                            0.223	0.289	0.503	0.169
+286	⛄  26   C4         	snowman without snow	                                0.119	0.203	0.128	0.278
+287	👌 1    F44C       	ok hand sign	                                        0.153	0.21 	0.206	0.16
+288	👫 1    F46B       	man and woman holding hands	                         0.075	0.096	0.266	0.131
+289	〽  303  D          	part alternation mark	                               0.203	0.123	0.201	0.305
+290	🔎 1    F50E       	right-pointing magnifying glass	                     0.177	0.253	0.244	0.123
+291	🔴 1    F534       	large red circle	                                    0.244	0.22 	0.112	0.279
+292	🍆 1    F346       	aubergine	                                           0.353	0.234	0.178	0.165
+293	🍧 1    F367       	shaved ice	                                          0.213	0.168	0.152	0.096
+294	🎮 1    F3AE       	video game	                                          0.138	0.202	0.145	0.25
+295	💬 1    F4AC       	speech balloon	                                      0.233	0.302	0.227	0.214
+296	👽 1    F47D       	extraterrestrial alien	                              0.15 	0.231	0.155	0.152
+297	📛 1    F4DB       	name badge	                                          0.269	0.25 	0.147	0.201
+298	🌾 1    F33E       	ear of rice	                                         0.188	0.259	0.383	0.215
+299	🎓 1    F393       	graduation cap	                                      0.162	0.103	0.392	0.126
+300	📥 1    F4E5       	inbox tray	                                          0.205	0.126	0.14 	0.213
+301	😖 1    F616       	confounded face	                                     0.392	0.531	0.172	0.433
+302	📢 1    F4E2       	public address loudspeaker	                          0.271	0.199	0.15 	0.216
+303	🏪 1    F3EA       	convenience store	                                   0.191	0.178	0.176	0.176
+304	🐦 1    F426       	bird	                                                0.22 	0.243	0.213	0.142
+305	👝 1    F45D       	pouch	                                               0.123	0.17 	0.253	0.31
+306	💯 1    F4AF       	hundred points symbol	                               0.254	0.147	0.145	0.123
+307	📆 1    F4C6       	tear-off calendar	                                   0.139	0.267	0.095	0.299
+308	📫 1    F4EB       	closed mailbox with raised flag	                     0.191	0.108	0.097	0.136
+309	☀  2600	black       sun with rays	                                       0.11 	0.251	0.267	0.18
+310	🌹 1    F339       	rose	                                                0.129	0.161	0.334	0.199
+311	🍞 1    F35E       	bread	                                               0.142	0.205	0.181	0.156
+312	🏨 1    F3E8       	hotel	                                               0.075	0.246	0.196	0.184
+313	💄 1    F484       	lipstick	                                            0.276	0.168	0.502	0.141
+314	😇 1    F607       	smiling face with halo	                              0.108	0.092	0.28 	0.123
+315	😏 1    F60F       	smirking face	                                       0.258	0.041	0.096	0.146
+316	😱 1    F631       	face screaming in fear	                              0.292	0.263	0.133	0.21
+317	🙅 1    F645       	face with no good gesture	                           0.288	0.288	0.11 	0.296
+318	⛲  26   F2         	fountain	                                            0.101	0.229	0.276	0.292
+319	💺 1    F4BA       	seat	                                                0.155	0.24 	0.067	0.137
+320	◀  25   C0         	black left-pointing triangle	                        0.256	0.262	0.114	0.296
+321	♥  2665	black       heart suit	                                          0.165	0.123	0.336	0.193
+322	🔱 1    F531       	trident emblem	                                      0.228	0.144	0.219	0.257
+323	🕔 1    F554       	clock face five oclock	                              0.126	0.335	0.21 	0.264
+324	😒 1    F612       	unamused face	                                       0.418	0.297	0.119	0.333
+325	💐 1    F490       	bouquet	                                             0.09 	0.251	0.326	0.181
+326	📄 1    F4C4       	page facing up	                                      0.196	0.31 	0.3  	0.29
+327	📓 1    F4D3       	notebook	                                            0.128	0.144	0.281	0.174
+328	🔲 1    F532       	black square button	                                 0.361	0.212	0.235	0.228
+329	😉 1    F609       	winking face	                                        0.098	0.053	0.129	0.171
+330	💡 1    F4A1       	electric light bulb	                                 0.237	0.199	0.306	0.225
+331	💽 1    F4BD       	minidisc	                                            0.194	0.187	0.328	0.229
+332	😛 1    F61B       	face with stuck-out tongue	                          0.242	0.19 	0.142	0.14
+333	🏥 1    F3E5       	hospital	                                            0.128	0.376	0.305	0.184
+334	💤 1    F4A4       	sleeping symbol	                                     0.142	0.213	0.411	0.289
+335	🔧 1    F527       	wrench	                                              0.25 	0.313	0.337	0.137
+336	🙉 1    F649       	hear-no-evil monkey	                                 0.303	0.277	0.094	0.283
+337	🎪 1    F3AA       	circus tent	                                         0.113	0.196	0.111	0.204
+338	🐵 1    F435       	monkey face	                                         0.194	0.327	0.079	0.061
+339	🔖 1    F516       	bookmark	                                            0.257	0.174	0.182	0.289
+340	😼 1    F63C       	cat face with wry smile	                             0.25 	0.083	0.078	0.121
+341	🍅 1    F345       	tomato	                                              0.284	0.22 	0.294	0.236
+342	📘 1    F4D8       	blue book	                                           0.156	0.191	0.149	0.193
+343	🎧 1    F3A7       	headphone	                                           0.167	0.148	0.266	0.316
+344	👑 1    F451       	crown	                                               0.333	0.118	0.268	0.127
+345	💫 1    F4AB       	dizzy symbol	                                        0.233	0.147	0.359	0.134
+346	🕕 1    F555       	clock face six oclock	                               0.143	0.393	0.169	0.326
+347	😲 1    F632       	astonished face	                                     0.348	0.411	0.138	0.327
+348	😆 1    F606       	smiling face with open mouth and tightly-closed eyes	0.165	0.216	0.119	0.188
+349	⚪  26   AA         	medium white circle	                                 0.22 	0.164	0.121	0.217
+350	👵 1    F475       	older woman	                                         0.235	0.299	0.326	0.279
+351	💿 1    F4BF       	optical disc	                                        0.22 	0.165	0.332	0.261
+352	🔍 1    F50D       	left-pointing magnifying glass	                      0.222	0.276	0.203	0.131
+353	♐  2650	sagittarius	                                                     0.17 	0.217	0.21 	0.22
+354	⛽  26   FD         	fuel pump	                                           0.375	0.161	0.138	0.185
+355	🌽 1    F33D       	ear of maize	                                        0.141	0.156	0.182	0.167
+356	🍲 1    F372       	pot of food	                                         0.18 	0.149	0.177	0.193
+357	🕑 1    F551       	clock face two oclock	                               0.122	0.35 	0.191	0.298
+358	♓  2653	pisces     	                                                     0.169	0.176	0.233	0.239
+359	⚽  26   BD         	soccer ball	                                         0.147	0.332	0.115	0.411
+360	🎅 1    F385       	father christmas	                                    0.131	0.226	0.254	0.166
+361	⏪  23E  A          	black left-pointing double triangle	                 0.301	0.233	0.189	0.282
+362	🎻 1    F3BB       	violin	                                              0.176	0.139	0.298	0.224
+363	💓 1    F493       	beating heart	                                       0.171	0.078	0.323	0.157
+364	😀 1    F600       	grinning face	                                       0.163	0.173	0.171	0.186
+365	👧 1    F467       	girl	                                                0.227	0.16 	0.214	0.146
+366	📌 1    F4CC       	pushpin	                                             0.299	0.263	0.136	0.177
+367	😧 1    F627       	anguished face	                                      0.309	0.485	0.14 	0.369
+368	😳 1    F633       	flushed face	                                        0.281	0.263	0.102	0.231
+369	🙍 1    F64D       	person frowning	                                     0.346	0.374	0.145	0.421
+370	☺  263  A          	white smiling face	                                  0.095	0.13 	0.245	0.176
+371	🎿 1    F3BF       	ski and ski boot	                                    0.103	0.077	0.051	0.192
+372	👏 1    F44F       	clapping hands sign	                                 0.219	0.256	0.189	0.214
+373	💋 1    F48B       	kiss mark	                                           0.272	0.108	0.273	0.167
+374	🔶 1    F536       	large orange diamond	                                0.33 	0.211	0.223	0.335
+375	😯 1    F62F       	hushed face	                                         0.314	0.355	0.137	0.353
+376	☔  2614	umbrella    with rain drops	                                     0.184	0.242	0.254	0.37
+377	🌿 1    F33F       	herb	                                                0.152	0.282	0.509	0.138
+378	💂 1    F482       	guardsman	                                           0.19 	0.23 	0.081	0.176
+379	🏩 1    F3E9       	love hotel	                                          0.041	0.141	0.229	0.155
+380	👾 1    F47E       	alien monster	                                       0.128	0.228	0.087	0.197
+381	📁 1    F4C1       	file folder	                                         0.151	0.217	0.158	0.205
+382	📣 1    F4E3       	cheering megaphone	                                  0.239	0.214	0.167	0.22
+383	🐛 1    F41B       	bug	                                                 0.268	0.27 	0.174	0.102
+384	🐡 1    F421       	blowfish	                                            0.21 	0.214	0.155	0.138
+385	🐻 1    F43B       	bear face	                                           0.205	0.256	0.129	0.196
+386	🔟 1    F51F       	keycap ten	                                          0.217	0.109	0.086	0.173
+387	😚 1    F61A       	kissing face with closed eyes	                       0.179	0.08 	0.217	0.168
+388	🐥 1    F425       	front-facing baby chick	                             0.135	0.147	0.152	0.151
+389	💈 1    F488       	barber pole	                                         0.135	0.163	0.174	0.18
+390	👈 1    F448       	white left pointing backhand index	                  0.199	0.262	0.226	0.251
+391	🔢 1    F522       	input symbol for numbers	                            0.174	0.186	0.219	0.139
+392	😟 1    F61F       	worried face	                                        0.349	0.397	0.097	0.348
+393	🌁 1    F301       	foggy	                                               0.162	0.301	0.317	0.283
+394	🐢 1    F422       	turtle	                                              0.108	0.251	0.239	0.08
+395	🗼 1    F5FC       	tokyo tower	                                         0.115	0.092	0.168	0.24
+396	💸 1    F4B8       	money with wings	                                    0.123	0.096	0.166	0.121
+397	📠 1    F4E0       	fax machine	                                         0.241	0.352	0.167	0.226
+398	⚾  26   BE         	baseball	                                            0.143	0.242	0.099	0.369
+399	🍯 1    F36F       	honey pot	                                           0.177	0.181	0.264	0.143
+400	💳 1    F4B3       	credit card	                                         0.144	0.089	0.241	0.213
+401	📹 1    F4F9       	video camera	                                        0.301	0.29 	0.235	0.202
+402	🍏 1    F34F       	green apple	                                         0.16 	0.188	0.405	0.102
+403	👤 1    F464       	bust in silhouette	                                  0.294	0.347	0.186	0.279
+404	💃 1    F483       	dancer	                                              0.112	0.116	0.138	0.139
+405	📟 1    F4DF       	pager	                                               0.144	0.191	0.229	0.259
+406	😰 1    F630       	face with open mouth and cold sweat	                 0.343	0.439	0.134	0.352
+407	🍹 1    F379       	tropical drink	                                      0.144	0.178	0.159	0.119
+408	👶 1    F476       	baby	                                                0.266	0.201	0.457	0.156
+409	♿  267  F          	wheelchair symbol	                                   0.18 	0.179	0.093	0.264
+410	⛎  26   CE         	ophiuchus	                                           0.213	0.17 	0.233	0.228
+411	🐘 1    F418       	elephant	                                            0.224	0.234	0.163	0.156
+412	💴 1    F4B4       	banknote with yen sign	                              0.217	0.182	0.171	0.302
+413	⚠  26   A0         	warning sign	                                        0.264	0.293	0.107	0.212
+414	🍰 1    F370       	shortcake	                                           0.126	0.196	0.166	0.089
+415	🐲 1    F432       	dragon face	                                         0.198	0.298	0.205	0.157
+416	🔚 1    F51A       	end with leftwards arrow above	                      0.285	0.32 	0.232	0.403
+417	😁 1    F601       	grinning face with smiling eyes	                     0.091	0.251	0.123	0.079
+418	🌑 1    F311       	new moon symbol	                                     0.239	0.221	0.258	0.291
+419	👞 1    F45E       	mans shoe	                                           0.276	0.174	0.11 	0.173
+420	👰 1    F470       	bride with veil	                                     0.193	0.268	0.502	0.185
+421	💀 1    F480       	skull	                                               0.362	0.267	0.056	0.218
+422	💊 1    F48A       	pill	                                                0.195	0.253	0.182	0.203
+423	📦 1    F4E6       	package	                                             0.126	0.186	0.214	0.143
+424	🏰 1    F3F0       	european castle	                                     0.069	0.202	0.132	0.222
+425	📑 1    F4D1       	bookmark tabs	                                       0.137	0.228	0.301	0.23
+426	😋 1    F60B       	face savouring delicious food	                       0.128	0.107	0.169	0.091
+427	👡 1    F461       	womans sandal	                                       0.246	0.236	0.208	0.23
+428	👨 1    F468       	man	                                                 0.243	0.131	0.291	0.098
+429	👻 1    F47B       	ghost	                                               0.147	0.201	0.017	0.108
+430	📞 1    F4DE       	telephone receiver	                                  0.179	0.167	0.101	0.311
+431	♣  2663	black       club suit	                                           0.188	0.228	0.128	0.248
+432	〰  3030	wavy        dash	                                                0.235	0.287	0.253	0.268
+433	🎳 1    F3B3       	bowling	                                             0.074	0.165	0.073	0.275
+434	👊 1    F44A       	fisted hand sign	                                    0.236	0.253	0.13 	0.273
+435	💅 1    F485       	nail polish	                                         0.418	0.121	0.314	0.099
+436	🕘 1    F558       	clock face nine oclock	                              0.15 	0.367	0.197	0.331
+437	🍙 1    F359       	rice ball	                                           0.103	0.254	0.092	0.262
+438	📝 1    F4DD       	memo	                                                0.147	0.235	0.269	0.203
+439	😮 1    F62E       	face with open mouth	                                0.271	0.29 	0.16 	0.295
+440	‼  203  C          	double exclamation mark	                             0.157	0.125	0.063	0.086
+441	⏫  23E  B          	black up-pointing double triangle	                   0.243	0.236	0.251	0.256
+442	⭐  2    B50        	white medium star	                                   0.237	0.175	0.29 	0.16
+443	💨 1    F4A8       	dash symbol	                                         0.363	0.18 	0.102	0.164
+444	♍  264  D          	virgo	                                               0.17 	0.109	0.264	0.195
+445	🍂 1    F342       	fallen leaf	                                         0.133	0.167	0.286	0.168
+446	🎩 1    F3A9       	top hat	                                             0.172	0.214	0.112	0.207
+447	👍 1    F44D       	thumbs up sign	                                      0.202	0.265	0.264	0.194
+448	👩 1    F469       	woman	                                               0.241	0.215	0.29 	0.142
+449	💕 1    F495       	two hearts	                                          0.172	0.088	0.383	0.142
+450	💵 1    F4B5       	banknote with dollar sign	                           0.21 	0.19 	0.149	0.192
+451	📷 1    F4F7       	camera	                                              0.198	0.296	0.287	0.197
+452	🔸 1    F538       	small orange diamond	                                0.258	0.162	0.234	0.271
+453	🗾 1    F5FE       	silhouette of japan	                                 0.122	0.213	0.241	0.152
+454	🐗 1    F417       	boar	                                                0.187	0.269	0.122	0.158
+455	👦 1    F466       	boy	                                                 0.171	0.155	0.225	0.159
+456	📖 1    F4D6       	open book	                                           0.196	0.207	0.259	0.243
+457	🔃 1    F503       	clockwise downwards and upwards open circle arrows	  0.229	0.234	0.23 	0.262
+458	📗 1    F4D7       	green book	                                          0.154	0.24 	0.391	0.107
+459	🔜 1    F51C       	soon with rightwards arrow above	                    0.123	0.179	0.191	0.302
+460	🍳 1    F373       	cooking	                                             0.078	0.221	0.139	0.118
+461	🎰 1    F3B0       	slot machine	                                        0.085	0.169	0.067	0.23
+462	🔓 1    F513       	open lock	                                           0.207	0.206	0.17 	0.109
+463	🍃 1    F343       	leaf fluttering in wind	                             0.231	0.194	0.382	0.139
+464	📪 1    F4EA       	closed mailbox with lowered flag	                    0.184	0.19 	0.109	0.181
+465	😪 1    F62A       	sleepy face	                                         0.267	0.375	0.205	0.367
+466	🌈 1    F308       	rainbow	                                             0.183	0.207	0.317	0.261
+467	🎤 1    F3A4       	microphone	                                          0.121	0.081	0.237	0.29
+468	🎼 1    F3BC       	musical score	                                       0.149	0.09 	0.371	0.315
+469	🔳 1    F533       	white square button	                                 0.351	0.226	0.225	0.167
+470	😠 1    F620       	angry face	                                          0.493	0.375	0.074	0.443
+471	♒  2652	aquarius   	                                                     0.178	0.306	0.232	0.228
+472	👂 1    F442       	ear	                                                 0.299	0.33 	0.316	0.357
+473	📀 1    F4C0       	dvd	                                                 0.184	0.143	0.319	0.307
+474	↗  2197	north       east arrow	                                          0.199	0.224	0.159	0.243
+475	⤴  2934	arrow       pointing rightwards then curving upwards	            0.262	0.255	0.222	0.229
+476	🍕 1    F355       	slice of pizza	                                      0.142	0.109	0.149	0.11
+477	📨 1    F4E8       	incoming envelope	                                   0.24 	0.196	0.168	0.248
+478	☕  2615	hot         beverage	                                            0.142	0.2  	0.317	0.106
+479	🐩 1    F429       	poodle	                                              0.186	0.216	0.168	0.152
+480	👗 1    F457       	dress	                                               0.183	0.16 	0.292	0.242
+481	👱 1    F471       	person with blond hair	                              0.257	0.23 	0.226	0.166
+482	💌 1    F48C       	love letter	                                         0.13 	0.15 	0.331	0.142
+483	💣 1    F4A3       	bomb	                                                0.22 	0.196	0.163	0.205
+484	🎯 1    F3AF       	direct hit	                                          0.177	0.213	0.098	0.09
+485	💢 1    F4A2       	anger symbol	                                        0.316	0.208	0.036	0.289
+486	🔊 1    F50A       	speaker with three sound waves	                      0.259	0.187	0.154	0.348
+487	🔹 1    F539       	small blue diamond	                                  0.23 	0.181	0.246	0.232
+488	😸 1    F638       	grinning cat face with smiling eyes	                 0.12 	0.161	0.176	0.201
+489	🎂 1    F382       	birthday cake	                                       0.055	0.185	0.317	0.122
+490	🎠 1    F3A0       	carousel horse	                                      0.119	0.128	0.125	0.173
+491	🎦 1    F3A6       	cinema	                                              0.273	0.207	0.206	0.218
+492	👯 1    F46F       	woman with bunny ears	                               0.241	0.11 	0.052	0.18
+493	💞 1    F49E       	revolving hearts	                                    0.2  	0.097	0.427	0.142
+494	🍝 1    F35D       	spaghetti	                                           0.056	0.149	0.149	0.159
+495	🍟 1    F35F       	french fries	                                        0.164	0.154	0.14 	0.177
+496	🍦 1    F366       	soft ice cream	                                      0.156	0.181	0.141	0.09
+497	🏣 1    F3E3       	japanese post office	                                0.19 	0.309	0.226	0.249
+498	👃 1    F443       	nose	                                                0.383	0.272	0.186	0.52
+499	📕 1    F4D5       	closed book	                                         0.199	0.162	0.256	0.16
+500	🏀 1    F3C0       	basketball and hoop	                                 0.171	0.209	0.118	0.398
+501	🐽 1    F43D       	pig nose	                                            0.212	0.188	0.167	0.392
+502	♏  264  F          	scorpius	                                            0.185	0.218	0.302	0.274
+503	⚫  26   AB         	medium black circle	                                 0.335	0.212	0.176	0.3
+504	⬅  2    B05        	leftwards black arrow	                               0.282	0.221	0.126	0.199
+505	👸 1    F478       	princess	                                            0.398	0.198	0.337	0.175
+506	🔑 1    F511       	key	                                                 0.165	0.157	0.239	0.116
+507	🍁 1    F341       	maple leaf	                                          0.279	0.172	0.208	0.147
+508	🎹 1    F3B9       	musical keyboard	                                    0.132	0.108	0.34 	0.265
+509	🏫 1    F3EB       	school	                                              0.15 	0.268	0.296	0.162
+510	📰 1    F4F0       	newspaper	                                           0.222	0.338	0.27 	0.246
+511	↩  21   A9         	leftwards arrow with hook	                           0.181	0.292	0.179	0.208
+512	🍫 1    F36B       	chocolate bar	                                       0.147	0.117	0.152	0.108
+513	🍬 1    F36C       	candy	                                               0.192	0.184	0.188	0.12
+514	♌  264  C          	leo	                                                 0.241	0.221	0.212	0.241
+515	㊗  3297	circled     ideograph congratulation	                            0.158	0.162	0.255	0.199
+516	🌔 1    F314       	waxing gibbous moon symbol	                          0.181	0.245	0.327	0.221
+517	🐧 1    F427       	penguin	                                             0.151	0.188	0.134	0.141
+518	🐮 1    F42E       	cow face	                                            0.142	0.222	0.129	0.185
+519	🐯 1    F42F       	tiger face	                                          0.13 	0.392	0.074	0.259
+520	🌅 1    F305       	sunrise	                                             0.107	0.292	0.4  	0.158
+521	🎨 1    F3A8       	artist palette	                                      0.136	0.118	0.442	0.058
+522	🔋 1    F50B       	battery	                                             0.082	0.179	0.196	0.111
+523	😤 1    F624       	face with look of triumph	                           0.399	0.21 	0.043	0.22
+524	◻  25   FB         	white medium square	                                 0.395	0.255	0.169	0.231
+525	⛳  26   F3         	flag in hole	                                        0.134	0.207	0.222	0.175
+526	🏃 1    F3C3       	runner	                                              0.162	0.297	0.062	0.2
+527	⏬  23E  C          	black down-pointing double triangle	                 0.287	0.247	0.22 	0.224
+528	🍇 1    F347       	grapes	                                              0.176	0.155	0.179	0.176
+529	🐨 1    F428       	koala	                                               0.119	0.217	0.116	0.109
+530	📎 1    F4CE       	paperclip	                                           0.289	0.219	0.194	0.231
+531	📤 1    F4E4       	outbox tray	                                         0.204	0.229	0.197	0.194
+532	👢 1    F462       	womans boots	                                        0.221	0.095	0.127	0.239
+533	💉 1    F489       	syringe	                                             0.21 	0.245	0.142	0.124
+534	🔯 1    F52F       	six pointed star with middle dot	                    0.249	0.161	0.343	0.282
+535	🌏 1    F30F       	earth globe asia-australia	                          0.163	0.242	0.261	0.188
+536	🍈 1    F348       	melon	                                               0.282	0.313	0.262	0.077
+537	🍓 1    F353       	strawberry	                                          0.153	0.198	0.197	0.104
+538	💧 1    F4A7       	droplet	                                             0.199	0.223	0.203	0.248
+539	😹 1    F639       	cat face with tears of joy	                          0.438	0.178	0.116	0.282
+540	🌙 1    F319       	crescent moon	                                       0.098	0.137	0.287	0.218
+541	🎡 1    F3A1       	ferris wheel	                                        0.092	0.168	0.141	0.156
+542	📧 1    F4E7       	e-mail symbol	                                       0.26 	0.225	0.21 	0.24
+543	◾  25   FE         	black medium small square	                           0.392	0.211	0.186	0.255
+544	👆 1    F446       	white up pointing backhand index	                    0.259	0.142	0.46 	0.299
+545	🔽 1    F53D       	down-pointing small red triangle	                    0.195	0.258	0.182	0.225
+546	🕛 1    F55B       	clock face twelve oclock	                            0.186	0.347	0.165	0.349
+547	👘 1    F458       	kimono	                                              0.144	0.196	0.238	0.222
+548	💔 1    F494       	broken heart	                                        0.244	0.34 	0.199	0.332
+549	🙈 1    F648       	see-no-evil monkey	                                  0.183	0.27 	0.089	0.135
+550	🌵 1    F335       	cactus	                                              0.087	0.245	0.192	0.034
+551	💎 1    F48E       	gem stone	                                           0.173	0.073	0.543	0.108
+552	💜 1    F49C       	purple heart	                                        0.183	0.131	0.341	0.207
+553	📴 1    F4F4       	mobile phone off	                                    0.176	0.247	0.146	0.245
+554	↕  2195	up          down arrow	                                          0.274	0.277	0.207	0.276
+555	🍤 1    F364       	fried shrimp	                                        0.138	0.15 	0.191	0.165
+556	🔔 1    F514       	bell	                                                0.27 	0.219	0.242	0.427
+557	🕖 1    F556       	clock face seven oclock	                             0.15 	0.35 	0.089	0.33
+558	😈 1    F608       	smiling face with horns	                             0.213	0.055	0.081	0.193
+559	↖  2196	north       west arrow	                                          0.193	0.214	0.186	0.124
+560	🃏 1    F0CF       	playing card black joker	                            0.233	0.286	0.051	0.177
+561	🐬 1    F42C       	dolphin	                                             0.107	0.184	0.117	0.204
+562	👕 1    F455       	t-shirt	                                             0.219	0.078	0.116	0.226
+563	👛 1    F45B       	purse	                                               0.105	0.196	0.302	0.202
+564	👴 1    F474       	older man	                                           0.27 	0.263	0.276	0.215
+565	📅 1    F4C5       	calendar	                                            0.174	0.21 	0.131	0.225
+566	😦 1    F626       	frowning face with open mouth	                       0.37 	0.423	0.128	0.355
+567	⏰  23   F0         	alarm clock	                                         0.176	0.28 	0.154	0.227
+568	🍷 1    F377       	wine glass	                                          0.046	0.124	0.218	0.059
+569	🐙 1    F419       	octopus	                                             0.098	0.234	0.199	0.086
+570	💍 1    F48D       	ring	                                                0.171	0.073	0.46 	0.173
+571	🏁 1    F3C1       	chequered flag	                                      0.221	0.184	0.125	0.263
+572	💑 1    F491       	couple with heart	                                   0.165	0.113	0.409	0.25
+573	😌 1    F60C       	relieved face	                                       0.127	0.182	0.254	0.137
+574	😬 1    F62C       	grimacing face	                                      0.161	0.328	0.1  	0.211
+575	🍭 1    F36D       	lollipop	                                            0.092	0.163	0.158	0.055
+576	🍴 1    F374       	fork and knife	                                      0.053	0.078	0.126	0.285
+577	💩 1    F4A9       	pile of poo	                                         0.35 	0.342	0.151	0.446
+578	🔷 1    F537       	large blue diamond	                                  0.249	0.053	0.236	0.278
+579	🗽 1    F5FD       	statue of liberty	                                   0.09 	0.226	0.113	0.186
+580	◼  25   FC         	black medium square	                                 0.445	0.245	0.21 	0.264
+581	♑  2651	capricorn  	                                                     0.196	0.172	0.3  	0.179
+582	🎱 1    F3B1       	billiards	                                           0.257	0.09 	0.059	0.204
+583	⛔  26   D4         	no entry	                                            0.312	0.445	0.136	0.344
+584	🌊 1    F30A       	water wave	                                          0.106	0.29 	0.123	0.222
+585	🐎 1    F40E       	horse	                                               0.281	0.172	0.148	0.212
+586	🐑 1    F411       	sheep	                                               0.29 	0.169	0.12 	0.292
+587	🐶 1    F436       	dog face	                                            0.13 	0.18 	0.257	0.084
+588	🔞 1    F51E       	no one under eighteen symbol	                        0.109	0.136	0.051	0.179
+589	↔  2194	left        right arrow	                                         0.329	0.372	0.214	0.335
+590	😻 1    F63B       	smiling cat face with heart-shaped eyes	             0.304	0.1  	0.319	0.145
+591	🎬 1    F3AC       	clapper board	                                       0.213	0.196	0.237	0.162
+592	🌛 1    F31B       	first quarter moon with face	                        0.11 	0.103	0.32 	0.227
+593	🍶 1    F376       	sake bottle and cup	                                 0.145	0.255	0.282	0.145
+594	🎲 1    F3B2       	game die	                                            0.126	0.162	0.09 	0.179
+595	🙎 1    F64E       	person with pouting face	                            0.293	0.244	0.196	0.299
+596	🌄 1    F304       	sunrise over mountains	                              0.103	0.28 	0.392	0.205
+597	🍊 1    F34A       	tangerine	                                           0.169	0.199	0.284	0.237
+598	🍺 1    F37A       	beer mug	                                            0.157	0.12 	0.167	0.097
+599	🐳 1    F433       	spouting whale	                                      0.16 	0.184	0.09 	0.159
+600	😢 1    F622       	crying face	                                         0.284	0.385	0.21 	0.333
+601	⌛  231  B          	hourglass	                                           0.205	0.305	0.25 	0.266
+602	🎥 1    F3A5       	movie camera	                                        0.142	0.178	0.233	0.158
+603	🕚 1    F55A       	clock face eleven oclock	                            0.123	0.282	0.119	0.316
+604	🌉 1    F309       	bridge at night	                                     0.079	0.151	0.24 	0.247
+605	💼 1    F4BC       	briefcase	                                           0.173	0.192	0.286	0.175
+606	🎶 1    F3B6       	multiple musical notes	                              0.149	0.131	0.326	0.31
+607	📂 1    F4C2       	open file folder	                                    0.213	0.263	0.171	0.276
+608	🔡 1    F521       	input symbol for latin small letters	                0.193	0.191	0.173	0.129
+609	🌸 1    F338       	cherry blossom	                                      0.122	0.197	0.31 	0.13
+610	💝 1    F49D       	heart with ribbon	                                   0.106	0.172	0.417	0.144
+611	👙 1    F459       	bikini	                                              0.13 	0.132	0.177	0.187
+612	🔩 1    F529       	nut and bolt	                                        0.181	0.276	0.175	0.178
+613	🔵 1    F535       	large blue circle	                                   0.203	0.241	0.117	0.336
+614	😂 1    F602       	face with tears of joy	                              0.381	0.231	0.099	0.326
+615	😐 1    F610       	neutral face	                                        0.415	0.309	0.149	0.322
+616	🐜 1    F41C       	ant	                                                 0.269	0.308	0.098	0.112
+617	📩 1    F4E9       	envelope with downwards arrow above	                 0.251	0.088	0.063	0.199
+618	😿 1    F63F       	crying cat face	                                     0.257	0.264	0.246	0.344
