@@ -6,6 +6,8 @@ from contractions import CONTRACTION_MAP
 from negate import NEGATE
 import nltk
 from nltk.tokenize.toktok import ToktokTokenizer
+from nltk.stem import WordNetLemmatizer
+lemmatizer = WordNetLemmatizer()
 # """ spaCy is mostly used for lemmatizing purposes, according to the WWW it is supperior to NLTK in this matter """
 # import spacy                    # If you have problems installing spaCy: 
 # import en_core_web_sm           # Try creating a new environment in Python and do a clean spaCy install on there
@@ -78,11 +80,22 @@ class CorporaHelper():
         return text
 
 
-    # def lemmatizer(text):
-    #     """ Simmilar to Stemmer this Lemmatizes words to its' ROOT WORDS with respect to verbs in capital letter: keep on keeping on! Death Stranding =>  keep on keep o ! death stranding """
+    # def lemmatizer_spacy(text):
+    #     """ Simmilar to Stemmer this Lemmatizes words to its' ROOT WORDS with respect to verbs in capital letter: keep on keeping on! Death Stranding =>  keep on keep on ! death stranding """
     #     text = nlp(text)
     #     text = ' '.join([word.lemma_ if word.lemma_ != '-PRON-' else word.text for word in text])
     #     return text
+
+    def lemmatizer_nltk():
+        """ Simmilar to Stemmer this Lemmatizes words to its' ROOT WORDS with respect to verbs in capital letter: keep on keeping on! Death Stranding =>  keep on keep on ! death stranding """
+        lemmatizer.lemmatize(pos='v') #verb as example
+        return text
+
+        # 'a' - adjective
+        # 'r' - adverb
+        # 'n' - noun
+        # 'v' - verb
+        # More info: https://www.youtube.com/watch?v=uoHVztKY6S4
 
     def translate_abrevations(self):    # This one is really context specific. 
                                         # We need to discuss this
