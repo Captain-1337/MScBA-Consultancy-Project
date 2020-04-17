@@ -22,6 +22,7 @@ class EmotionAnalyzer:
         """ 
         # init
         emotion = EmotionResult.create_emotion()
+        self._emotions.clear
         if corpus is not None:
             self._corpus = corpus
         
@@ -41,11 +42,32 @@ class EmotionAnalyzer:
                 """
                 from nltk.tokenize import word_tokenize
                 tokens = word_tokenize(self._corpus)
+
                 for token in tokens:
                     self._emotions.append(self._snh.get_emotion(token))
 
             elif method == 'roger1':
-                pass
+                from nltk.tokenize import sent_tokenize, word_tokenize
+                from nltk import pos_tag
+
+                # 1. Split into sentences
+                sentences = sent_tokenize(self._corpus)
+                
+                # For each sentence 
+                for sent in sentences:
+                    # 2. Word tokenize => list of words
+                    word_tokens = word_tokenize(sent)
+                    pos_tokens = pos_tag(word_tokens)
+                    # search for concept phrasen through all word in the sentence
+                    # i love you -> i_love_you , love_you_i, you_love_i
+                    consumed_words = {}
+                    
+                    # 3.
+                    # check for instensity
+                    # check for Negatation
+
+
+                
             elif method == 'himmet1':
                 pass
 
@@ -86,11 +108,36 @@ class EmotionAnalyzer:
 
         return result_emotion
 
+    def _lemmatize_token(self, pos_token):
+        """
+        Lemmatize a pos token and returns the lemmatized word
+        """
+        from nltk.stem import WordNetLemmatizer
+        from nltk.corpus import wordnet
+
+        lemmatizer = WordNetLemmatizer()
+        # translate ot wordnet pos
+        pos = pos_token[1]
+        wn_pos = ''
+        if pos.startswith('J'):
+            wn_pos = wordnet.ADJ
+        elif pos.startswith('V'):
+            wn_pos = wordnet.VERB
+        elif pos.startswith('N'):
+            wn_pos = wordnet.NOUN
+        elif pos.startswith('R'):
+            wn_pos = wordnet.ADV
+        else:        
+            wn_pos = ''
+
+        word = lemmatizer.lemmatize(pos_token[0], pos=wn_pos)
+
+        return word
 
 
 
 
-# TODO neganation of words
+# TODO negataion of words
 # TODO Check intesitiy happy vs. HAPPY
 """
 move to emotion_analyzer.py when ready
