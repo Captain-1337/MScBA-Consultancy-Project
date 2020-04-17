@@ -6,10 +6,10 @@ from contractions import CONTRACTION_MAP
 from negate import NEGATE
 import nltk
 from nltk.tokenize.toktok import ToktokTokenizer
-""" spaCy is mostly used for lemmatizing purposes, according to the WWW it is supperior to NLTK in this matter """
-import spacy                    # If you have problems installing spaCy: 
-import en_core_web_sm           # Try creating a new environment in Python and do a clean spaCy install on there
-nlp = en_core_web_sm.load() # <- pip install https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.2.0/en_core_web_sm-2.2.0.tar.gz
+# """ spaCy is mostly used for lemmatizing purposes, according to the WWW it is supperior to NLTK in this matter """
+# import spacy                    # If you have problems installing spaCy: 
+# import en_core_web_sm           # Try creating a new environment in Python and do a clean spaCy install on there
+# nlp = en_core_web_sm.load() # <- pip install https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.2.0/en_core_web_sm-2.2.0.tar.gz
 
 
 
@@ -78,11 +78,11 @@ class CorporaHelper():
         return text
 
 
-    def lemmatizer(text):
-        """ Simmilar to Stemmer this Lemmatizes words to its' ROOT WORDS with respect to verbs in capital letter: keep on keeping on! Death Stranding =>  keep on keep o ! death stranding """
-        text = nlp(text)
-        text = ' '.join([word.lemma_ if word.lemma_ != '-PRON-' else word.text for word in text])
-        return text
+    # def lemmatizer(text):
+    #     """ Simmilar to Stemmer this Lemmatizes words to its' ROOT WORDS with respect to verbs in capital letter: keep on keeping on! Death Stranding =>  keep on keep o ! death stranding """
+    #     text = nlp(text)
+    #     text = ' '.join([word.lemma_ if word.lemma_ != '-PRON-' else word.text for word in text])
+    #     return text
 
     def translate_abrevations(self):    # This one is really context specific. 
                                         # We need to discuss this
@@ -99,10 +99,10 @@ class CorporaHelper():
 
     def translate_contractions(text, contraction_mapping=CONTRACTION_MAP):
         """expands contractions: I'm => I am | don't => do not | He's => He is (see contractions.py for full map) """ 
-            contractions_pattern = re.compile('({})'.format('|'.join(contraction_mapping.keys())),
+        contractions_pattern = re.compile('({})'.format('|'.join(contraction_mapping.keys())),
                                         flags=re.IGNORECASE|re.DOTALL)
         
-            def expand_match(contraction):
+        def expand_match(contraction):
                 match = contraction.group(0)
                 first_char = match[0]
                 expanded_contraction = contraction_mapping.get(match)\
@@ -110,9 +110,9 @@ class CorporaHelper():
                                     else contraction_mapping.get(match.lower())
                 expanded_contraction = first_char+expanded_contraction[1:]
                 return expanded_contraction
-            expanded_text = contractions_pattern.sub(expand_match, text)
-            expanded_text = re.sub("'", "", expanded_text)
-            return expanded_text
+        expanded_text = contractions_pattern.sub(expand_match, text)
+        expanded_text = re.sub("'", "", expanded_text)
+        return expanded_text
 
     def remove_stopwords(text, is_lower_case=False):   
         """Removes stopwords without touching the negates [no & not]: The, and, if are stopwords, computer is not => , , stopwords , computer not """ 
@@ -160,8 +160,8 @@ class CorporaHelper():
         is_different = False
         allcap_words = 0
         for word in words:
-        if word.isupper():
-        allcap_words += 1
+            if word.isupper():
+                allcap_words += 1
         cap_differential = len(words) - allcap_words
         if 0 < cap_differential < len(words):
             is_different = True
