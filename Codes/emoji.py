@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 """
-#TestSean
 encode('unicode_escape') 
 Source: EmoTag https://abushoeb.github.io/emotag/emotion/
         https://abushoeb.github.io/emotag/
