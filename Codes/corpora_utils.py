@@ -73,6 +73,7 @@ class CorporaHelper():
         # TODO  luv => love ...
         None
 
+    @staticmethod
     def simple_stemmer(text):
         """ Stemmer removes the inflections of words and transforms it to its' BASE WORDS with respect to verbs in capital letter: My system is daily crashing ,but look now at daily. => y system is daili crash ,but look now at daily.  """
         ps = nltk.porter.PorterStemmer()
@@ -103,6 +104,7 @@ class CorporaHelper():
         # TODO  => abr. = abrevation
         None
 
+    @staticmethod
     def remove_special_char(text, remove_digits=False):
         """removes or replaces special characters: Well this was fun! 123#@! => Well this was fun 123) """
         pattern = r'[^a-zA-z0-9\s]' if not remove_digits else r'[^a-zA-z\s]'
@@ -110,6 +112,7 @@ class CorporaHelper():
         text = re.sub(pattern, '', text)
         return text
 
+    @staticmethod
     def translate_contractions(text, contraction_mapping=CONTRACTION_MAP):
         """expands contractions: I'm => I am | don't => do not | He's => He is (see contractions.py for full map) """ 
         contractions_pattern = re.compile('({})'.format('|'.join(contraction_mapping.keys())),
@@ -127,6 +130,7 @@ class CorporaHelper():
         expanded_text = re.sub("'", "", expanded_text)
         return expanded_text
 
+    @staticmethod
     def remove_stopwords(text, is_lower_case=False):   
         """Removes stopwords without touching the negates [no & not]: The, and, if are stopwords, computer is not => , , stopwords , computer not """ 
         tokenizer = ToktokTokenizer()
@@ -142,27 +146,29 @@ class CorporaHelper():
         filtered_text = ' '.join(filtered_tokens)    
         return filtered_text
 
-    def negated(input_words, include_nt=True):
+    @staticmethod
+    def is_negated(text, include_nt=True):
         """
         Determine if input contains negation words.
         Function retrieved from NLTK VADER (see negates)
         """
-        input_words = [str(w).lower() for w in input_words]
+        text = [str(w).lower() for w in text]
         neg_words = []
         neg_words.extend(NEGATE)
         for word in neg_words:
-            if word in input_words:
+            if word in text:
                 return True
         if include_nt:
-            for word in input_words:
+            for word in text:
                 if "n't" in word:
                     return True
-        '''if "least" in input_words:
-            i = input_words.index("least")
-            if i > 0 and input_words[i - 1] != "at":
+        '''if "least" in text:
+            i = text.index("least")
+            if i > 0 and text[i - 1] != "at":
                 return True'''
         return False
     
+    @staticmethod
     def allcap_differential(words):
         """
         Check whether just some words in the input are ALL CAPS

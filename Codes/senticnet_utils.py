@@ -12,6 +12,7 @@ class SenticNetHelper():
         """
         Gets from a word or word concept an EmtotionResult vector
         """
+        concept = concept.replace(" ", "_")
         if concept in self._sn.data:
             sentics = self._sn.sentics(concept)        
             emotion = self._get_emotion_from_sentics(sentics)
@@ -102,7 +103,7 @@ class SenticNetHelper():
         return emotion
 
     @staticmethod
-    def reduce_emotion_to_senic_dimensions(emotion):
+    def reduce_emotion_to_sentics_dimensions(emotion):
         """
         Reduces the emotion so it can have only one of the two opposite emotions
             'pleasantness_value', 
@@ -168,7 +169,7 @@ class SenticNetHelper():
         temp_value = 0
         
         # negotation the emotion only can have one of the 4 emotion pleasentnes
-        neg_emotion = SenticNetHelper.reduce_emotion_to_senic_dimensions(emotion)
+        neg_emotion = SenticNetHelper.reduce_emotion_to_sentics_dimensions(emotion)
         # ANGER - FEAR
         if neg_emotion[Emotions.ANGER.value] > min_value:
             # ANGER
@@ -258,5 +259,11 @@ class SenticNetHelper():
             neg_emotion[Emotions.DISGUST.value] = 0
 
         return neg_emotion
+
+
+        
+
+
+
 
 

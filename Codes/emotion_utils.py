@@ -33,7 +33,7 @@ class EmotionResult():
             emotion = EmotionResult.create_neutral_emotion()
         
         return emotion
-
+    
     @staticmethod
     def get_primary_emotion(emotion, neutral_threshold = 0.1):
         """
@@ -77,7 +77,21 @@ class EmotionResult():
             result_emotion = Emotions.NEUTRAL.value
 
         return result_emotion
-    
+
+    @staticmethod
+    def is_neutral_emotion(emotion):
+        """
+        Checks if the EmotionResult is a neutral emotion (all emotions equal 0)
+
+        :param emotion: EmotionResult
+        :return boolean: True if it is a neutral emotion
+        """
+        result = emotion[Emotions.FEAR.value] == 0 and emotion[Emotions.ANGER.value] == 0
+        result = result and emotion[Emotions.JOY.value] == 0 and emotion[Emotions.ANTICIPATION.value] == 0
+        result = result and emotion[Emotions.SADNESS.value] == 0 and emotion[Emotions.DISGUST.value] == 0
+        result = result and emotion[Emotions.SURPRISE.value] == 0 and emotion[Emotions.TRUST.value] == 0
+
+        return result
 
 class Emotions(Enum):
     """
