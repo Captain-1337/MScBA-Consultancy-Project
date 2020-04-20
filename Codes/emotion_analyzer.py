@@ -1,5 +1,9 @@
 from senticnet_utils import SenticNetHelper
 from emotion_utils import Emotions, EmotionResult
+from corpora_utils import CorporaHelper
+from nltk.tokenize import sent_tokenize, word_tokenize, RegexpTokenizer
+from nltk import pos_tag
+from itertools import combinations, permutations
 
 class EmotionAnalyzer:
     """
@@ -47,24 +51,53 @@ class EmotionAnalyzer:
                     self._emotions.append(self._snh.get_emotion(token))
 
             elif method == 'roger1':
-                from nltk.tokenize import sent_tokenize, word_tokenize
-                from nltk import pos_tag
 
-                # 1. Split into sentences
+                # Split into sentences
                 sentences = sent_tokenize(self._corpus)
-                
                 # For each sentence 
                 for sent in sentences:
-                    # 2. Word tokenize => list of words
-                    word_tokens = word_tokenize(sent)
-                    pos_tokens = pos_tag(word_tokens)
-                    # search for concept phrasen through all word in the sentence
-                    # i love you -> i_love_you , love_you_i, you_love_i
-                    consumed_words = {}
-                    
-                    # 3.
-                    # check for instensity
-                    # check for Negatation
+                    # Split into clauses
+                    clauses = sent.split(',')
+                    for clause in clauses:
+                        #  Word tokenize => list of words without punctation
+                        tokenizer = RegexpTokenizer(r'\w+') 
+                        word_tokens = tokenizer.tokenize(clause)
+                        pos_tokens = pos_tag(word_tokens)
+                        # get a negatation flag
+                        negatation_flag = CorporaHelper.is_negated(clause)
+                        # search for concept phrasen through all word in the sentence
+                        # combinations of 4
+                        # - permutations of 4
+                        # - - lemmatize remove stopword
+                        # - - combination of 4
+                        # - - permutaions of 4
+                        # the same for 3 and 2
+                        combs = combinations(word_tokens, r=4)
+                        matched_tokens = []
+                        for comb in combs:
+                            # check if part of the comination not mached yet
+
+
+                            concept = " ".join(comb)
+                            # lookup emotion
+                            emotion = self._snh.get_emotion(concept)
+                            if not EmotionResult.is_neutral_emotion(emotion):
+                                # remove tokens from word_tokens
+                                matched_tokens.append(comb)
+                                pass
+                                # emotion found return
+
+                        
+                        # lookup for single word
+                        
+                        # consumed_words = {}
+                        # 3.
+                        # check for instensity
+                        # check for Negatation
+                        if negatation_flag:
+                            # TODO negate clause emotions.
+                            
+                            pass
 
 
                 
