@@ -7,7 +7,6 @@ from negate import NEGATE
 import nltk
 from nltk.tokenize.toktok import ToktokTokenizer
 from nltk.stem import WordNetLemmatizer
-lemmatizer = WordNetLemmatizer()
 # """ spaCy is mostly used for lemmatizing purposes, according to the WWW it is supperior to NLTK in this matter """
 # import spacy                    # If you have problems installing spaCy: 
 # import en_core_web_sm           # Try creating a new environment in Python and do a clean spaCy install on there
@@ -86,17 +85,30 @@ class CorporaHelper():
     #     text = nlp(text)
     #     text = ' '.join([word.lemma_ if word.lemma_ != '-PRON-' else word.text for word in text])
     #     return text
+    
+    @staticmethod
+    def lemmatize_token(token, pos):
+        """
+        Lemmatize a word token
 
-    def lemmatizer_nltk():
-        """ Simmilar to Stemmer this Lemmatizes words to its' ROOT WORDS with respect to verbs in capital letter: keep on keeping on! Death Stranding =>  keep on keep on ! death stranding """
-        lemmatizer.lemmatize(pos='v') #verb as example
-        return text
+        :param token: word token
+        :param pos: Part of speech
+        """
+        from nltk.corpus import wordnet
+        lemmatizer = WordNetLemmatizer()
+        wn_pos = wordnet.NOUN
+        # translate pos into wordnet pos
+        if pos.startswith('J'):
+            wn_pos = wordnet.ADJ
+        elif pos.startswith('V'):
+            wn_pos = wordnet.VERB
+        elif pos.startswith('N'):
+            wn_pos = wordnet.NOUN
+        elif pos.startswith('R'):
+            wn_pos = wordnet.ADV
 
-        # 'a' - adjective
-        # 'r' - adverb
-        # 'n' - noun
-        # 'v' - verb
-        # More info: https://www.youtube.com/watch?v=uoHVztKY6S4
+        lem_token = lemmatizer.lemmatize(token, pos=wn_pos) 
+        return lem_token
 
     def translate_abrevations(self):    # This one is really context specific. 
                                         # We need to discuss this
@@ -146,6 +158,17 @@ class CorporaHelper():
         filtered_text = ' '.join(filtered_tokens)    
         return filtered_text
 
+    @staticmethod   
+    def is_stopword(word):
+        """
+        Checks if the word is a stopword
+
+        :param word: word to check
+        :returns: True or False
+        """
+        stopword_list = nltk.corpus.stopwords.words('english')
+        return word in stopword_list
+
     @staticmethod
     def is_negated(text, include_nt=True):
         """
@@ -185,6 +208,27 @@ class CorporaHelper():
         if 0 < cap_differential < len(words):
             is_different = True
         return is_different
+
+    @staticmethod
+    def build_ordered_pos(pos_tags):
+        """
+        Building an pos tag array with dictionaries
+        example: {word: "car",pos: "NN",order: 1}
+
+        :param pos_tags: tokens from pos_tag
+        :returns: an ordered pos tag list
+        """
+        result = []
+        index = 1
+        for tag in pos_tags:
+            pos = {}
+            pos["word"] = tag[0]
+            pos["pos"] = tag[1]
+            pos["order"] = index
+            index += 1 
+            result.append(pos)
+        return result
+
 
 class CorporaDomains(Enum):
     """
