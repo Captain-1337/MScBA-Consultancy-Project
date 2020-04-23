@@ -35,7 +35,7 @@ class EmotionAnalyzer:
         if self._mockup:
             # Creating some random mockup emotions for testing
             for x in range(20):
-                self._emotions.append(EmotionResult.create_random_emotion())
+                self._emotions.append(EmotionResult(EmotionResult.create_random_emotion(),"mockup"))
         else:
             # TODO implement concept/phrase extraction
             # 1. Split in sentences
@@ -49,7 +49,9 @@ class EmotionAnalyzer:
                 tokens = word_tokenize(self._corpus)
 
                 for token in tokens:
-                    self._emotions.append(self._snh.get_emotion(token))
+                    emotion = self._snh.get_emotion(token)
+                    if not EmotionResult.is_neutral_emotion(emotion):
+                        self._emotions.append(EmotionResult(emotion,token))
 
             elif method == 'combine':
                 """
@@ -103,7 +105,8 @@ class EmotionAnalyzer:
                                 if EmotionResult.is_neutral_emotion(emotion):
                                     # try lemmatized
                                     emotion = self._snh.get_emotion(CorporaHelper.lemmatize_token(word["word"],word["pos"]))
-                                clause_emotions.append(emotion)
+                                if not EmotionResult.is_neutral_emotion(emotion):
+                                    clause_emotions.append(EmotionResult(emotion,word["word"]))
                             # remove word from word_tokens
                             self._word_pos.remove(word)
 
@@ -117,7 +120,7 @@ class EmotionAnalyzer:
                     self._emotions.extend(clause_emotions)                    
                 
                 
-            elif method == 'himmet1':
+            elif method == 'sematic':
                 pass
 
 
@@ -125,6 +128,10 @@ class EmotionAnalyzer:
         emotion = self._summarize_emotions()
 
         return emotion
+    
+    def print_emotions(self):
+        for emotion in self._emotions:
+            emotion.print()
     
     def _get_ordered_pos_tag_distance(self,ordered_pos_tags):
         """
@@ -193,7 +200,7 @@ class EmotionAnalyzer:
                     if r > 3: self._word_pos.remove(comb[3])
   
                     # emotion found return
-                    emotions.append(emotion)
+                    emotions.append(EmotionResult(emotion,concept))
         if emotions.count == 0:
             return None
         else:
@@ -238,7 +245,7 @@ class EmotionAnalyzer:
                         if r > 3: self._word_pos.remove(comb[3])
     
                         # emotion found return
-                        emotions.append(emotion)
+                        emotions.append(EmotionResult(emotion,concept))
             if emotions.count == 0:
                 return None
             else:
@@ -253,14 +260,14 @@ class EmotionAnalyzer:
         # Sum up the emotions
         
         for emotion in self._emotions:
-            result_emotion[Emotions.ANGER.value] += emotion[Emotions.ANGER.value]
-            result_emotion[Emotions.FEAR.value] += emotion[Emotions.FEAR.value]
-            result_emotion[Emotions.SADNESS.value] += emotion[Emotions.SADNESS.value]
-            result_emotion[Emotions.DISGUST.value] += emotion[Emotions.DISGUST.value]
-            result_emotion[Emotions.JOY.value] += emotion[Emotions.JOY.value]
-            result_emotion[Emotions.TRUST.value] += emotion[Emotions.TRUST.value]
-            result_emotion[Emotions.SURPRISE.value] += emotion[Emotions.SURPRISE.value]
-            result_emotion[Emotions.ANTICIPATION.value] += emotion[Emotions.ANTICIPATION.value]
+            result_emotion[Emotions.ANGER.value] += emotion.get_anger()
+            result_emotion[Emotions.FEAR.value] += emotion.get_fear()
+            result_emotion[Emotions.SADNESS.value] += emotion.get_sadness()
+            result_emotion[Emotions.DISGUST.value] += emotion.get_disgust()
+            result_emotion[Emotions.JOY.value] += emotion.get_joy()
+            result_emotion[Emotions.TRUST.value] += emotion.get_trust()
+            result_emotion[Emotions.SURPRISE.value] += emotion.get_surprise()
+            result_emotion[Emotions.ANTICIPATION.value] += emotion.get_anticipation()
         
         # Normalize
         if emotion_count > 0:
