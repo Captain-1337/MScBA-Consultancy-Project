@@ -65,7 +65,7 @@ class EmotionAnalyzer:
                     clauses = sent.split(',')
                     for clause in clauses:
                         #  Word tokenize => list of words without punctation
-                        tokenizer = RegexpTokenizer(r'\w+') 
+                        tokenizer = RegexpTokenizer(r'\w+')                        
                         word_tokens = tokenizer.tokenize(clause)
                         pos_tags = pos_tag(word_tokens)
                         # Add order of word
@@ -83,7 +83,9 @@ class EmotionAnalyzer:
                         #
                         # for 4 to 2 multiword concepts
                         clause_emotions = []
+                        
                         for x in range(-4, -1):
+                            
                             # Combinations
                             emotions = self._lookup_combinations(word_pos,abs(x))
                             clause_emotions.extend(emotions)
@@ -97,18 +99,18 @@ class EmotionAnalyzer:
                             emotions = self._lookup_permutations(word_pos,abs(x),lemma=True)
                             clause_emotions.extend(emotions)
                         
-                        # lookup for single word only if not a stopword
-                        
-                        for word in word_pos:
-                            if  not CorporaHelper.is_stopword(word):
+                        # lookup for single word only if not a stopword           
+                        for word in self._word_pos:
+                            if  not CorporaHelper.is_stopword(word["word"]):
+                                
                                 emotion = self._snh.get_emotion(word["word"])
                                 if EmotionResult.is_neutral_emotion(emotion):
                                     # try lemmatized
                                     emotion = self._snh.get_emotion(CorporaHelper.lemmatize_token(word["word"],word["pos"]))
                                 if not EmotionResult.is_neutral_emotion(emotion):
                                     clause_emotions.append(EmotionResult(emotion,word["word"]))
-                            # remove word from word_tokens
-                            self._word_pos.remove(word)
+                            # remove word from word_tokens -> cannot remove of a looping list
+                            #self._word_pos.remove(word)
 
                         # check for instensity
                         # check for Negatation
@@ -116,8 +118,8 @@ class EmotionAnalyzer:
                             # TODO negate clause emotions.
                             pass
 
-                    # Add clause to total emotion            
-                    self._emotions.extend(clause_emotions)                    
+                        # Add clause to total emotion            
+                        self._emotions.extend(clause_emotions)                    
                 
                 
             elif method == 'sematic':
