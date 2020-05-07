@@ -26,19 +26,19 @@ class CorporaHelper():
         self.load_corpora_from_csv(file)
         self._data
 
-    def load_corpora_from_csv(self,file, sep=';'):
+    def load_corpora_from_csv(self, file, sep=';'):
         """
             Load a corpora from a csv file into the helper 
             file: filename include the path
             sep: separator of the fields in the csv
         """
-        self._data = pd.read_table(file, sep=sep)
+        self._data = pd.read_table(file, sep=sep, index_col=0)
         # TODO transform in Data structure
         """
-            column 1: id
-            column 2: corpus 
-            column 3: emotion
-            column 4: domain
+            id is set as index
+            column 1: corpus 
+            column 2: emotion
+            column 3: domain
         """        
         #self._data.join('cleanedcorpus')
         # column 5: cleanedcorpus
@@ -49,21 +49,38 @@ class CorporaHelper():
         return self._data
 
     def get_domain_data(self, domain):
-
         return self._data[self._data[CorporaProperties.DOMAIN.value].str.match(domain)]
+
+    def set_calc_emotion(self, corpus_id, emotion:str):
+        """
+        Sets the calculated emotion in the dataframe
+
+        :param corpus_id: id of the corpus
+        :param emotion: calculated emotion to set
+        """
+        # Set calculated emotion
+        self._data.at[corpus_id, CorporaProperties.CALCULATED_EMOTION.value] = emotion
+        # Set a flag correct if the emotion is equal to the calculated emotion
+        if self._data.at[corpus_id,CorporaProperties.EMOTION.value] == emotion:
+            self._data.at[corpus_id, CorporaProperties.CORRECT.value] = 'true'
+
+    def write_to_csv(self, path_or_buf =''):
+        self._data.to_csv(path_or_buf=path_or_buf)
+
 
     def translate_emoticons(self):  # I found a list with various emoticons, some of them are tagged:
                                     # https://gist.github.com/endolith/157796
                                     # Let us decide which one to use.
         # TODO :-) => happy
-        self._data[CorporaProperties.CLEANED_CORPUS.value]
+        #self._data[CorporaProperties.CLEANED_CORPUS.value]
+        None
 
     def translate_emojis(self): # check emoji.py, lets discuss which one to choose.
                                 # there are over 600 emojis listed and labeled.
         # TODO 😀 => happy
         None
 
-    def remove_accent(text):
+    def remove_accent(self, text):
         """removes the signs on accented characters: Áccěntěd => Accented) """
         text = unicodedata.normalize('NFKD', text).encode('ascii', 'ignore').decode('utf-8', 'ignore')
         return text
@@ -170,7 +187,7 @@ class CorporaHelper():
         return word in stopword_list
 
     @staticmethod
-    def is_negated(text, include_nt=True):
+    def is_negated(text, include_nt=True) -> bool:
         """
         Determine if input contains negation words.
         Function retrieved from NLTK VADER (see negates)
@@ -248,6 +265,8 @@ class CorporaProperties(Enum):
     EMOTION = 'emotion'
     DOMAIN = 'domain'
     CLEANED_CORPUS = 'cleanedcorpus'
+    CALCULATED_EMOTION = 'calcemotion'
+    CORRECT = 'correct'
     
 
 
