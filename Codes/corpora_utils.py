@@ -22,9 +22,9 @@ class CorporaHelper():
     # Datamatrix of the annodated corpora
     _data = pd.DataFrame()
 
-    def __init__(self, file):
-        self.load_corpora_from_csv(file)
-        self._data
+    def __init__(self, file=None):
+        if file is not None:
+            self.load_corpora_from_csv(file)
 
     def load_corpora_from_csv(self, file, sep=';'):
         """
@@ -65,7 +65,31 @@ class CorporaHelper():
             self._data.at[corpus_id, CorporaProperties.CORRECT.value] = 'true'
 
     def write_to_csv(self, path_or_buf =''):
-        self._data.to_csv(path_or_buf=path_or_buf)
+        """
+        Writes the whole dataframe set into a CSV file
+
+        :param path_of_buf: Path or filename to write the dataframes
+        """
+        self._data.to_csv(path_or_buf=path_or_buf, sep=';')
+
+    
+    def evaluate_accurancy(self, filename = ''):
+        """
+        Evaluate the Result of the cor
+        """
+        from pycm import ConfusionMatrix
+        #actual_vector = self._data[CorporaProperties.EMOTION.value]
+        actual_vector = self._data.loc[:,CorporaProperties.EMOTION.value].values
+        #print(actual_vector)
+        #predict_vector = self._data[CorporaProperties.CALCULATED_EMOTION.value]
+        predict_vector = self._data.loc[:,CorporaProperties.CALCULATED_EMOTION.value].values
+        #print(predict_vector)
+        cm = ConfusionMatrix(actual_vector=actual_vector, predict_vector=predict_vector)
+        #print(cm)
+        cm.save_csv(filename)
+
+
+
 
 
     def translate_emoticons(self):  # I found a list with various emoticons, some of them are tagged:
@@ -80,7 +104,8 @@ class CorporaHelper():
         # TODO 😀 => happy
         None
 
-    def remove_accent(self, text):
+    @staticmethod
+    def remove_accent(text):
         """removes the signs on accented characters: Áccěntěd => Accented) """
         text = unicodedata.normalize('NFKD', text).encode('ascii', 'ignore').decode('utf-8', 'ignore')
         return text
@@ -92,7 +117,7 @@ class CorporaHelper():
     @staticmethod
     def simple_stemmer(text):
         """ Stemmer removes the inflections of words and transforms it to its' BASE WORDS with respect to verbs in capital letter: My system is daily crashing ,but look now at daily. => y system is daili crash ,but look now at daily.  """
-        ps = nltk.porter.PorterStemmer()
+        ps = nltk.PorterStemmer()
         text = ' '.join([ps.stem(word) for word in text.split()])
         return text
 
@@ -158,6 +183,11 @@ class CorporaHelper():
         expanded_text = contractions_pattern.sub(expand_match, text)
         expanded_text = re.sub("'", "", expanded_text)
         return expanded_text
+
+    def preprocss_corpora(self):
+        #for 
+        #CorporaHelper.translate_contractions(text,contraction_mapping)
+        pass
 
     @staticmethod
     def remove_stopwords(text, is_lower_case=False):   
