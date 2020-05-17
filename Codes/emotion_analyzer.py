@@ -21,6 +21,16 @@ class EmotionAnalyzer:
         self._emotions = []
         self._mockup = mockup
 
+    def reset(self):
+        """
+        Resets the Analyzer
+        """
+        self._corpus = ''
+        self._emotions = []
+        self._mockup = False
+        self._emotion = ''
+        self._word_pos = []
+
     def get_emotion(self, corpus=None, method ='simple'):
         """
         Gets a EmotionResult frorm the corpora
@@ -37,10 +47,7 @@ class EmotionAnalyzer:
             for x in range(20):
                 self._emotions.append(EmotionResult(EmotionResult.create_random_emotion(),"mockup"))
         else:
-            # TODO implement concept/phrase extraction
-            # 1. Split in sentences
-            # 2. Ex
-            # 
+            
             if method == 'simple':
                 """
                     Simple lookup for each word token in the lexicon
@@ -123,6 +130,7 @@ class EmotionAnalyzer:
                 
                 
             elif method == 'sematic':
+                # TODO implement concept/phrase extraction
                 pass
 
 
@@ -175,7 +183,16 @@ class EmotionAnalyzer:
         # TODO remove _word_ps or chacne ordered_pos_tag
         combs = combinations(ordered_pos_tags, r=r)
         for comb in combs:
-            # check if part of the comination not mached yet
+            # check if part of the comination not mached yet => skip if part of the combination has been mached yet.
+            if comb[0] not in self._word_pos:
+                continue
+            if comb[1] not in self._word_pos:
+                continue
+            if r > 2 and comb[2] not in self._word_pos:
+                continue
+            if r > 3 and comb[3] not in self._word_pos:
+                continue
+
             # check if distance is not twice as number of words
             distance = self._get_ordered_pos_tag_distance(comb)
             if distance > 2*r:
@@ -209,49 +226,62 @@ class EmotionAnalyzer:
             return emotions
 
     def _lookup_permutations(self, ordered_pos_tags,r,lemma=False):
-            """
-            Lookup permutations in the lexicon
+        """
+        Lookup permutations in the lexicon
 
-            :param ordered_pos_tags:
-            :param r: number of words for permutation
-            :param lemma: for lemmatized lookup
-            :returns: List of emotionResults or None
-            """
-            emotions = []
-            # TODO remove _word_ps or chacne ordered_pos_tag
-            combs = permutations(ordered_pos_tags, r=r)
-            for comb in combs:
-                # check if part of the comination not mached yet
-                # check if distance is not twice as number of words
-                distance = self._get_ordered_pos_tag_distance(comb)
-                if distance > 2*r:
-                    # skip if distance is higher that twice as the number of words
-                    continue                    
-                else:
-                    if lemma:
-                        concept = CorporaHelper.lemmatize_token(comb[0]["word"], comb[0]["pos"]) + "_" + CorporaHelper.lemmatize_token(comb[1]["word"], comb[1]["pos"])
-                        if r > 2: concept = concept + "_" + CorporaHelper.lemmatize_token(comb[2]["word"], comb[2]["pos"])
-                        if r > 3: concept = concept + "_" + CorporaHelper.lemmatize_token(comb[3]["word"], comb[3]["pos"])
-                    else:
-                        concept = comb[0]["word"] + "_" + comb[1]["word"] 
-                        if r > 2: concept = concept + "_" + comb[2]["word"]
-                        if r > 3: concept = concept + "_" + comb[3]["word"]
+        :param ordered_pos_tags:
+        :param r: number of words for permutation
+        :param lemma: for lemmatized lookup
+        :returns: List of emotionResults or None
+        """
+        emotions = []
+        # TODO remove _word_ps or chacne ordered_pos_tag
+        combs = permutations(ordered_pos_tags, r=r)
+        for comb in combs:
+            # check if part of the comination not mached yet => skip if part of the combination has been mached yet.
+            if comb[0] not in self._word_pos:
+                continue
+            if comb[1] not in self._word_pos:
+                continue
+            if r > 2 and comb[2] not in self._word_pos:
+                continue
+            if r > 3 and comb[3] not in self._word_pos:
+                continue
 
-                    # lookup emotion
-                    emotion = self._snh.get_emotion(concept)
-                    if not EmotionResult.is_neutral_emotion(emotion):
-                        # remove tokens from word_tokens
-                        self._word_pos.remove(comb[0])
-                        self._word_pos.remove(comb[1])
-                        if r > 2: self._word_pos.remove(comb[2])
-                        if r > 3: self._word_pos.remove(comb[3])
-    
-                        # emotion found return
-                        emotions.append(EmotionResult(emotion,concept))
-            if emotions.count == 0:
-                return None
+            # check if distance is not twice as number of words
+            distance = self._get_ordered_pos_tag_distance(comb)
+            if distance > 2*r:
+                # skip if distance is higher that twice as the number of words
+                continue                    
             else:
-                return emotions
+                if lemma:
+                    concept = CorporaHelper.lemmatize_token(comb[0]["word"], comb[0]["pos"]) + "_" + CorporaHelper.lemmatize_token(comb[1]["word"], comb[1]["pos"])
+                    if r > 2: concept = concept + "_" + CorporaHelper.lemmatize_token(comb[2]["word"], comb[2]["pos"])
+                    if r > 3: concept = concept + "_" + CorporaHelper.lemmatize_token(comb[3]["word"], comb[3]["pos"])
+                else:
+                    concept = comb[0]["word"] + "_" + comb[1]["word"] 
+                    if r > 2: concept = concept + "_" + comb[2]["word"]
+                    if r > 3: concept = concept + "_" + comb[3]["word"]
+
+                # lookup emotion
+                emotion = self._snh.get_emotion(concept)
+                if not EmotionResult.is_neutral_emotion(emotion):
+
+                    # remove tokens from word_tokens
+                    self._word_pos.remove(comb[0])
+                    self._word_pos.remove(comb[1])
+                    if r > 2: 
+                        self._word_pos.remove(comb[2])
+                    if r > 3: 
+                        self._word_pos.remove(comb[3])
+    
+                    # emotion found return
+                    emotions.append(EmotionResult(emotion,concept))
+
+        if emotions.count == 0:
+            return None
+        else:
+            return emotions
     
     def _summarize_emotions(self):
         """
@@ -259,8 +289,8 @@ class EmotionAnalyzer:
         """
         result_emotion = EmotionResult.create_emotion()
         emotion_count = len(self._emotions)
+
         # Sum up the emotions
-        
         for emotion in self._emotions:
             result_emotion[Emotions.ANGER.value] += emotion.get_anger()
             result_emotion[Emotions.FEAR.value] += emotion.get_fear()
