@@ -3,6 +3,7 @@ from keras.preprocessing.text import Tokenizer
 from keras.preprocessing.sequence import pad_sequences
 from keras.layers import SimpleRNN, Embedding, Flatten, Dense, LSTM
 from keras import layers
+from keras import backend as K
 from corpora_utils import CorporaHelper,CorporaDomains, CorporaProperties
 import numpy as np
 import os
@@ -76,7 +77,7 @@ y_test = labels[training_samples + validation_samples: training_samples + valida
 # Read the glove embedding acc. 6.1.3
 glove_dir = './glove.twitter.27B'
 embeddings_index = {}
-f = open(os.path.join(glove_dir, 'glove.twitter.27B.100d.txt', ), encoding='utf-8')
+f = open(os.path.join(glove_dir, 'glove.twitter.27B.200d.txt', ), encoding='utf-8')
 for line in f:
     values = line.split()
     word = values[0]
@@ -87,7 +88,7 @@ f.close()
 print('Found %s word vectors.' % len(embeddings_index))
 
 # Create embedding matrix
-embedding_dim = 100
+embedding_dim = 200
 embedding_matrix = np.zeros((max_words, embedding_dim))
 for word, i in word_index.items():
     embedding_vector = embeddings_index.get(word)
@@ -117,6 +118,23 @@ model.add(layers.Bidirectional(layers.LSTM(32)))
 model.add(Dense(1, activation='sigmoid'))
 model.summary()
 
+def recall_m(y_true, y_pred):
+    true_positives = K.sum(K.round(K.clip(y_true * y_pred, 0, 1)))
+    possible_positives = K.sum(K.round(K.clip(y_true, 0, 1)))
+    recall = true_positives / (possible_positives + K.epsilon())
+    return recall
+
+def precision_m(y_true, y_pred):
+    true_positives = K.sum(K.round(K.clip(y_true * y_pred, 0, 1)))
+    predicted_positives = K.sum(K.round(K.clip(y_pred, 0, 1)))
+    precision = true_positives / (predicted_positives + K.epsilon())
+    return precision
+
+def f1_m(y_true, y_pred):
+    precision = precision_m(y_true, y_pred)
+    recall = recall_m(y_true, y_pred)
+    return 2*((precision*recall)/(precision+recall+K.epsilon()))
+
 
 
 """
@@ -136,9 +154,9 @@ model.layers[0].set_weights([embedding_matrix])
 model.layers[0].trainable = False
 
 # Train and Evaluate
-model.compile(optimizer='rmsprop', loss='binary_crossentropy', metrics=['acc'])
+model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['acc',f1_m,precision_m, recall_m])
 history = model.fit(x_train, y_train,
-                    epochs=20,
+                    epochs=2,
                     batch_size=128,
                     validation_data=(x_val, y_val))
 """
@@ -155,8 +173,14 @@ model.save_weights('pre_trained_glove_model.h5')
 # Test model
 print("Evaluate on test data")
 model.load_weights('pre_trained_glove_model.h5')
-results = model.evaluate(x_test, y_test, batch_size=128)
-print("test loss, test acc:", results)
+#results = model.evaluate(x_test, y_test, batch_size=128)
+loss, accuracy, f1_score, precision, recall = model.evaluate(x_test, y_test, verbose=0)
+print("Loss:", loss)
+print("Accuracy:", accuracy)
+print("F1-Score", f1_score)
+print("Precision:", precision)
+print("Recall:", recall)
+
 
 # Plot performance
 import matplotlib.pyplot as plt
