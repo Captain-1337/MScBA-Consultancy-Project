@@ -193,7 +193,7 @@ val_loss = history.history['val_loss']
 epochs = range(1, len(acc) + 1)
 
 elapsed_time = time.time() - start_time
-print(elapsed_time)
+print("Elapsed Time:"elapsed_time)
 
 plt.plot(epochs, acc, 'bo', label='Training acc')
 plt.plot(epochs, val_acc, 'b', label='Validation acc')
