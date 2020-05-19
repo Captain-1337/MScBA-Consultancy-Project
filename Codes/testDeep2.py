@@ -1,12 +1,12 @@
 from keras.preprocessing.text import Tokenizer
 from keras.preprocessing.sequence import pad_sequences
+from keras.layers import SimpleRNN, Embedding, Flatten, Dense
 from corpora_utils import CorporaHelper,CorporaDomains, CorporaProperties
 import numpy as np
 import os
 """
-Binary simple NN with two layers and 2 emotions
+Binary simple RNN with two layers and 2 emotions
 """
-
 
 #corpus = 'All this not sleeping has a terrible way of playing with your memory.' # fear => test
 #corpus = "The Rock is destined to be the 21st Century s new Conan and that he s going to make a splash even greater than Arnold Schwarzenegger , Jean-Claud Van Damme or Steven Segal ."
@@ -96,6 +96,28 @@ for word, i in word_index.items():
 
 # Create model
 from keras.models import Sequential
+from keras.layers import Embedding, SimpleRNN
+
+"""
+model = Sequential()
+model.add(Embedding(10000, 32))
+model.add(SimpleRNN(32, return_sequences=True))
+model.summary()
+"""
+max_features = max_words
+
+model = Sequential()
+#model.add(Embedding(max_features, 32))
+model.add(Embedding(max_words, embedding_dim, input_length=maxlen))
+model.add(Flatten())
+model.add(SimpleRNN(32))
+model.add(Dense(1, activation='sigmoid'))
+model.summary()
+
+
+
+"""
+from keras.models import Sequential
 from keras.layers import Embedding, Flatten, Dense
 
 model = Sequential()
@@ -104,12 +126,19 @@ model.add(Flatten()) #3D to 2D
 model.add(Dense(32, activation='relu'))
 model.add(Dense(1, activation='sigmoid'))
 model.summary()
+"""
 
 # Load GloVe embedding
 model.layers[0].set_weights([embedding_matrix])
 model.layers[0].trainable = False
 
 # Train and Evaluate
+model.compile(optimizer='rmsprop', loss='binary_crossentropy', metrics=['acc'])
+history = model.fit(x_train, y_train,
+                    epochs=10,
+                    batch_size=128,
+                    validation_split=0.2)
+"""
 model.compile(optimizer='rmsprop',
               loss='binary_crossentropy',
               metrics=['acc'])
@@ -117,6 +146,7 @@ history = model.fit(x_train, y_train,
                     epochs=10,
                     batch_size=32,
                     validation_data=(x_val, y_val))
+"""
 model.save_weights('pre_trained_glove_model.h5')
 
 # Test model
