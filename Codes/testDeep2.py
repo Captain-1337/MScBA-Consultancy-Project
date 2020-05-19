@@ -1,3 +1,4 @@
+import time
 from keras.preprocessing.text import Tokenizer
 from keras.preprocessing.sequence import pad_sequences
 from keras.layers import SimpleRNN, Embedding, Flatten, Dense
@@ -7,7 +8,7 @@ import os
 """
 Binary simple RNN with two layers and 2 emotions
 """
-
+start_time = time.time()
 #corpus = 'All this not sleeping has a terrible way of playing with your memory.' # fear => test
 #corpus = "The Rock is destined to be the 21st Century s new Conan and that he s going to make a splash even greater than Arnold Schwarzenegger , Jean-Claud Van Damme or Steven Segal ."
 corpus = 'If you sometimes like to go to the movies to have fun , Wasabi is a good place to start .' # joy 
@@ -109,7 +110,10 @@ max_features = max_words
 model = Sequential()
 #model.add(Embedding(max_features, 32))
 model.add(Embedding(max_words, embedding_dim, input_length=maxlen))
-model.add(Flatten())
+#model.add(Flatten())
+model.add(SimpleRNN(32, return_sequences=True))
+model.add(SimpleRNN(32, return_sequences=True))
+model.add(SimpleRNN(32, return_sequences=True))
 model.add(SimpleRNN(32))
 model.add(Dense(1, activation='sigmoid'))
 model.summary()
@@ -135,9 +139,9 @@ model.layers[0].trainable = False
 # Train and Evaluate
 model.compile(optimizer='rmsprop', loss='binary_crossentropy', metrics=['acc'])
 history = model.fit(x_train, y_train,
-                    epochs=10,
+                    epochs=20,
                     batch_size=128,
-                    validation_split=0.2)
+                    validation_data=(x_val, y_val))
 """
 model.compile(optimizer='rmsprop',
               loss='binary_crossentropy',
@@ -164,6 +168,9 @@ loss = history.history['loss']
 val_loss = history.history['val_loss']
 
 epochs = range(1, len(acc) + 1)
+
+elapsed_time = time.time() - start_time
+print(elapsed_time)
 
 plt.plot(epochs, acc, 'bo', label='Training acc')
 plt.plot(epochs, val_acc, 'b', label='Validation acc')
