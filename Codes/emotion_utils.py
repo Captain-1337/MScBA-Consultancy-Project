@@ -155,5 +155,5 @@ class Emotions(Enum):
     ANTICIPATION = 'anticipation'
     SURPRISE = 'surprise'
     # For no Emotion
-    NEUTRAL = 'neutral'
+    NEUTRAL = 'noemotion'
     
