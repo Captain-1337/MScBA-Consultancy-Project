@@ -37,7 +37,7 @@ class EmotionAnalyzer:
         """ 
         # init
         emotion = EmotionResult.create_emotion()
-        self._emotions.clear
+        self._emotions.clear()
         if corpus is not None:
             self._corpus = corpus
         
