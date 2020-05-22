@@ -43,7 +43,13 @@ class EmotionResult():
     
     def print(self):
         print(self.emotion_context)
-        print(self._emotion_result)        
+        print(self._emotion_result)   
+
+    def to_string(self):
+        result = self.emotion_context + " = "
+        result = result + str(self._emotion_result)
+        return result
+
         
     @staticmethod
     def create_emotion(anger = 0, fear = 0, sadness = 0, disgust = 0, joy = 0, trust = 0, anticipation = 0, surprise = 0):
