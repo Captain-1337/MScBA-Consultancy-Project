@@ -64,6 +64,14 @@ class CorporaHelper():
         if self._data.at[corpus_id,CorporaProperties.EMOTION.value] == emotion:
             self._data.at[corpus_id, CorporaProperties.CORRECT.value] = 'true'
 
+    def set_calc_emotion_details(self, corpus_id, emotion_details:str):
+        # Set calculated emotion details
+        self._data.at[corpus_id, CorporaProperties.EMOTION_DETAILS.value] = emotion_details
+
+    def set_calc_emotion_result(self, corpus_id, emotion_result:str):
+        # Set calculated emotion details
+        self._data.at[corpus_id, CorporaProperties.EMOTION_RESULT.value] = emotion_result
+
     def write_to_csv(self, path_or_buf =''):
         """
         Writes the whole dataframe set into a CSV file
@@ -87,9 +95,6 @@ class CorporaHelper():
         cm = ConfusionMatrix(actual_vector=actual_vector, predict_vector=predict_vector)
         #print(cm)
         cm.save_csv(filename)
-
-
-
 
 
     def translate_emoticons(self):  # I found a list with various emoticons, some of them are tagged:
@@ -183,11 +188,6 @@ class CorporaHelper():
         expanded_text = contractions_pattern.sub(expand_match, text)
         expanded_text = re.sub("'", "", expanded_text)
         return expanded_text
-
-    def preprocss_corpora(self):
-        #for 
-        #CorporaHelper.translate_contractions(text,contraction_mapping)
-        pass
 
     @staticmethod
     def remove_stopwords(text, is_lower_case=False):   
@@ -297,6 +297,8 @@ class CorporaProperties(Enum):
     CLEANED_CORPUS = 'cleanedcorpus'
     CALCULATED_EMOTION = 'calcemotion'
     CORRECT = 'correct'
+    EMOTION_RESULT = 'emotionresult'
+    EMOTION_DETAILS = 'emotiondetails'
     
 
 
