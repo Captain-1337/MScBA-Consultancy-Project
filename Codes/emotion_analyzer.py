@@ -15,6 +15,7 @@ class EmotionAnalyzer:
     _emotion = ''
     _snh = SenticNetHelper()
     _word_pos = []
+    _correction = None
 
     def __init__(self, corpus = '', mockup = False):
         self._corpus = corpus
@@ -30,6 +31,14 @@ class EmotionAnalyzer:
         self._mockup = False
         self._emotion = ''
         self._word_pos = []
+        self._correction = None
+
+    def set_emotion_correction(self, correction):
+        """
+        Set a correction to balance between corpora and lexicon
+        :param correction: Values to correct the difference beween corpora and lexicon as EmotionResult
+        """
+        self._correction = correction
 
     def get_emotion(self, corpus=None, method ='simple'):
         """
@@ -137,7 +146,32 @@ class EmotionAnalyzer:
         # Calculate result emotion
         emotion = self._summarize_emotions()
 
+        # Add a correction of the emotion
+        if self._correction is not None:
+            emotion[Emotions.ANGER.value] = emotion[Emotions.ANGER.value] + self._correction[Emotions.ANGER.value]
+            emotion[Emotions.FEAR.value] = emotion[Emotions.FEAR.value] + self._correction[Emotions.FEAR.value]
+            emotion[Emotions.SADNESS.value] = emotion[Emotions.SADNESS.value] + self._correction[Emotions.SADNESS.value]
+            emotion[Emotions.DISGUST.value] = emotion[Emotions.DISGUST.value] + self._correction[Emotions.DISGUST.value]
+            emotion[Emotions.JOY.value] = emotion[Emotions.JOY.value] + self._correction[Emotions.JOY.value]
+            emotion[Emotions.TRUST.value] = emotion[Emotions.TRUST.value] + self._correction[Emotions.TRUST.value]
+            emotion[Emotions.SURPRISE.value] = emotion[Emotions.SURPRISE.value] + self._correction[Emotions.SURPRISE.value]
+            emotion[Emotions.ANTICIPATION.value] = emotion[Emotions.ANTICIPATION.value] + self._correction[Emotions.ANTICIPATION.value]
+
         return emotion
+
+    def get_sum_emotion_result(self):
+        #TODO
+        pass
+    
+    def get_emotion_results(self):
+        #TODO
+        return self._emotions
+
+    def get_emotion_results_as_string(self):
+        result = ''
+        for emotion in self._emotions:
+            result = result + emotion.to_string() + chr(13) + chr(10)
+        return result
     
     def print_emotions(self):
         for emotion in self._emotions:
