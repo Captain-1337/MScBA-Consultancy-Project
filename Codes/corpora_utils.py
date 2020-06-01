@@ -423,21 +423,39 @@ class CorporaHelper():
         return is_different
 
     @staticmethod
-    def build_ordered_pos(pos_tags):
+    def build_ordered_pos(pos_tags,add_ne_label = False):
         """
         Building an pos tag array with dictionaries
-        example: {word: "car",pos: "NN",order: 1}
+        example: {word: "car",pos: "NN",order: 1, ne:""}
 
         :param pos_tags: tokens from pos_tag
+        :param add_ne_label: flag if the tags should be parsed for named entities as well. PERSON implemented
         :returns: an ordered pos tag list
         """
         result = []
         index = 1
+        person_list = []
+        # parse for named entities
+        if add_ne_label:
+            ne_chuncked = nltk.ne_chunk(pos_tags)
+            for chunk in ne_chuncked:
+                if hasattr(chunk, 'label'):
+                    if chunk.label() == 'PERSON':
+                        # Add first name of the named entity to the person list
+                        person_list.append(chunk[0][0])
+                    
         for tag in pos_tags:
-            pos = {}
+            pos={}
             pos["word"] = tag[0]
             pos["pos"] = tag[1]
             pos["order"] = index
+            if add_ne_label:
+                if pos["word"] in person_list:
+                    pos["ne"] = 'PERSON'
+                # can be extended to more ne
+                else:
+                    pos["ne"] = ''
+
             index += 1 
             result.append(pos)
         return result
