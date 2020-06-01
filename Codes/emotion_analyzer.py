@@ -66,12 +66,12 @@ class EmotionAnalyzer:
 
                 for token in tokens:
                     emotion = self._snh.get_emotion(token)
-                    if not EmotionResult.is_neutral_emotion(emotion):
-                        self._emotions.append(EmotionResult(emotion,token))
+                    if not EmotionResult.is_neutral_emotion(emotion.get_emotion()):
+                        self._emotions.append(emotion)
 
             elif method == 'combine':
                 """
-                More complex lookup for combinations and perutations of words
+                More complex lookup for combinations and perutations of multi words
                 """
                 # Split into sentences
                 sentences = sent_tokenize(self._corpus)
@@ -84,9 +84,9 @@ class EmotionAnalyzer:
                         tokenizer = RegexpTokenizer(r'\w+')                        
                         word_tokens = tokenizer.tokenize(clause)
                         pos_tags = pos_tag(word_tokens)
-                        # Add order of word
-                        word_pos = CorporaHelper.build_ordered_pos(pos_tags)
-                        self._word_pos = word_pos # TODO fix
+                        # Add order of word and named entity label
+                        word_pos = CorporaHelper.build_ordered_pos(pos_tags, add_ne_label = True)
+                        self._word_pos = word_pos # TODO fix no need as class variable
                         # get a negatation flag
                         negatation_flag = CorporaHelper.is_negated(clause)
                         # search for concept phrasen through all word in the sentence
@@ -119,12 +119,12 @@ class EmotionAnalyzer:
                         for word in self._word_pos:
                             if  not CorporaHelper.is_stopword(word["word"]):
                                 
-                                emotion = self._snh.get_emotion(word["word"])
-                                if EmotionResult.is_neutral_emotion(emotion):
+                                emotion = self._snh.get_emotion(word["word"],word)
+                                if EmotionResult.is_neutral_emotion(emotion.get_emotion()):
                                     # try lemmatized
                                     emotion = self._snh.get_emotion(CorporaHelper.lemmatize_token(word["word"],word["pos"]))
-                                if not EmotionResult.is_neutral_emotion(emotion):
-                                    clause_emotions.append(EmotionResult(emotion,word["word"]))
+                                if not EmotionResult.is_neutral_emotion(emotion.get_emotion()):
+                                    clause_emotions.append(emotion)
                             # remove word from word_tokens -> cannot remove of a looping list
                             #self._word_pos.remove(word)
 
@@ -235,17 +235,27 @@ class EmotionAnalyzer:
             else:
 
                 if lemma:
-                    concept = CorporaHelper.lemmatize_token(comb[0]["word"], comb[0]["pos"]) + "_" + CorporaHelper.lemmatize_token(comb[1]["word"], comb[1]["pos"])
-                    if r > 2: concept = concept + "_" + CorporaHelper.lemmatize_token(comb[2]["word"], comb[2]["pos"])
-                    if r > 3: concept = concept + "_" + CorporaHelper.lemmatize_token(comb[3]["word"], comb[3]["pos"])
+                    concept = CorporaHelper.lemmatize_token(comb[0]["word"], comb[0]["pos"]) + " " + CorporaHelper.lemmatize_token(comb[1]["word"], comb[1]["pos"])
+                    concept_pos = [comb[0],comb[1]]
+                    if r > 2: 
+                        concept = concept + " " + CorporaHelper.lemmatize_token(comb[2]["word"], comb[2]["pos"])
+                        concept_pos.append(comb[2])
+                    if r > 3: 
+                        concept = concept + " " + CorporaHelper.lemmatize_token(comb[3]["word"], comb[3]["pos"])
+                        concept_pos.append(comb[3])
                 else:
-                    concept = comb[0]["word"] + "_" + comb[1]["word"] 
-                    if r > 2: concept = concept + "_" + comb[2]["word"]
-                    if r > 3: concept = concept + "_" + comb[3]["word"]
+                    concept = comb[0]["word"] + " " + comb[1]["word"]
+                    concept_pos = [comb[0],comb[1]]
+                    if r > 2: 
+                        concept = concept + " " + comb[2]["word"]
+                        concept_pos.append(comb[2])
+                    if r > 3: 
+                        concept = concept + " " + comb[3]["word"]
+                        concept_pos.append(comb[3])
 
                 # lookup emotion
-                emotion = self._snh.get_emotion(concept)
-                if not EmotionResult.is_neutral_emotion(emotion):
+                emotion = self._snh.get_emotion(concept,concept_pos)
+                if not EmotionResult.is_neutral_emotion(emotion.get_emotion()):
                     # remove tokens from word_tokens
                     self._word_pos.remove(comb[0])
                     self._word_pos.remove(comb[1])
@@ -253,7 +263,7 @@ class EmotionAnalyzer:
                     if r > 3: self._word_pos.remove(comb[3])
   
                     # emotion found return
-                    emotions.append(EmotionResult(emotion,concept))
+                    emotions.append(emotion)
         if emotions.count == 0:
             return None
         else:
@@ -289,17 +299,27 @@ class EmotionAnalyzer:
                 continue                    
             else:
                 if lemma:
-                    concept = CorporaHelper.lemmatize_token(comb[0]["word"], comb[0]["pos"]) + "_" + CorporaHelper.lemmatize_token(comb[1]["word"], comb[1]["pos"])
-                    if r > 2: concept = concept + "_" + CorporaHelper.lemmatize_token(comb[2]["word"], comb[2]["pos"])
-                    if r > 3: concept = concept + "_" + CorporaHelper.lemmatize_token(comb[3]["word"], comb[3]["pos"])
+                    concept = CorporaHelper.lemmatize_token(comb[0]["word"], comb[0]["pos"]) + " " + CorporaHelper.lemmatize_token(comb[1]["word"], comb[1]["pos"])
+                    concept_pos = [comb[0],comb[1]]
+                    if r > 2: 
+                        concept = concept + " " + CorporaHelper.lemmatize_token(comb[2]["word"], comb[2]["pos"])
+                        concept_pos.append(comb[2])
+                    if r > 3: 
+                        concept = concept + " " + CorporaHelper.lemmatize_token(comb[3]["word"], comb[3]["pos"])
+                        concept_pos.append(comb[3])
                 else:
-                    concept = comb[0]["word"] + "_" + comb[1]["word"] 
-                    if r > 2: concept = concept + "_" + comb[2]["word"]
-                    if r > 3: concept = concept + "_" + comb[3]["word"]
+                    concept = comb[0]["word"] + " " + comb[1]["word"]
+                    concept_pos = [comb[0],comb[1]]
+                    if r > 2:
+                        concept = concept + " " + comb[2]["word"]
+                        concept_pos.append(comb[2])
+                    if r > 3: 
+                        concept = concept + " " + comb[3]["word"]
+                        concept_pos.append(comb[3])
 
                 # lookup emotion
-                emotion = self._snh.get_emotion(concept)
-                if not EmotionResult.is_neutral_emotion(emotion):
+                emotion = self._snh.get_emotion(concept,concept_pos)
+                if not EmotionResult.is_neutral_emotion(emotion.get_emotion()):
 
                     # remove tokens from word_tokens
                     self._word_pos.remove(comb[0])
@@ -310,7 +330,7 @@ class EmotionAnalyzer:
                         self._word_pos.remove(comb[3])
     
                     # emotion found return
-                    emotions.append(EmotionResult(emotion,concept))
+                    emotions.append(emotion)
 
         if emotions.count == 0:
             return None
@@ -351,6 +371,8 @@ class EmotionAnalyzer:
     def _lemmatize_token(self, pos_token):
         """
         Lemmatize a pos token and returns the lemmatized word
+        :param pos_token: Token with part of speech
+        :returns: Returns the lemmatized token
         """
         from nltk.stem import WordNetLemmatizer
         from nltk.corpus import wordnet
@@ -373,7 +395,6 @@ class EmotionAnalyzer:
         word = lemmatizer.lemmatize(pos_token[0], pos=wn_pos)
 
         return word
-
 
 
 
