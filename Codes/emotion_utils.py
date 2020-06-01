@@ -1,21 +1,51 @@
 from enum import Enum
 from random import random
 
+class Emotions(Enum):
+    """
+    Enumarations of Plutchnik's basic emotions
+    """
+    ANGER = 'anger'
+    FEAR = 'fear'
+    SADNESS = 'sadness'
+    DISGUST = 'disgust'
+    JOY = 'joy'
+    TRUST = 'trust'
+    ANTICIPATION = 'anticipation'
+    SURPRISE = 'surprise'
+    # For no Emotion
+    NEUTRAL = 'noemotion'
+
 class EmotionResult():
     _emotion_result = {}
     emotion_context = ''
 
-    def __init__(self, emotion_result, context = ''):
+    def __init__(self, emotion = None, context = ''):
         """
         Constructor
 
-        :param emotion_result: inti the Instace with that emotion_result dictionary
+        :param emotion: emotion to init the result
         :param context: Assign a context of the emotion to the result
         """
-        if emotion_result == None:
-            emotion_result = EmotionResult.create_emotion()
-        self._emotion_result = emotion_result
+        if emotion == None:
+            emotion = EmotionResult.create_emotion()
+        self._emotion_result = emotion
         self.emotion_context = context
+
+    def set_context(self, context):
+        """
+        Sets a context to the result
+        :param context: context of the result
+        """
+        self.emotion_context = context
+
+    def get_emotion(self):
+        """
+        Returns the emotion dictionary
+
+        :returns: Return the emotion dictionary
+        """
+        return self._emotion_result
 
     def get_anger(self):
         return self._emotion_result[Emotions.ANGER.value]
@@ -89,12 +119,14 @@ class EmotionResult():
         return emotion
     
     @staticmethod
-    def get_primary_emotion(emotion, neutral_threshold = 0.1):
+    def get_primary_emotion(emotion, noemotion_threshold = 0.1, considered_emotions = [Emotions.ANGER.value,Emotions.FEAR.value,Emotions.SADNESS.value,Emotions.DISGUST.value,Emotions.JOY.value,Emotions.TRUST.value,Emotions.SURPRISE.value,Emotions.ANTICIPATION.value]):
         """
         Get the primary emotion out of an EmotionResult
 
         :param emotion: emotion as EmotionsResult data vector
-        :param neutral_threshold: Sets the minimum value of the primary emotion. Below this value it will count as neutral no emotion.
+        :param noemotion_threshold: Sets the minimum value of the primary emotion. Below this value it will count as neutral no emotion.
+        :param considered_emotions: list of the basic emotions to be considered for the output. By default all 8 emotions are considered.
+        :returns: result emotion as a string
         """
         result_emotion =''
         emotion_intensity = 0.0
@@ -103,32 +135,33 @@ class EmotionResult():
             return result_emotion
 
         # Get the emotion with the highest value
-        result_emotion = Emotions.ANGER.value
-        emotion_intensity = emotion[Emotions.ANGER.value]
-        if float(emotion[Emotions.FEAR.value]) > emotion_intensity:
+        if Emotions.ANGER.value in considered_emotions: 
+            result_emotion = Emotions.ANGER.value
+            emotion_intensity = emotion[Emotions.ANGER.value]
+        if Emotions.FEAR.value in considered_emotions and float(emotion[Emotions.FEAR.value]) > emotion_intensity:
             result_emotion = Emotions.FEAR.value
             emotion_intensity = float(emotion[Emotions.FEAR.value])
-        if float(emotion[Emotions.SADNESS.value]) > emotion_intensity:
+        if Emotions.SADNESS.value in considered_emotions and float(emotion[Emotions.SADNESS.value]) > emotion_intensity:
             result_emotion = Emotions.SADNESS.value
             emotion_intensity = float(emotion[Emotions.SADNESS.value])
-        if float(emotion[Emotions.DISGUST.value]) > emotion_intensity:
+        if Emotions.DISGUST.value in considered_emotions and float(emotion[Emotions.DISGUST.value]) > emotion_intensity:
             result_emotion = Emotions.DISGUST.value
             emotion_intensity = float(emotion[Emotions.DISGUST.value])
-        if float(emotion[Emotions.JOY.value]) > emotion_intensity:
+        if Emotions.JOY.value in considered_emotions and float(emotion[Emotions.JOY.value]) > emotion_intensity:
             result_emotion = Emotions.JOY.value
             emotion_intensity = float(emotion[Emotions.JOY.value])
-        if float(emotion[Emotions.TRUST.value]) > emotion_intensity:
+        if Emotions.TRUST.value in considered_emotions and float(emotion[Emotions.TRUST.value]) > emotion_intensity:
             result_emotion = Emotions.TRUST.value
             emotion_intensity = float(emotion[Emotions.TRUST.value])
-        if float(emotion[Emotions.SURPRISE.value]) > emotion_intensity:
+        if Emotions.SURPRISE.value in considered_emotions and float(emotion[Emotions.SURPRISE.value]) > emotion_intensity:
             result_emotion = Emotions.SURPRISE.value
             emotion_intensity = float(emotion[Emotions.SURPRISE.value])
-        if float(emotion[Emotions.ANTICIPATION.value]) > emotion_intensity:
+        if Emotions.ANTICIPATION.value in considered_emotions and float(emotion[Emotions.ANTICIPATION.value]) > emotion_intensity:
             result_emotion = Emotions.ANTICIPATION.value
             emotion_intensity = float(emotion[Emotions.ANTICIPATION.value])       
         
         # Check if emotion intesity is hight enough (> than the threshold) otherwise it is neutral
-        if emotion_intensity < neutral_threshold:
+        if emotion_intensity < noemotion_threshold:
             result_emotion = Emotions.NEUTRAL.value
 
         return result_emotion
@@ -147,19 +180,4 @@ class EmotionResult():
         result = result and emotion[Emotions.SURPRISE.value] == 0 and emotion[Emotions.TRUST.value] == 0
 
         return result
-
-class Emotions(Enum):
-    """
-    Enumarations of Plutchnik's basic emotions
-    """
-    ANGER = 'anger'
-    FEAR = 'fear'
-    SADNESS = 'sadness'
-    DISGUST = 'disgust'
-    JOY = 'joy'
-    TRUST = 'trust'
-    ANTICIPATION = 'anticipation'
-    SURPRISE = 'surprise'
-    # For no Emotion
-    NEUTRAL = 'noemotion'
     
