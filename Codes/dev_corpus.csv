@@ -1,0 +1,12 @@
+﻿;corpus;emotion;domain
+993;Francophiles will snicker knowingly and you 'll want to slap them .Roger's rabbit was n't very ugly. I've ;anger;moviereview
+1;Add space for special chars and convert camelCase!?. #loveRabbitRoger. @;disgust;moviereview
+2;Roger helps me to remove html tags.<html> </html> <div> smile </div>.  ;joy;moviereview
+3;Translate slang words. I luv u. #;joy;moviereview
+4;Translate abbrevations Abbr. etc. e.g. ;noemotion;moviereview
+5;Translate emoticons :-)  :-)) and ((+_+)) (^_^)/ and >:( x.x <3;joy;moviereview
+6;Translate emoji😊👍 #joy;joy;moviereview
+7;My url is : http://rogers.li #joy;joy;moviereview
+8;My_underscore_is_very_nice !;joy;moviereview
+9;I lov u verry much;joy;moviereview
+
