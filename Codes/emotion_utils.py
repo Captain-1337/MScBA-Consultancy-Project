@@ -169,9 +169,9 @@ class EmotionResult():
     @staticmethod
     def is_neutral_emotion(emotion):
         """
-        Checks if the EmotionResult is a neutral emotion (all emotions equal 0)
+        Checks if the emotion is a neutral emotion (all emotions equal 0)
 
-        :param emotion: EmotionResult
+        :param emotion: emotion dict
         :returns boolean: True if it is a neutral emotion
         """
         result = emotion[Emotions.FEAR.value] == 0 and emotion[Emotions.ANGER.value] == 0
