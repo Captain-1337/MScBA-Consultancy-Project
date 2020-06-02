@@ -1,24 +1,45 @@
 from enum import Enum
 from senticnet.senticnet import SenticNet
 from emotion_utils import Emotions, EmotionResult
+from emotion_lexicon import EmotionLexicon
 
-class SenticNetHelper():
+class SenticNetHelper(EmotionLexicon):
     _sn = SenticNet()
+
+    _person = ['i','me','you','he','him','she','her','they','them','we','us']
 
     def __init__(self):
         None
 
-    def get_emotion(self, concept):
+    def get_emotion(self, concept, word_pos_list=None):
         """
-        Gets from a word or word concept an EmtotionResult vector
+        Gets from a word or word concept an EmotionResult dictionary
+        :param concept: word concept to be looked up in the lexicon
+        :param word_pos_list: enhanced word part of speech token with properties. example: {word: "car",pos: "NN",order: 1, ne:""}
+        :return EmotionResult:
         """
+        splitted_concept = concept.split()
+        
+        # replace person words (names, I you , him, his etc.) with person
+        if word_pos_list is not None:
+            if len(splitted_concept) == len(word_pos_list):
+                for i, word in enumerate(splitted_concept):
+                    if "pos" in word_pos_list[i] and  word_pos_list[i]["pos"] == 'PRP' and word.lower() in self._person:
+                        concept = concept.replace(word, 'person')
+                    elif "ne" in word_pos_list[i] and word_pos_list[i]["ne"] == 'PERSON':
+                        concept = concept.replace(word, 'person')
+
         concept = concept.replace(" ", "_")
+        # only lower case in lexicon
+        concept = concept.lower()
+
         if concept in self._sn.data:
             sentics = self._sn.sentics(concept)        
             emotion = self._get_emotion_from_sentics(sentics)
         else:
             emotion = EmotionResult.create_neutral_emotion()
-        return emotion
+        emotion_result = EmotionResult(emotion,concept)
+        return emotion_result
 
     def _get_emotion_from_sentics(self, sentics):
         """
@@ -33,6 +54,8 @@ class SenticNetHelper():
         'aptitude_value'
             => +:trust  -:disgust
         # interest => anticipation admiration => trust
+        :param sentics: sentics values of the word
+        :returns: emotion as dict
         """
         emotion = EmotionResult.create_emotion()
 

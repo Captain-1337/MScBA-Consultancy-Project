@@ -8,7 +8,7 @@ from corpora_utils import CorporaHelper,CorporaDomains, CorporaProperties
 import numpy as np
 import os
 """
-Binary simple RNN with two layers and 2 emotions
+Binary bidirectional LSTM RNN with two layers and 2 emotions
 """
 start_time = time.time()
 #corpus = 'All this not sleeping has a terrible way of playing with your memory.' # fear => test
@@ -112,7 +112,6 @@ max_features = max_words
 model = Sequential()
 #model.add(Embedding(max_features, 32))
 model.add(Embedding(max_words, embedding_dim, input_length=maxlen))
-#model.add(Flatten())
 #model.add(LSTM(32))
 model.add(layers.Bidirectional(layers.LSTM(32)))
 model.add(Dense(1, activation='sigmoid'))
@@ -134,7 +133,6 @@ def f1_m(y_true, y_pred):
     precision = precision_m(y_true, y_pred)
     recall = recall_m(y_true, y_pred)
     return 2*((precision*recall)/(precision+recall+K.epsilon()))
-
 
 
 """
@@ -193,7 +191,7 @@ val_loss = history.history['val_loss']
 epochs = range(1, len(acc) + 1)
 
 elapsed_time = time.time() - start_time
-print("Elapsed Time:"elapsed_time)
+print("Elapsed Time:", elapsed_time)
 
 plt.plot(epochs, acc, 'bo', label='Training acc')
 plt.plot(epochs, val_acc, 'b', label='Validation acc')
