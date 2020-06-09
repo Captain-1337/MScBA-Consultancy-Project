@@ -1,5 +1,3 @@
-
-
 class EmotionLexicon:
     """
     Class for an Emotion Lexicon

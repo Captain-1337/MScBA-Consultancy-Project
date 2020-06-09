@@ -6,6 +6,7 @@ from emotion_lexicon import EmotionLexicon
 class SenticNetHelper(EmotionLexicon):
     _sn = SenticNet()
 
+    # subject pronouns and object pronouns
     _person = ['i','me','you','he','him','she','her','they','them','we','us']
 
     def __init__(self):
@@ -38,6 +39,7 @@ class SenticNetHelper(EmotionLexicon):
             emotion = self._get_emotion_from_sentics(sentics)
         else:
             emotion = EmotionResult.create_neutral_emotion()
+            
         emotion_result = EmotionResult(emotion,concept)
         return emotion_result
 

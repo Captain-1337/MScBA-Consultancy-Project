@@ -1,4 +1,5 @@
 from senticnet_utils import SenticNetHelper
+from emotion_lexicon import EmotionLexicon
 from emotion_utils import Emotions, EmotionResult
 from corpora_utils import CorporaHelper
 from nltk.tokenize import sent_tokenize, word_tokenize, RegexpTokenizer
@@ -13,14 +14,17 @@ class EmotionAnalyzer:
     _emotions = []
     _mockup = False
     _emotion = ''
-    _snh = SenticNetHelper()
+    _lexicon = SenticNetHelper()
     _word_pos = []
     _correction = None
 
-    def __init__(self, corpus = '', mockup = False):
+    def __init__(self, corpus = '', lexicon = None, mockup = False):
         self._corpus = corpus
         self._emotions = []
         self._mockup = mockup
+        # Default Senticnet Lexicon
+        if lexicon is not None:
+            self._lexicon = lexicon
 
     def reset(self):
         """
@@ -65,7 +69,7 @@ class EmotionAnalyzer:
                 tokens = word_tokenize(self._corpus)
 
                 for token in tokens:
-                    emotion = self._snh.get_emotion(token)
+                    emotion = self._lexicon.get_emotion(token)
                     if not EmotionResult.is_neutral_emotion(emotion.get_emotion()):
                         self._emotions.append(emotion)
 
@@ -119,16 +123,16 @@ class EmotionAnalyzer:
                         for word in self._word_pos:
                             if  not CorporaHelper.is_stopword(word["word"]):
                                 
-                                emotion = self._snh.get_emotion(word["word"],word)
+                                emotion = self._lexicon.get_emotion(word["word"],word)
                                 if EmotionResult.is_neutral_emotion(emotion.get_emotion()):
                                     # try lemmatized
-                                    emotion = self._snh.get_emotion(CorporaHelper.lemmatize_token(word["word"],word["pos"]))
+                                    emotion = self._lexicon.get_emotion(CorporaHelper.lemmatize_token(word["word"],word["pos"]))
                                 if not EmotionResult.is_neutral_emotion(emotion.get_emotion()):
                                     clause_emotions.append(emotion)
                             # remove word from word_tokens -> cannot remove of a looping list
                             #self._word_pos.remove(word)
 
-                        # check for instensity
+                        # check for instensity TODO
                         # check for Negatation
                         if negatation_flag:
                             # TODO negate clause emotions.
@@ -254,7 +258,7 @@ class EmotionAnalyzer:
                         concept_pos.append(comb[3])
 
                 # lookup emotion
-                emotion = self._snh.get_emotion(concept,concept_pos)
+                emotion = self._lexicon.get_emotion(concept,concept_pos)
                 if not EmotionResult.is_neutral_emotion(emotion.get_emotion()):
                     # remove tokens from word_tokens
                     self._word_pos.remove(comb[0])
@@ -318,7 +322,7 @@ class EmotionAnalyzer:
                         concept_pos.append(comb[3])
 
                 # lookup emotion
-                emotion = self._snh.get_emotion(concept,concept_pos)
+                emotion = self._lexicon.get_emotion(concept,concept_pos)
                 if not EmotionResult.is_neutral_emotion(emotion.get_emotion()):
 
                     # remove tokens from word_tokens
