@@ -50,6 +50,15 @@ class EmoLexHelper(EmotionLexicon):
     def __init__(self):
         self.load_lexicon()       
 
+    def get_max_n_gramm(self):
+        """
+        Gets the maximum word of multiwords in the lexicon
+        Default 1
+
+        :returns: Max. Number of words in a lookup of the lexicon
+        """
+        return 1
+
     def get_emotion(self, concept, word_pos_list=None):
         """
         Abtract function for an Lexicon to implement.

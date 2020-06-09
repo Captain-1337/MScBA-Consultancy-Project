@@ -103,8 +103,13 @@ class EmotionAnalyzer:
                         #
                         # for 4 to 2 multiword concepts
                         clause_emotions = []
-                        
-                        for x in range(-4, -1):
+
+                        # get max of word lookup
+                        max_lex_words = self._lexicon.get_max_n_gramm()
+                        range_from = max_lex_words * -1
+                        range_to = -1
+                        # lookup for combinations of 2 or more words                
+                        for x in range(range_from, range_to):
                             
                             # Combinations
                             emotions = self._lookup_combinations(word_pos,abs(x))
@@ -213,58 +218,48 @@ class EmotionAnalyzer:
         Lookup combination in the lexicon
 
         :param ordered_pos_tags:
-        :param r: number of words to combine
+        :param r: number of words to combine range
         :param lemma: for lemmatized lookup
         :returns: List of emotionResults or None
         """
         emotions = []
         # TODO remove _word_ps or chacne ordered_pos_tag
         combs = combinations(ordered_pos_tags, r=r)
+        
         for comb in combs:
+            skip = False
+
             # check if part of the comination not mached yet => skip if part of the combination has been mached yet.
-            if comb[0] not in self._word_pos:
-                continue
-            if comb[1] not in self._word_pos:
-                continue
-            if r > 2 and comb[2] not in self._word_pos:
-                continue
-            if r > 3 and comb[3] not in self._word_pos:
-                continue
+            for i in range(0,r):
+                if comb[i] not in self._word_pos:
+                    skip = True
+                    continue
 
             # check if distance is not twice as number of words
             distance = self._get_ordered_pos_tag_distance(comb)
-            if distance > 2*r:
+            if distance > 2*r or skip:
                 # skip if distance is higher that twice as the number of words
+                skip = False
                 continue                    
             else:
+                concept = ''
+                concept_pos = []
 
-                if lemma:
-                    concept = CorporaHelper.lemmatize_token(comb[0]["word"], comb[0]["pos"]) + " " + CorporaHelper.lemmatize_token(comb[1]["word"], comb[1]["pos"])
-                    concept_pos = [comb[0],comb[1]]
-                    if r > 2: 
-                        concept = concept + " " + CorporaHelper.lemmatize_token(comb[2]["word"], comb[2]["pos"])
-                        concept_pos.append(comb[2])
-                    if r > 3: 
-                        concept = concept + " " + CorporaHelper.lemmatize_token(comb[3]["word"], comb[3]["pos"])
-                        concept_pos.append(comb[3])
-                else:
-                    concept = comb[0]["word"] + " " + comb[1]["word"]
-                    concept_pos = [comb[0],comb[1]]
-                    if r > 2: 
-                        concept = concept + " " + comb[2]["word"]
-                        concept_pos.append(comb[2])
-                    if r > 3: 
-                        concept = concept + " " + comb[3]["word"]
-                        concept_pos.append(comb[3])
+                # build concept and concept pos
+                for i in range(0,r):
+                    if lemma:
+                        concept = concept + " " + CorporaHelper.lemmatize_token(comb[i]["word"], comb[i]["pos"])
+                    else:
+                        concept = concept + " " + comb[i]["word"]
+                    concept_pos.append(comb[i])
+                concept = concept.strip()
 
                 # lookup emotion
                 emotion = self._lexicon.get_emotion(concept,concept_pos)
                 if not EmotionResult.is_neutral_emotion(emotion.get_emotion()):
                     # remove tokens from word_tokens
-                    self._word_pos.remove(comb[0])
-                    self._word_pos.remove(comb[1])
-                    if r > 2: self._word_pos.remove(comb[2])
-                    if r > 3: self._word_pos.remove(comb[3])
+                    for i in range(0,r):
+                        self._word_pos.remove(comb[i])
   
                     # emotion found return
                     emotions.append(emotion)
@@ -286,52 +281,39 @@ class EmotionAnalyzer:
         # TODO remove _word_ps or chacne ordered_pos_tag
         combs = permutations(ordered_pos_tags, r=r)
         for comb in combs:
+            skip = False
+
             # check if part of the comination not mached yet => skip if part of the combination has been mached yet.
-            if comb[0] not in self._word_pos:
-                continue
-            if comb[1] not in self._word_pos:
-                continue
-            if r > 2 and comb[2] not in self._word_pos:
-                continue
-            if r > 3 and comb[3] not in self._word_pos:
-                continue
+            for i in range(0,r):
+                if comb[i] not in self._word_pos:
+                    skip = True
+                    continue
 
             # check if distance is not twice as number of words
             distance = self._get_ordered_pos_tag_distance(comb)
-            if distance > 2*r:
+            if distance > 2*r or skip:
                 # skip if distance is higher that twice as the number of words
-                continue                    
+                skip = False
+                continue                  
             else:
-                if lemma:
-                    concept = CorporaHelper.lemmatize_token(comb[0]["word"], comb[0]["pos"]) + " " + CorporaHelper.lemmatize_token(comb[1]["word"], comb[1]["pos"])
-                    concept_pos = [comb[0],comb[1]]
-                    if r > 2: 
-                        concept = concept + " " + CorporaHelper.lemmatize_token(comb[2]["word"], comb[2]["pos"])
-                        concept_pos.append(comb[2])
-                    if r > 3: 
-                        concept = concept + " " + CorporaHelper.lemmatize_token(comb[3]["word"], comb[3]["pos"])
-                        concept_pos.append(comb[3])
-                else:
-                    concept = comb[0]["word"] + " " + comb[1]["word"]
-                    concept_pos = [comb[0],comb[1]]
-                    if r > 2:
-                        concept = concept + " " + comb[2]["word"]
-                        concept_pos.append(comb[2])
-                    if r > 3: 
-                        concept = concept + " " + comb[3]["word"]
-                        concept_pos.append(comb[3])
+                concept = ''
+                concept_pos = []
+
+                # build concept and concept pos
+                for i in range(0,r):
+                    if lemma:
+                        concept = concept + " " + CorporaHelper.lemmatize_token(comb[i]["word"], comb[i]["pos"])
+                    else:
+                        concept = concept + " " + comb[i]["word"]
+                    concept_pos.append(comb[i])
+                concept = concept.strip()
 
                 # lookup emotion
                 emotion = self._lexicon.get_emotion(concept,concept_pos)
                 if not EmotionResult.is_neutral_emotion(emotion.get_emotion()):
-
                     # remove tokens from word_tokens
-                    self._word_pos.remove(comb[0])
-                    self._word_pos.remove(comb[1])
-                    if r > 2: 
-                        self._word_pos.remove(comb[2])
-                    if r > 3: 
-                        self._word_pos.remove(comb[3])
+                    for i in range(0,r):
+                        self._word_pos.remove(comb[i])
     
                     # emotion found return
                     emotions.append(emotion)

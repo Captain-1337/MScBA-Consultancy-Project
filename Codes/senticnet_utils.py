@@ -12,6 +12,14 @@ class SenticNetHelper(EmotionLexicon):
     def __init__(self):
         None
 
+    def get_max_n_gramm(self):
+        """
+        Gets the maximum word of multiwords in the lexicon
+
+        :returns: Max. Number of words in a lookup of the lexicon
+        """
+        return 4
+
     def get_emotion(self, concept, word_pos_list=None):
         """
         Gets from a word or word concept an EmotionResult dictionary
