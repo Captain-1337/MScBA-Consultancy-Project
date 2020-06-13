@@ -22,7 +22,9 @@ count_joy = 0
 count_sadness = 0
 count_anger = 0
 count_fear = 0
+number_of_classes: 4
 max_per_emotion = 240
+max_data = 4*240
 
 for index, corpus in corpora_helper.get_data().iterrows():
     # only moviereviews
@@ -60,9 +62,9 @@ print('number of sadness labels: ', count_sadness)
 
 ## Create one hot encoding
 maxlen = 100 # max. number of words in sequences
-training_samples = 672 # 70% of 960
-validation_samples = 192 # 20% of 960
-test_samples = 96  # 10% of 960
+training_samples = int(max_data * 0.7) #672  70% of 960
+validation_samples = int(max_data * 0.2) # 192 20% of 960
+test_samples = int(max_data * 0.1) #96  10% of 960
 max_words = 10000
 
 tokenizer = Tokenizer(num_words=max_words)
