@@ -32,24 +32,24 @@ for index, corpus in corpora_helper.get_data().iterrows():
         # only joy
         # only disgust
         if corpus[CorporaProperties.EMOTION.value] == 'anger':
-            labels.append(0)
             if max_per_emotion > count_anger:
                 texts.append(corpus[CorporaProperties.CLEANED_CORPUS.value])
+                labels.append(0)
                 count_anger += 1
         elif corpus[CorporaProperties.EMOTION.value] == 'fear':
-            labels.append(1)
             if max_per_emotion > count_fear:
                 texts.append(corpus[CorporaProperties.CLEANED_CORPUS.value])
+                labels.append(1)
                 count_fear += 1
         elif corpus[CorporaProperties.EMOTION.value] == 'joy':
-            labels.append(2)
             if max_per_emotion > count_joy:
                 texts.append(corpus[CorporaProperties.CLEANED_CORPUS.value])
+                labels.append(2)
                 count_joy += 1
         elif corpus[CorporaProperties.EMOTION.value] == 'sadness':
-            labels.append(3)
             if max_per_emotion > count_sadness:
                 texts.append(corpus[CorporaProperties.CLEANED_CORPUS.value])
+                labels.append(3)
                 count_sadness += 1
 print('number of anger labels: ',count_anger)
 print('number of fear labels: ', count_fear)
@@ -199,6 +199,23 @@ print("Evaluate on test data")
 model.load_weights('pre_trained_glove_model.h5')
 results = model.evaluate(x_test, y_test, batch_size=128)
 print("test loss, test acc:", results)
+
+model.save('emotion_deep1.h5')
+
+## Example use of the model!
+test_corpora = ['I hate you bastard ! Go away !', 'This is a lovely film , but it makes me sad .','That is because - damn it !']
+test_corpora.append('Die bitch ! You make me angry .')
+test_corpora.append('My son died .')
+test_corpora.append('I am afraid because of this horror .')
+for text in test_corpora:
+    textarray = [text]
+    tokenizer = Tokenizer(num_words=max_words)
+    tokenizer.fit_on_texts(textarray)
+    sequences = tokenizer.texts_to_sequences(textarray)
+    data = pad_sequences(sequences, maxlen=maxlen)
+    print(text)
+    pred = model.predict(data)
+    print("prediction:", pred)
 
 # Plot performance
 import matplotlib.pyplot as plt
