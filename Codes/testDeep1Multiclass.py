@@ -60,22 +60,115 @@ print('number of sadness labels: ', count_sadness)
 # 2 joy
 # 3 sadness
 
-## Create one hot encoding
-maxlen = 100 # max. number of words in sequences
-training_samples = int(max_data * 0.7) #672  70% of 960
-validation_samples = int(max_data * 0.2) # 192 20% of 960
-test_samples = int(max_data * 0.1) #96  10% of 960
-max_words = 10000
 
+## Create one hot encoding
+max_words = 10000
 tokenizer = Tokenizer(num_words=max_words)
 tokenizer.fit_on_texts(texts)
 sequences = tokenizer.texts_to_sequences(texts)
 
-#one_hot_results = tokenizer.texts_to_matrix(samples, mode='binary')
-#print(one_hot_results)
-
 word_index = tokenizer.word_index
 print ('%s eindeutige Tokens gefunden.' % len(word_index))
+
+
+# Read the glove embedding acc. 6.1.3
+"""
+glove_dir = './glove.6B'
+embeddings_index = {}
+f = open(os.path.join(glove_dir, 'glove.6B.100d.txt', ), encoding='utf-8')
+for line in f:
+    values = line.split()
+    word = values[0]
+    coefs = np.asarray(values[1:], dtype='float32')
+    embeddings_index[word] = coefs
+f.close()
+
+print('Found %s word vectors.' % len(embeddings_index))
+
+# Create embedding matrix
+
+embedding_dim = 100
+word_embedding_matrix = np.zeros((max_words, embedding_dim))
+for word, i in word_index.items():
+    embedding_vector = embeddings_index.get(word)
+    if i < max_words:
+        if embedding_vector is not None:
+            # Words not found in embedding index will be all-zeros.
+            word_embedding_matrix[i] = embedding_vector
+embedding = Embedding(max_words, embedding_dim, input_length=maxlen)
+"""
+
+# Load prepared Multigenre embedding
+
+word_embeddings_path = 'multigenre_final_embeddings.pkl'
+with open(word_embeddings_path, 'rb') as word_embeddings_file:
+    embedding_info = pickle.load(word_embeddings_file)
+
+word_indicies_path = 'word_indices.pickle'
+with open(word_indicies_path, 'rb') as word_indicies_file:
+    word_indices = pickle.load(word_indicies_file)
+
+
+#helper functions
+def is_active_vector_method(string):
+    return int(string)
+    
+def get_unigram_embedding(word, word_embedding_dict, bin_string):
+    
+    if word in word_embedding_dict:
+        word_feature_embedding_dict = word_embedding_dict[word]
+        final_embedding = np.array([])
+    else:
+        return None
+    
+    for i in range(16):
+        if is_active_vector_method(bin_string[i]):
+            final_embedding = np.append(final_embedding, word_feature_embedding_dict[i])
+    
+    return final_embedding
+
+# 
+unigram_feature_string = "1111111111111111"
+word_indices_len = len(word_indices)
+pre_padding = 0
+embeddings_index = embedding_info[0]
+MAX_SEQUENCE_LENGTH = embedding_info[1]
+maxlen = MAX_SEQUENCE_LENGTH
+#MAX_NB_WORDS = 10000
+
+EMBEDDING_DIM = len(get_unigram_embedding("glad", embedding_info[0], unigram_feature_string))
+print("Embedding dimension:",EMBEDDING_DIM)
+
+
+
+# Matrix
+word_embedding_matrix = list()
+word_embedding_matrix = np.zeros((max_words, EMBEDDING_DIM)) # evtl. change to word_indices_len
+#word_embedding_matrix.append(np.zeros(EMBEDDING_DIM))
+
+for word, i in word_index.items(): # sorted(word_indices, key=word_indices.get):
+    embedding_features = get_unigram_embedding(word, embedding_info[0], unigram_feature_string)
+    if i < max_words:
+        if embedding_features is not None:
+            # Words not found in embedding index will be all-zeros.
+            word_embedding_matrix[i] = embedding_features
+
+word_embedding_matrix = np.asarray(word_embedding_matrix, dtype='f')
+word_embedding_matrix = scale(word_embedding_matrix)
+
+print('word_indices_len',word_indices_len)
+print('EMBEDDING_DIM',EMBEDDING_DIM)
+print('input_length', MAX_SEQUENCE_LENGTH + pre_padding)
+embedding = Embedding(max_words, EMBEDDING_DIM, input_length=maxlen, trainable=False)
+#embedding = Embedding(word_indices_len + 1, EMBEDDING_DIM,input_length=MAX_SEQUENCE_LENGTH + pre_padding, trainable=False)
+
+
+# Prepare data
+#maxlen = 100 # max. number of words in sequences
+
+training_samples = int(max_data * 0.7) #672  70% of 960
+validation_samples = int(max_data * 0.2) # 192 20% of 960
+test_samples = int(max_data * 0.1) #96  10% of 960
 
 data = pad_sequences(sequences, maxlen=maxlen)
 
@@ -97,80 +190,6 @@ y_val = labels[training_samples: training_samples + validation_samples]
 x_test = data[training_samples + validation_samples: training_samples + validation_samples + test_samples]
 y_test = labels[training_samples + validation_samples: training_samples + validation_samples + test_samples]
 
-# Read the glove embedding acc. 6.1.3
-glove_dir = './glove.6B'
-embeddings_index = {}
-f = open(os.path.join(glove_dir, 'glove.6B.100d.txt', ), encoding='utf-8')
-for line in f:
-    values = line.split()
-    word = values[0]
-    coefs = np.asarray(values[1:], dtype='float32')
-    embeddings_index[word] = coefs
-f.close()
-
-print('Found %s word vectors.' % len(embeddings_index))
-
-# Create embedding matrix
-embedding_dim = 100
-word_embedding_matrix = np.zeros((max_words, embedding_dim))
-for word, i in word_index.items():
-    embedding_vector = embeddings_index.get(word)
-    if i < max_words:
-        if embedding_vector is not None:
-            # Words not found in embedding index will be all-zeros.
-            word_embedding_matrix[i] = embedding_vector
-embedding = Embedding(max_words, embedding_dim, input_length=maxlen)
-
-# Load prepared Multigenre embedding
-"""
-word_embeddings_path = 'multigenre_final_embeddings.pkl'
-with open(word_embeddings_path, 'rb') as word_embeddings_file:
-    embedding_info = pickle.load(word_embeddings_file)
-
-word_indicies_path = 'word_indices.pickle'
-with open(word_indicies_path, 'rb') as word_indicies_file:
-    word_indices = pickle.load(word_indicies_file)
-
-
-#helper functions
-def is_active_vector_method(string):
-    return int(string)
-    
-def get_unigram_embedding(word, word_embedding_dict, bin_string):
-    
-    word_feature_embedding_dict = word_embedding_dict[word]
-    final_embedding = np.array([])
-    
-    for i in range(16):
-        if is_active_vector_method(bin_string[i]):
-            final_embedding = np.append(final_embedding, word_feature_embedding_dict[i])
-    
-    return final_embedding
-
-# 
-unigram_feature_string = "1111111111111111"
-word_indices_len = len(word_indices)
-pre_padding = 0
-embeddings_index = embedding_info[0]
-MAX_SEQUENCE_LENGTH = embedding_info[1]
-MAX_NB_WORDS = 20000
-EMBEDDING_DIM = len(get_unigram_embedding("glad", embedding_info[0], unigram_feature_string))
-print("Embedding dimension:",EMBEDDING_DIM)
-
-# Matrix
-word_embedding_matrix = list()
-word_embedding_matrix.append(np.zeros(EMBEDDING_DIM))
-
-for word in sorted(word_indices, key=word_indices.get):
-    embedding_features = get_unigram_embedding(word, embedding_info[0], unigram_feature_string)    
-    word_embedding_matrix.append(embedding_features)
-
-word_embedding_matrix = np.asarray(word_embedding_matrix, dtype='f')
-word_embedding_matrix = scale(word_embedding_matrix)
-
-embedding = Embedding(word_indices_len + 1, EMBEDDING_DIM,
-                    input_length=MAX_SEQUENCE_LENGTH + pre_padding, trainable=False)
-"""
 
 # Create model
 model = Sequential()
