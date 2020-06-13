@@ -22,6 +22,7 @@ count_joy = 0
 count_sadness = 0
 count_anger = 0
 count_fear = 0
+max_per_emotion = 240
 
 for index, corpus in corpora_helper.get_data().iterrows():
     # only moviereviews
@@ -30,20 +31,24 @@ for index, corpus in corpora_helper.get_data().iterrows():
         # only disgust
         if corpus[CorporaProperties.EMOTION.value] == 'anger':
             labels.append(0)
-            texts.append(corpus[CorporaProperties.CLEANED_CORPUS.value])
-            count_anger += 1
+            if max_per_emotion > count_anger:
+                texts.append(corpus[CorporaProperties.CLEANED_CORPUS.value])
+                count_anger += 1
         elif corpus[CorporaProperties.EMOTION.value] == 'fear':
             labels.append(1)
-            texts.append(corpus[CorporaProperties.CLEANED_CORPUS.value])
-            count_fear += 1
+            if max_per_emotion > count_fear:
+                texts.append(corpus[CorporaProperties.CLEANED_CORPUS.value])
+                count_fear += 1
         elif corpus[CorporaProperties.EMOTION.value] == 'joy':
             labels.append(2)
-            texts.append(corpus[CorporaProperties.CLEANED_CORPUS.value])
-            count_joy += 1
+            if max_per_emotion > count_joy:
+                texts.append(corpus[CorporaProperties.CLEANED_CORPUS.value])
+                count_joy += 1
         elif corpus[CorporaProperties.EMOTION.value] == 'sadness':
             labels.append(3)
-            texts.append(corpus[CorporaProperties.CLEANED_CORPUS.value])
-            count_sadness += 1
+            if max_per_emotion > count_sadness:
+                texts.append(corpus[CorporaProperties.CLEANED_CORPUS.value])
+                count_sadness += 1
 print('number of anger labels: ',count_anger)
 print('number of fear labels: ', count_fear)
 print('number of joy labels: ',count_joy)
@@ -55,9 +60,9 @@ print('number of sadness labels: ', count_sadness)
 
 ## Create one hot encoding
 maxlen = 100 # max. number of words in sequences
-training_samples = 7000
-validation_samples = 1000
-test_samples = 1000
+training_samples = 672 # 70% of 960
+validation_samples = 192 # 20% of 960
+test_samples = 96  # 10% of 960
 max_words = 10000
 
 tokenizer = Tokenizer(num_words=max_words)
@@ -104,7 +109,6 @@ f.close()
 print('Found %s word vectors.' % len(embeddings_index))
 
 # Create embedding matrix
-
 embedding_dim = 100
 word_embedding_matrix = np.zeros((max_words, embedding_dim))
 for word, i in word_index.items():
@@ -149,6 +153,7 @@ embeddings_index = embedding_info[0]
 MAX_SEQUENCE_LENGTH = embedding_info[1]
 MAX_NB_WORDS = 20000
 EMBEDDING_DIM = len(get_unigram_embedding("glad", embedding_info[0], unigram_feature_string))
+print("Embedding dimension:",EMBEDDING_DIM)
 
 # Matrix
 word_embedding_matrix = list()
@@ -163,8 +168,8 @@ word_embedding_matrix = scale(word_embedding_matrix)
 
 embedding = Embedding(word_indices_len + 1, EMBEDDING_DIM,
                     input_length=MAX_SEQUENCE_LENGTH + pre_padding, trainable=False)
-
 """
+
 # Create model
 model = Sequential()
 model.add(embedding)
@@ -178,7 +183,7 @@ model.layers[0].set_weights([word_embedding_matrix])
 model.layers[0].trainable = False
 
 # Train and Evaluate
-model.compile(optimizer='rmsprop',
+model.compile(optimizer='adam',
               loss='sparse_categorical_crossentropy',
               metrics=['acc'])
 history = model.fit(x_train, y_train,
