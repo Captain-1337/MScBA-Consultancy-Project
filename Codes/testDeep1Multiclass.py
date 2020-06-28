@@ -1,7 +1,7 @@
 from keras.preprocessing.text import Tokenizer
 from keras.preprocessing.sequence import pad_sequences
 from keras.models import Sequential
-from keras.layers import Embedding, Flatten, Dense
+from keras.layers import Embedding, Flatten, Dense, Conv1D
 from sklearn.preprocessing import scale
 from corpora_utils import CorporaHelper,CorporaDomains, CorporaProperties
 import numpy as np
@@ -25,6 +25,18 @@ count_fear = 0
 number_of_classes: 4
 max_per_emotion = 240
 max_data = 4*240
+
+# preprocessing corpora
+corpora_helper.translate_contractions() # problem space before '
+corpora_helper.translate_urls() # http;/sdasd  => URL
+#corpora_helper.translate_emoticons()
+#corpora_helper.translate_emojis()
+#corpora_helper.translate_html_tags()
+corpora_helper.translate_camel_case()
+corpora_helper.translate_underscore()
+# todo remove @blabla
+corpora_helper.add_space_at_special_chars()
+
 
 for index, corpus in corpora_helper.get_data().iterrows():
     # only moviereviews
@@ -55,6 +67,7 @@ print('number of anger labels: ',count_anger)
 print('number of fear labels: ', count_fear)
 print('number of joy labels: ',count_joy)
 print('number of sadness labels: ', count_sadness)
+max_data = count_anger + count_fear + count_joy + count_sadness
 # 0 anger
 # 1 fear
 # 2 joy
@@ -100,7 +113,7 @@ embedding = Embedding(max_words, embedding_dim, input_length=maxlen)
 
 # Load prepared Multigenre embedding
 
-word_embeddings_path = 'multigenre_final_embeddings.pkl'
+word_embeddings_path = 'multigenre_embedding_final_new.pkl'
 with open(word_embeddings_path, 'rb') as word_embeddings_file:
     embedding_info = pickle.load(word_embeddings_file)
 
@@ -129,6 +142,7 @@ def get_unigram_embedding(word, word_embedding_dict, bin_string):
 
 # 
 unigram_feature_string = "1111111111111111"
+#unigram_feature_string = "0000000000000000"
 word_indices_len = len(word_indices)
 pre_padding = 0
 embeddings_index = embedding_info[0]
@@ -194,6 +208,7 @@ y_test = labels[training_samples + validation_samples: training_samples + valida
 # Create model
 model = Sequential()
 model.add(embedding)
+model.add(Conv1D(32,5, activation='relu'))
 model.add(Flatten()) #3D to 2D
 model.add(Dense(32, activation='relu'))
 model.add(Dense(4, activation='softmax'))
