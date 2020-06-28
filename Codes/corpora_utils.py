@@ -3,10 +3,12 @@ from enum import Enum
 import unicodedata
 import re
 from contractions import CONTRACTION_MAP
-from negate import NEGATE
+from negate import NEGATE as neg
 import nltk
 from nltk.tokenize.toktok import ToktokTokenizer
 from nltk.stem import WordNetLemmatizer
+nltk_sw = nltk.corpus.stopwords.words('english') #Number of nltk stop words: 179
+nltk_sw_neg = [x for x in nltk_sw if x not in neg] #Number of nltk stop words without negating words: 158
 # """ spaCy is mostly used for lemmatizing purposes, according to the WWW it is supperior to NLTK in this matter """
 # import spacy                    # If you have problems installing spaCy: 
 # import en_core_web_sm           # Try creating a new environment in Python and do a clean spaCy install on there
@@ -49,7 +51,7 @@ class CorporaHelper():
         else:
             # full copy if column not exists 
             self._data[CorporaProperties.CLEANED_CORPUS.value] = self._data[CorporaProperties.CORPUS.value]
-
+    
     def get_data(self):
         return self._data
 
@@ -351,16 +353,12 @@ class CorporaHelper():
     @staticmethod
     def remove_stopwords(text, is_lower_case=False):
         """
-        Removes stopwords without touching the negates [no & not]: The, and, if are stopwords, computer is not => , , stopwords , computer not
+        Removes stopwords without touching the negates [see negate.py]: The, and, if are stopwords, computer is not => , , stopwords , computer not
         for english only
-        :param text: Text to remove the stopwords
-        :param is_lower_case: flag, if text is in lower case
         :returns: Text without stopwords
         """ 
         tokenizer = ToktokTokenizer()
-        stopword_list = nltk.corpus.stopwords.words('english')
-        stopword_list.remove('no')    # Removing negates from Stopwords
-        stopword_list.remove('not')   # Removing negates from Stopwords
+        stopword_list = nltk_sw_neg
         tokens = tokenizer.tokenize(text)
         tokens = [token.strip() for token in tokens]
         if is_lower_case:
@@ -368,7 +366,6 @@ class CorporaHelper():
         else:
             filtered_tokens = [token for token in tokens if token.lower() not in stopword_list]
         filtered_text = ' '.join(filtered_tokens)
-
         return filtered_text
 
     @staticmethod   
