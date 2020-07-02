@@ -580,7 +580,7 @@ class CorporaHelper():
         """
         text = [str(w).lower() for w in text]
         neg_words = []
-        neg_words.extend(NEGATE)
+        neg_words.extend(neg)
         for word in neg_words:
             if word in text:
                 return True
