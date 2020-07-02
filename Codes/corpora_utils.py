@@ -1,6 +1,7 @@
 import pandas as pd
 from enum import Enum
 import unicodedata
+from random import Random
 import re
 from contractions import CONTRACTION_MAP
 from negate import NEGATE as neg
@@ -55,8 +56,14 @@ class CorporaHelper():
     def get_data(self):
         return self._data
 
+    def set_data(self, data):
+        self._data = data
+
     def get_domain_data(self, domain):
         return self._data[self._data[CorporaProperties.DOMAIN.value].str.match(domain)]
+
+    def get_emotion_data(self, emotion):
+        return self._data[self._data[CorporaProperties.EMOTION.value].str.match(emotion)]
 
     def remove_duplicate_coprus(self):
         """
@@ -73,6 +80,43 @@ class CorporaHelper():
         for corpus_id, corpus in self.get_data().iterrows():
             if corpus[CorporaProperties.EMOTION.value] == emotion:
                 self._data.drop(corpus_id, inplace=True)
+
+    def random_enrich_emotion(self, emotion, number):
+        """
+        Enriches the data by a number of random copies
+        by avoiding copy the same corpus twice
+
+        :param emotion: Emotion to be enriched
+        :param number: Number of additiona data sets
+        """
+        emotiondata = self.get_emotion_data(emotion).copy()
+        emotiondata.reset_index(drop=True, inplace=True)
+        emotion_size = emotiondata.shape[0]
+        
+        rand = Random()
+
+        for num in range(1,number+1):
+                rand_index = rand.randint(0, emotion_size-1)
+                self._data = self._data.append(emotiondata.loc[rand_index].copy(), ignore_index = True)
+                # remove element from list to copy from
+                emotiondata.drop(rand_index, inplace=True)
+                emotiondata.reset_index(drop=True, inplace=True)
+                emotion_size = emotiondata.shape[0]
+                if emotion_size == 0:
+                    break
+    
+    def limit_emotion(self, emotion, max_data):
+        """
+        Limit the number of data for an emotion and cut off
+
+        :param maxdata: Limit the number of data for emotion
+        """
+        data_copy = self.get_emotion_data(emotion).copy()
+        emotion_size = data_copy.shape[0]
+        to_drop = emotion_size - max_data
+
+        drop_set = data_copy.sample(n=to_drop, random_state=0)
+        self._data.drop(drop_set.index, inplace=True)
     
     def remove_domain(self, domain):
         """
@@ -83,6 +127,47 @@ class CorporaHelper():
         for corpus_id, corpus in self.get_data().iterrows():
             if corpus[CorporaProperties.DOMAIN.value] == domain:
                 self._data.drop(corpus_id, inplace=True)
+
+    def equalize_data_emotions(self, max_data):
+        """
+        Create an equal number of emotions
+        Enrich or cutoff if necessary
+        :params max_data: Maximum number of dataset per emotion
+        """
+        # Enrich
+        #TODO create it dynamic
+        # anger
+        diff = max_data - self.get_emotion_data('anger').shape[0]
+        if diff > 0: 
+            # enrich
+            self.random_enrich_emotion('anger',diff)
+        else:
+            # limit
+            self.limit_emotion('anger',max_data)
+        # fear
+        diff = max_data - self.get_emotion_data('fear').shape[0]
+        if diff > 0: 
+            # enrich
+            self.random_enrich_emotion('fear',diff)
+        else:
+            # limit
+            self.limit_emotion('fear',max_data)
+        # joy
+        diff = max_data - self.get_emotion_data('joy').shape[0]
+        if diff > 0: 
+            # enrich
+            self.random_enrich_emotion('joy',diff)
+        else:
+            # limit
+            self.limit_emotion('joy',max_data)
+        # sadness
+        diff = max_data - self.get_emotion_data('sadness').shape[0]
+        if diff > 0: 
+            # enrich
+            self.random_enrich_emotion('sadness',diff)
+        else:
+            # limit
+            self.limit_emotion('sadness',max_data)
 
     def set_calc_emotion(self, corpus_id, emotion:str):
         """
@@ -105,14 +190,50 @@ class CorporaHelper():
         # Set calculated emotion details
         self._data.at[corpus_id, CorporaProperties.EMOTION_RESULT.value] = emotion_result
 
-    def write_to_csv(self, path_or_buf =''):
+    def write_to_csv(self, path_or_buf ='', sep=';'):
         """
         Writes the whole dataframe set into a CSV file
 
         :param path_of_buf: Path or filename to write the dataframes
         """
-        self._data.to_csv(path_or_buf=path_or_buf, sep=';')
+        self._data.to_csv(path_or_buf=path_or_buf, sep=sep)
 
+    def shuffle_data(self):
+        from sklearn.utils import shuffle
+        # shuffle with sample and sklearn utils
+        self._data = self.get_data().sample(frac = 1)        
+        self._data = shuffle(self.get_data())
+
+    def split_train_test_data(self, train_frac):
+        """
+        Split the data into a training set and a test set based on training percent
+
+        :param train_frac: Percent of the training set
+        :returns: dataframes of training and testing
+        """
+        #TODO enhance dynamic for all emotions
+        data_copy_anger = self.get_emotion_data('anger').copy()
+        data_copy_fear = self.get_emotion_data('fear').copy()
+        data_copy_joy = self.get_emotion_data('joy').copy()
+        data_copy_sadness = self.get_emotion_data('sadness').copy()
+
+        data_copy = data_copy_anger
+        data_copy = data_copy.append(data_copy_fear)
+        data_copy = data_copy.append(data_copy_joy)
+        data_copy = data_copy.append(data_copy_sadness)
+
+        sample_anger = data_copy_anger.sample(frac=train_frac, random_state=0).copy()
+        sample_fear = data_copy_fear.sample(frac=train_frac, random_state=0).copy()
+        sample_joy = data_copy_joy.sample(frac=train_frac, random_state=0).copy()
+        sample_sadness = data_copy_sadness.sample(frac=train_frac, random_state=0).copy()
+
+        train_set = sample_anger
+        train_set = train_set.append(sample_fear)
+        train_set = train_set.append(sample_joy)
+        train_set = train_set.append(sample_sadness)
+
+        test_set = data_copy.drop(train_set.index)
+        return train_set, test_set
     
     def evaluate_accurancy(self, filename = ''):
         """
@@ -135,7 +256,7 @@ class CorporaHelper():
         """
         for corpus_id, corpus in self.get_data().iterrows():
             text = corpus[CorporaProperties.CLEANED_CORPUS.value]
-            text = re.sub(r'\s\'','\'',text)
+            text = re.sub(r'\s\'','\'',text) # remove space before '
             self._data.at[corpus_id, CorporaProperties.CLEANED_CORPUS.value] = CorporaHelper.expand_contractions(text)
 
     def translate_emoticons(self): 
@@ -155,12 +276,45 @@ class CorporaHelper():
             text = emoji.demojize(text,False,(" "," "))
             self._data.at[corpus_id, CorporaProperties.CLEANED_CORPUS.value] = text
 
+    def translate_mention(self, replace = 'user'):
+        """
+        Replaces mentions like @michel022 with another string default: user
+
+        :param replace: The string wich will replace the mentions
+        """
+        for corpus_id, corpus in self.get_data().iterrows():
+            text = corpus[CorporaProperties.CLEANED_CORPUS.value]
+            text = re.sub(r'@(\w+)', replace, text) # remove space before '
+            self._data.at[corpus_id, CorporaProperties.CLEANED_CORPUS.value] = text
+
+    def translate_email(self, replace = 'email address'):
+        """
+        Replaces email address with another string default: email address
+
+        :param replace: The string wich will replace the email address
+        """
+        for corpus_id, corpus in self.get_data().iterrows():
+            text = corpus[CorporaProperties.CLEANED_CORPUS.value]
+            text = re.sub(r"([a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+)",replace, text)
+            self._data.at[corpus_id, CorporaProperties.CLEANED_CORPUS.value] = text
+
+#r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)"
     def translate_underscore(self):
         """
         Replaces underscore with space
         """
         self._data[CorporaProperties.CLEANED_CORPUS.value] = self._data[CorporaProperties.CLEANED_CORPUS.value].apply(lambda x: str(re.sub(r"_"," ", x)))
     
+    def translate_string(self,search,replace):
+        """
+        Replaces a string with another
+        :param search: String to be replaced
+        :param replace: String to replace
+        """
+        #self._data[CorporaProperties.CLEANED_CORPUS.value] = self._data[CorporaProperties.CLEANED_CORPUS.value].apply(lambda x: str(re.sub(search,replace, x)))
+        self._data[CorporaProperties.CLEANED_CORPUS.value] = self._data[CorporaProperties.CLEANED_CORPUS.value].apply(lambda x: str(x).replace(search, replace))
+        
+
     def translate_camel_case(self):
         """
         Splits camelWords in the cleaned corpus  loveMe => love me 
@@ -168,18 +322,34 @@ class CorporaHelper():
         self._data[CorporaProperties.CLEANED_CORPUS.value] = self._data[CorporaProperties.CLEANED_CORPUS.value].apply(CorporaHelper.camel_case_split)
 
 
-    def add_space_at_special_chars(self):
+    def add_space_at_special_chars(self, regexlist = r"([.()!:<>|,;?{}\\^\"\[\]§])"):
         """
         Adding a space before and after special chars in the cleaned corpus
+
+        :param regexlist: Regex of chars to be considered
         """
-        pat = re.compile(r"([.()!#:<>|/,;'?*%&{}\\^\"\[\]~§$])")
+        pat = re.compile(regexlist)
         for corpus_id, corpus in self.get_data().iterrows():
             text = corpus[CorporaProperties.CLEANED_CORPUS.value]
             text = pat.sub(" \\1 ", text)
             # remove multiple spaces
             text = re.sub(r'\s+', ' ',text)
             self._data.at[corpus_id, CorporaProperties.CLEANED_CORPUS.value] = text
-    
+
+    def add_space_at_word_puntuation(self, regexlist = r"([.()!:<>|,;?{}\\^\"\[\]§])"):
+        """
+        Adding a space before and after a punktiation chars if before or after is a word in the cleaned corpus
+
+        :param regexlist: Regex of chars to be considered
+        """
+        pat = re.compile(regexlist)
+        for corpus_id, corpus in self.get_data().iterrows():
+            text = corpus[CorporaProperties.CLEANED_CORPUS.value]
+            text = pat.sub(" \\1 ", text)
+            # remove multiple spaces
+            text = re.sub(r'\s+', ' ',text)
+            self._data.at[corpus_id, CorporaProperties.CLEANED_CORPUS.value] = text
+
     def spell_correction(self):
         """
         Correct spelling in the cleaned corpus
@@ -199,6 +369,14 @@ class CorporaHelper():
         Remove all html tags from the corpus
         """
         self._data[CorporaProperties.CLEANED_CORPUS.value] = self._data[CorporaProperties.CLEANED_CORPUS.value].apply(CorporaHelper.remove_html_tags)
+
+
+    def translate_to_lower(self):
+        """
+        Lowercase the whole corpus
+        """
+        self._data[CorporaProperties.CLEANED_CORPUS.value] = self._data[CorporaProperties.CLEANED_CORPUS.value].str.lower()
+
 
     def translate_slang_words(self):
         # TODO  luv => love ...
@@ -225,6 +403,18 @@ class CorporaHelper():
         result = ' '.join( [''.join(word) for word in words])
     
         return result
+
+    def remove_beginning_trailing_quotation_mark(self):
+        """
+        Remove beginning and trailing quotation marks
+        """
+        for corpus_id, corpus in self.get_data().iterrows():
+            text = corpus[CorporaProperties.CLEANED_CORPUS.value]
+
+            if text.startswith('"') and text.endswith('"'):
+                text = re.sub(r"^\"", '', text) # start
+                text = re.sub(r"\"$", '', text) # start
+                self._data.at[corpus_id, CorporaProperties.CLEANED_CORPUS.value] = text
 
     @staticmethod
     def convert_emoticons(text):
@@ -287,7 +477,7 @@ class CorporaHelper():
     #     return text
     
     @staticmethod
-    def lemmatize_token(token, pos):
+    def lemmatize_token(token, pos='N'):
         """
         Lemmatize a word token
 
@@ -315,7 +505,6 @@ class CorporaHelper():
         """
         Replaces abbrevatons with full text in the whole corpora
         """
-
         # Check this out http://lasid.sor.ufscar.br/expansion/static/index.html
         # TODO  => abr. = abrevation
         pass
@@ -334,6 +523,7 @@ class CorporaHelper():
         """
         Expands contractions: I'm => I am | don't => do not | He's => He is (see contractions.py for full map) 
         :param contraction_mapping: Mapping dictionary
+        :returns: expanded text
         """ 
         contractions_pattern = re.compile('({})'.format('|'.join(contraction_mapping.keys())),
                                         flags=re.IGNORECASE|re.DOTALL)
@@ -346,8 +536,11 @@ class CorporaHelper():
                                     else contraction_mapping.get(match.lower())
                 expanded_contraction = first_char+expanded_contraction[1:]
                 return expanded_contraction
+
         expanded_text = contractions_pattern.sub(expand_match, text)
-        expanded_text = re.sub("'", "", expanded_text)
+        expanded_text = re.sub("in' ", "ing ", expanded_text)
+
+
         return expanded_text
 
     @staticmethod
