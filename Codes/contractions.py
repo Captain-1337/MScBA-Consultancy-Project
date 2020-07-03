@@ -26,6 +26,7 @@ CONTRACTION_MAP = {
 "he'll": "he will",
 "he'll've": "he he will have",
 "he's": "he is",
+"how're": "how are",
 "how'd": "how did",
 "how'd'y": "how do you",
 "how'll": "how will",
@@ -35,6 +36,7 @@ CONTRACTION_MAP = {
 "I'll": "I will",
 "I'll've": "I will have",
 "I'm": "I am",
+"Im": "I am",
 "I've": "I have",
 "i'd": "i would",
 "i'd've": "i would have",
@@ -101,6 +103,7 @@ CONTRACTION_MAP = {
 "what're": "what are",
 "what's": "what is",
 "what've": "what have",
+"when're": "when are",
 "when's": "when is",
 "when've": "when have",
 "where'd": "where did",
@@ -108,6 +111,7 @@ CONTRACTION_MAP = {
 "where've": "where have",
 "who'll": "who will",
 "who'll've": "who will have",
+"who're": "who are",
 "who's": "who is",
 "who've": "who have",
 "why's": "why is",
@@ -128,5 +132,6 @@ CONTRACTION_MAP = {
 "you'll": "you will",
 "you'll've": "you will have",
 "you're": "you are",
-"you've": "you have"
+"you've": "you have",
+"n't": "not"
 }
