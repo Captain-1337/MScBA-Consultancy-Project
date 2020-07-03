@@ -10,31 +10,22 @@ import numpy as np
 import os
 import pickle
 """
-Binary simple NN with two layers and 4 emotions
+Deep learning with multigenre corpus LSTM two layers and 4 emotions
 """
-
-# load data
-labels = []
-texts = []
-corpora_helper = CorporaHelper("multigenre.csv")
-# enrich some emotions with random copies to raise the number of samples
-# anger from 240 to 400 => add 160 random
-corpora_helper.random_enrich_emotion('anger', 160)
-# fear from 263 to 400 => add 137 random
-corpora_helper.random_enrich_emotion('fear', 137)
-count_joy = 0
-count_sadness = 0
-count_anger = 0
-count_fear = 0
-#number_of_classes = 4
-max_per_emotion = 400
-
 # K-Fold variables
-num_folds = 10
-fold_runs = 3
+num_folds = 3
+fold_runs = 2
 fold_no = 1
-# trian
-epochs = 10
+
+MULTIGENRE = True
+TWITTER = False
+
+# set wich corpora to use Multigenre or twitter
+use_mg_train_corpora = MULTIGENRE
+
+
+# train
+epochs = 3
 skfold = StratifiedKFold(n_splits = num_folds, random_state = 7, shuffle = True)
 acc_per_fold = []
 loss_per_fold = []
@@ -42,103 +33,97 @@ avg_acc_per_run = []
 avg_loss_per_run = []
 create_final_model = True
 
-# preprocessing corpora
-corpora_helper.translate_contractions() # problem space before '
-corpora_helper.translate_urls() # http;/sdasd  => URL
-#corpora_helper.translate_emoticons()
-#corpora_helper.translate_emojis()
-#corpora_helper.translate_html_tags()
-corpora_helper.translate_camel_case()
-corpora_helper.translate_underscore()
-# todo remove @blabla
-corpora_helper.add_space_at_special_chars()
+# load data
+train_labels = []
+train_texts = []
+test_labels = []
+test_texts = []
 
+def load_corpora(filepath, sep=';'):
+    print('Load: ', filepath)
+    corpora_helper = CorporaHelper(filepath, separator=sep)
+    count_joy = 0
+    count_sadness = 0
+    count_anger = 0
+    count_fear = 0
+    labels = []
+    texts = []
+    # preprocessing corpora
+    corpora_helper.translate_urls()
+    corpora_helper.translate_emoticons()
+    corpora_helper.translate_emojis()
+    corpora_helper.translate_email()
+    #corpora_helper.translate_mention()
+    corpora_helper.translate_html_tags()
+    #corpora_helper.translate_camel_case()
+    corpora_helper.translate_underscore()
 
-for index, corpus in corpora_helper.get_data().iterrows():
-    # only moviereviews
-    if True or corpus[CorporaProperties.DOMAIN.value] == CorporaDomains.MOVIEREVIEW.value:
-        # only anger/ fear / joy / sadness
+    corpora_helper.translate_string('-LRB-','(')
+    corpora_helper.translate_string('-RRB-',')')
+    corpora_helper.translate_string('`',"'") # ` to '
+    corpora_helper.translate_string("''",'"') # double '' to "
+    corpora_helper.translate_contractions()
+    corpora_helper.translate_string("'","") # remove '
+    corpora_helper.translate_string("\\n"," ") # replace new lines with space
+
+    #corpora_helper.spell_correction()
+    corpora_helper.add_space_at_special_chars()
+    corpora_helper.translate_to_lower()
+
+    # 0 anger
+    # 1 fear
+    # 2 joy
+    # 3 sadness
+    for index, corpus in corpora_helper.get_data().iterrows():
         if corpus[CorporaProperties.EMOTION.value] == 'anger':
-            if max_per_emotion > count_anger:
-                texts.append(corpus[CorporaProperties.CLEANED_CORPUS.value])
-                labels.append(0)
-                count_anger += 1
+            texts.append(corpus[CorporaProperties.CLEANED_CORPUS.value])
+            labels.append(0)
+            count_anger += 1
         elif corpus[CorporaProperties.EMOTION.value] == 'fear':
-            if max_per_emotion > count_fear:
-                texts.append(corpus[CorporaProperties.CLEANED_CORPUS.value])
-                labels.append(1)
-                count_fear += 1
+            texts.append(corpus[CorporaProperties.CLEANED_CORPUS.value])
+            labels.append(1)
+            count_fear += 1
         elif corpus[CorporaProperties.EMOTION.value] == 'joy':
-            if max_per_emotion > count_joy:
-                texts.append(corpus[CorporaProperties.CLEANED_CORPUS.value])
-                labels.append(2)
-                count_joy += 1
+            texts.append(corpus[CorporaProperties.CLEANED_CORPUS.value])
+            labels.append(2)
+            count_joy += 1
         elif corpus[CorporaProperties.EMOTION.value] == 'sadness':
-            if max_per_emotion > count_sadness:
-                texts.append(corpus[CorporaProperties.CLEANED_CORPUS.value])
-                labels.append(3)
-                count_sadness += 1
-print('number of anger labels: ',count_anger)
-print('number of fear labels: ', count_fear)
-print('number of joy labels: ',count_joy)
-print('number of sadness labels: ', count_sadness)
-max_data = count_anger + count_fear + count_joy + count_sadness
-# 0 anger
-# 1 fear
-# 2 joy
-# 3 sadness
-#maxlen = 100 # max. number of words in sequences
+            texts.append(corpus[CorporaProperties.CLEANED_CORPUS.value])
+            labels.append(3)
+            count_sadness += 1
+    print('number of anger labels: ',count_anger)
+    print('number of fear labels: ', count_fear)
+    print('number of joy labels: ',count_joy)
+    print('number of sadness labels: ', count_sadness)
+    print('----------------------------------------------------------------------')
+    return texts, labels
+    #max_data = count_anger + count_fear + count_joy + count_sadness
 
+train_file = ""
+test_file = ""
+sep = ';'
+word_embeddings_path = ''
+if use_mg_train_corpora:
+    train_file = "corpora/multigenre_450_train.csv"
+    test_file = "corpora/multigenre_450_test.csv"
+    word_embeddings_path = 'multigenre_embedding_final_new.pkl'
+    sep = ';'
+else:
+    train_file = "corpora/twitter_2000_train.csv"
+    test_file = "corpora/twitter_2000_test.csv"
+    word_embeddings_path = 'twitter_embedding.pkl'
+    sep = '\t'
 
-## Create one hot encoding
-max_words = 10000
-tokenizer = Tokenizer(num_words=max_words)
-tokenizer.fit_on_texts(texts)
-sequences = tokenizer.texts_to_sequences(texts)
+train_texts, train_labels = load_corpora(train_file, sep=sep)
+test_texts, test_labels = load_corpora(test_file, sep=sep)
 
-word_index = tokenizer.word_index
-print ('%s eindeutige Tokens gefunden.' % len(word_index))
-
-
-# Read the glove embedding acc. 6.1.3
-"""
-glove_dir = './glove.6B'
-embeddings_index = {}
-f = open(os.path.join(glove_dir, 'glove.6B.100d.txt', ), encoding='utf-8')
-for line in f:
-    values = line.split()
-    word = values[0]
-    coefs = np.asarray(values[1:], dtype='float32')
-    embeddings_index[word] = coefs
-f.close()
-
-print('Found %s word vectors.' % len(embeddings_index))
-
-# Create embedding matrix
-
-embedding_dim = 100
-word_embedding_matrix = np.zeros((max_words, embedding_dim))
-for word, i in word_index.items():
-    embedding_vector = embeddings_index.get(word)
-    if i < max_words:
-        if embedding_vector is not None:
-            # Words not found in embedding index will be all-zeros.
-            word_embedding_matrix[i] = embedding_vector
-embedding = Embedding(max_words, embedding_dim, input_length=maxlen)
-
-"""
 # Load prepared Multigenre ensemble embedding
 
-word_embeddings_path = 'multigenre_embedding_final_new.pkl'
 with open(word_embeddings_path, 'rb') as word_embeddings_file:
     embedding_info = pickle.load(word_embeddings_file)
+max_words = 10000
 
-#word_indicies_path = 'word_indices.pickle'
-#with open(word_indicies_path, 'rb') as word_indicies_file:
-#    word_indices = pickle.load(word_indicies_file)
-
-
-#helper functions
+# Embedding helper functions
 def is_active_vector_method(string):
     return int(string)
     
@@ -157,9 +142,26 @@ def get_unigram_embedding(word, word_embedding_dict, bin_string):
     return final_embedding
 
 # 
-unigram_feature_string = "1111111111111111"
-#unigram_feature_string = "0000000000000000"
-#word_indices_len = len(word_indices)
+#unigram_feature_string = "1111111111111111"
+# selecting relevant embeddings for multigenre
+unigram_feature_string = "1001111111100001"
+#1 Google news pretrained vectors : GoogleNews-vectors-negative300.bin.gz  
+#2 Twitter pretrained vectors: word2vec_twitter_model.bin
+#3  glove.twitter.27B.200d.txt
+#4  glove.6B.300d.txt
+#5  glove.42B.300d.txt
+#6  glove.840B.300d.txt
+#7 NRC Emotion Intensity Lexicon
+#8 senti word net
+#9 NRC Sentiment lexicon: NRC-Emotion-Lexicon-Wordlevel-v0.92.txt
+#10 lexicons/Emoticon-unigrams.txt
+#11 lexicons/Emoticon-AFFLEX-NEGLEX-unigrams.txt
+#12 NRC Hashtag Lexica: NRC-Emotion-Lexicon-Wordlevel-v0.92.txt
+#13 HS-unigrams.txtNRC-Hashtag-Emotion-Lexicon-v0.2.txt
+#14 HS-AFFLEX-NEGLEX-unigrams.txt
+#15 Emoji Polarities
+#16 Depeche mood
+
 pre_padding = 0
 embeddings_index = embedding_info[0]
 MAX_SEQUENCE_LENGTH = embedding_info[1]
@@ -169,9 +171,44 @@ maxlen = MAX_SEQUENCE_LENGTH
 EMBEDDING_DIM = len(get_unigram_embedding("glad", embedding_info[0], unigram_feature_string))
 print("Embedding dimension:",EMBEDDING_DIM)
 
-# Matrix
+
+# Create train an test data set
+def create_data(texts, labels, maxlen, max_words = 10000):
+    ## Create one hot encoding
+    #max_words = 10000
+    #maxlen = 100 # max. number of words in sequences
+    tokenizer = Tokenizer(num_words=max_words, filters = '')
+    tokenizer.fit_on_texts(texts)
+    sequences = tokenizer.texts_to_sequences(texts)
+
+    word_i = tokenizer.word_index
+    print ('%s eindeutige Tokens gefunden.' % len(word_i))
+
+    data = pad_sequences(sequences, maxlen=maxlen)
+
+    labels = np.asarray(labels)
+    print('Shape of data:', data.shape)
+    print('Shape of labels:', labels.shape)
+    print('-------------------------------------------')
+
+    # mix the data
+    indices = np.arange(data.shape[0])
+    np.random.shuffle(indices)
+    data = data[indices]
+    labels = labels[indices]
+
+    # split in train and validate
+    x_data = data
+    y_data = labels
+    return x_data, y_data, word_i
+
+# Train an word index for embedding enrichment
+x_train, y_train, word_index = create_data(train_texts, train_labels, maxlen)
+x_test, y_test, text_word_index = create_data(test_texts, test_labels, maxlen)
+
+# Build Matrix
 word_embedding_matrix = list()
-word_embedding_matrix = np.zeros((max_words, EMBEDDING_DIM)) # evtl. change to word_indices_len
+word_embedding_matrix = np.zeros((max_words, EMBEDDING_DIM))
 #word_embedding_matrix.append(np.zeros(EMBEDDING_DIM))
 
 for word, i in word_index.items(): # sorted(word_indices, key=word_indices.get):
@@ -190,55 +227,6 @@ print('input_length', MAX_SEQUENCE_LENGTH + pre_padding)
 embedding = Embedding(max_words, EMBEDDING_DIM, input_length=maxlen, trainable=False)
 #embedding = Embedding(word_indices_len + 1, EMBEDDING_DIM,input_length=MAX_SEQUENCE_LENGTH + pre_padding, trainable=False)
 
-
-# Prepare data
-#maxlen = 100 # max. number of words in sequences
-
-training_samples = int(max_data * 0.8) 
-validation_samples = int(max_data * 0) 
-test_samples = int(max_data * 0.2) 
-
-data = pad_sequences(sequences, maxlen=maxlen)
-
-labels = np.asarray(labels)
-print('Shape of data:', data.shape)
-print('Shape of labels:', labels.shape)
-
-# mix the data
-indices = np.arange(data.shape[0])
-np.random.shuffle(indices)
-data = data[indices]
-labels = labels[indices]
-
-# split in train and validate
-x_train = data[:training_samples]
-y_train = labels[:training_samples]
-x_val = data[training_samples: training_samples + validation_samples]
-y_val = labels[training_samples: training_samples + validation_samples]
-x_test = data[training_samples + validation_samples: training_samples + validation_samples + test_samples]
-y_test = labels[training_samples + validation_samples: training_samples + validation_samples + test_samples]
-
-# Store x,y train and test 8 2
-with open('multigenre_400_train_corpus.pkl', 'wb') as writer:
-    pickle.dump(x_train, writer)
-with open('multigenre_400_train_labels.pkl', 'wb') as writer:
-    pickle.dump(y_train, writer)
-with open('multigenre_400_test_corpus.pkl', 'wb') as writer:
-    pickle.dump(x_test, writer)
-with open('multigenre_400_test_labels.pkl', 'wb') as writer:
-    pickle.dump(y_test, writer)
-
-
-# Load x,y test
-with open('multigenre_400_train_corpus.pkl', 'rb') as loader:
-    x_train = pickle.load(loader)
-with open('multigenre_400_train_labels.pkl', 'rb') as loader:
-    y_train = pickle.load(loader)
-with open('multigenre_400_test_corpus.pkl', 'rb') as loader:
-    x_test = pickle.load(loader)
-with open('multigenre_400_test_labels.pkl', 'rb') as loader:
-    y_test = pickle.load(loader)
-
 def create_model():
     # Create model
     """
@@ -249,7 +237,7 @@ def create_model():
     #model.add(Dense(32, activation='relu'))
     model.add(Dense(4, activation='softmax'))
     #model.summary()
-"""
+    """
     model = Sequential()
     model.add(embedding)
     model.add(Conv1D(32,5, activation='relu'))
@@ -259,7 +247,8 @@ def create_model():
     model.add(Dense(4, activation='softmax'))
 
     return model
-# run x Times
+
+# run x Times the folds
 for run_num in range(1,fold_runs+1):
     # k-fold
     for train_ind, val_ind in skfold.split(x_train,y_train):
