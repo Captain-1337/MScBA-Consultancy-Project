@@ -5,6 +5,7 @@ from corpora_utils import CorporaHelper
 from nltk.tokenize import sent_tokenize, word_tokenize, RegexpTokenizer
 from nltk import pos_tag
 from itertools import combinations, permutations
+import gensim.downloader as api
 
 class EmotionAnalyzer:
     """
@@ -17,6 +18,11 @@ class EmotionAnalyzer:
     _lexicon = SenticNetHelper()
     _word_pos = []
     _correction = None
+    # properties for similarity (experimental)
+    _use_similar_words_lookup = False
+    _similarity_level = 0.5
+    _similarity_lookup_topn = 10
+    _word_vector = None
 
     def __init__(self, corpus = '', lexicon = None, mockup = False):
         self._corpus = corpus
@@ -25,6 +31,28 @@ class EmotionAnalyzer:
         # Default Senticnet Lexicon
         if lexicon is not None:
             self._lexicon = lexicon
+
+    def enabel_similarity_lookup(self, simalirity_level = 0.5 ,topn = 10):
+        """
+        Enables to use similar word lookup in word2vec embedding for not found words in lexcion
+        :param simalirity_level: the min value of word similarity
+        :param topn: number of max similar words to lookup
+        """
+        self._use_similar_words_lookup = True
+        self._similarity_level = simalirity_level
+        self._topn = topn
+        if self._word_vector == None:
+            self._word_vector = api.load("glove-wiki-gigaword-100")  # load pre-trained word-vectors from gensim-data
+
+
+    def disable_similarity_lookup(self):
+        """
+        Disable the similar word lookup for not found words in lexcion
+        :param simalirity_level: the min value of word similarity
+        :param topn: number of max similar words to lookup
+        """
+        self._use_similar_words_lookup = False
+
 
     def reset(self):
         """
@@ -36,6 +64,7 @@ class EmotionAnalyzer:
         self._emotion = ''
         self._word_pos = []
         self._correction = None
+        #self.disable_similarity_lookup()
 
     def set_emotion_correction(self, correction):
         """
@@ -167,6 +196,15 @@ class EmotionAnalyzer:
             emotion[Emotions.ANTICIPATION.value] = emotion[Emotions.ANTICIPATION.value] + self._correction[Emotions.ANTICIPATION.value]
 
         return emotion
+
+    def get_similar_words(self, word):
+        """
+        Get similar word out of a word2vec embedding
+        :param word:
+        :returns: list of words
+        """
+        pass
+
 
     def get_sum_emotion_result(self):
         #TODO
