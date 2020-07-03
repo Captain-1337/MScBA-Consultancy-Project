@@ -51,8 +51,43 @@ class CorporaHelper():
                     self._data.at[corpus_id, CorporaProperties.CLEANED_CORPUS.value] = str(corpus[CorporaProperties.CORPUS.value])
         else:
             # full copy if column not exists 
-            self._data[CorporaProperties.CLEANED_CORPUS.value] = self._data[CorporaProperties.CORPUS.value]
+            self.create_cleaned_corpus()
     
+    def create_cleaned_corpus(self):
+        """
+        Creates the cleanded corpus column
+        """
+        self._data[CorporaProperties.CLEANED_CORPUS.value] = self._data[CorporaProperties.CORPUS.value]
+
+    def remove_cleaned_corpus(self):
+        """
+        Removes the cleanded corpus column
+        """
+        self.remove_column(CorporaProperties.CLEANED_CORPUS.value)
+    
+    def remove_column(self, column):
+        """
+        Removes a column from the data
+        """
+        self._data.drop(columns=[column], inplace=True)
+
+    def add_column(self, column, value = ''):
+        """
+        Adds a column with a default value
+
+        :param column: Name of the column
+        :param value: The default value for all entries
+        """
+        self._data[column] = value
+
+    def add_domain(self, domain):
+        """
+        Adds a domain column
+
+        :param domain: the domain value
+        """
+        self.add_column(CorporaProperties.DOMAIN.value, value=domain)
+
     def get_data(self):
         return self._data
 
@@ -658,7 +693,7 @@ class CorporaDomains(Enum):
     BLOG = 'blog'
     MOVIEREVIEW = 'moviereview'
     NEWSHEADLINES = 'newsheadline'
-    GENERAL_TWITTER = 'general_twitter'
+    TWITTER = 'twitter'
 
 class CorporaProperties(Enum):
     """
