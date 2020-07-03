@@ -357,7 +357,7 @@ class CorporaHelper():
         self._data[CorporaProperties.CLEANED_CORPUS.value] = self._data[CorporaProperties.CLEANED_CORPUS.value].apply(CorporaHelper.camel_case_split)
 
 
-    def add_space_at_special_chars(self, regexlist = r"([.()!:<>|,;?{}\\^\"\[\]§])"):
+    def add_space_at_special_chars(self, regexlist = r"([.()!:<>|,;#?{}\\^\"\[\]§])"):
         """
         Adding a space before and after special chars in the cleaned corpus
 
