@@ -43,6 +43,7 @@ CONTRACTION_MAP = {
 "i'll": "i will",
 "i'll've": "i will have",
 "i'm": "i am",
+"im": "i am",
 "i've": "i have",
 "isn't": "is not",
 "it'd": "it would",

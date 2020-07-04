@@ -556,7 +556,8 @@ class CorporaHelper():
     @staticmethod
     def expand_contractions(text, contraction_mapping=CONTRACTION_MAP):
         """
-        Expands contractions: I'm => I am | don't => do not | He's => He is (see contractions.py for full map) 
+        Expands contractions: I'm => I am | don't => do not | He's => He is (see contractions.py for full map)
+
         :param contraction_mapping: Mapping dictionary
         :returns: expanded text
         """ 
@@ -569,12 +570,13 @@ class CorporaHelper():
                 expanded_contraction = contraction_mapping.get(match)\
                                     if contraction_mapping.get(match)\
                                     else contraction_mapping.get(match.lower())
+
                 expanded_contraction = first_char+expanded_contraction[1:]
+
                 return expanded_contraction
 
         expanded_text = contractions_pattern.sub(expand_match, text)
         expanded_text = re.sub("in' ", "ing ", expanded_text)
-
 
         return expanded_text
 
