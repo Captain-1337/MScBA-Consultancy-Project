@@ -106,7 +106,7 @@ word_embeddings_path = ''
 if use_mg_train_corpora:
     train_file = "corpora/multigenre_450_train.csv"
     test_file = "corpora/multigenre_450_test.csv"
-    word_embeddings_path = 'multigenre_embedding_final_new.pkl'
+    word_embeddings_path = 'multigenre_embedding.pkl'
     sep = ';'
 else:
     train_file = "corpora/twitter_2000_train.csv"
