@@ -10,11 +10,11 @@ import numpy as np
 import os
 import pickle
 """
-Deep learning with multigenre corpus LSTM two layers and 4 emotions
+Deep learning with multigenre corpus and 4 emotions
 """
 # K-Fold variables
-num_folds = 3
-fold_runs = 2
+num_folds = 10
+fold_runs = 3
 fold_no = 1
 
 MULTIGENRE = True
@@ -25,7 +25,7 @@ use_mg_train_corpora = MULTIGENRE
 
 
 # train
-epochs = 3
+epochs = 10
 skfold = StratifiedKFold(n_splits = num_folds, random_state = 7, shuffle = True)
 acc_per_fold = []
 loss_per_fold = []
@@ -144,7 +144,12 @@ def get_unigram_embedding(word, word_embedding_dict, bin_string):
 # 
 #unigram_feature_string = "1111111111111111"
 # selecting relevant embeddings for multigenre
-unigram_feature_string = "1001111111100001"
+if use_mg_train_corpora:
+    # Multigenre
+    unigram_feature_string = "1001111111111101"
+else:
+    # Twitter
+    unigram_feature_string = "0110001111111101"
 #1 Google news pretrained vectors : GoogleNews-vectors-negative300.bin.gz  
 #2 Twitter pretrained vectors: word2vec_twitter_model.bin
 #3  glove.twitter.27B.200d.txt
