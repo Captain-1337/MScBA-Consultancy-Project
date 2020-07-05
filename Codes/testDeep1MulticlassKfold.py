@@ -3,8 +3,11 @@ from keras.preprocessing.sequence import pad_sequences
 from keras.models import Sequential
 from keras.layers import Embedding, Flatten, Dense, Conv1D
 from keras import layers
+from keras.optimizers import Adam
+#import tensorflow as tf
 from sklearn.preprocessing import scale
 from sklearn.model_selection import KFold, StratifiedKFold
+from sklearn.metrics import precision_recall_fscore_support
 from corpora_utils import CorporaHelper,CorporaDomains, CorporaProperties
 import numpy as np
 import os
@@ -13,7 +16,7 @@ import pickle
 Deep learning with multigenre corpus and 4 emotions
 """
 # K-Fold variables
-num_folds = 10 # 10
+num_folds = 3 # 10
 fold_runs = 1 # 3
 fold_no = 1
 
@@ -24,15 +27,24 @@ TWITTER = False
 use_mg_train_corpora = MULTIGENRE
 
 # train
-epochs = 10
+epochs = 3
+max_words = 10000
+#optimizer = keras.optimizers.Adam(learning_rate=0.01)
+optimizer = Adam(learning_rate=0.0001) # default
 skfold = StratifiedKFold(n_splits = num_folds, random_state = 7, shuffle = True)
 acc_per_fold = []
 loss_per_fold = []
+precision_per_fold = []
+recall_per_fold = []
+f1_per_fold = []
 avg_acc_per_run = []
 avg_loss_per_run = []
+avg_precision_per_run = []
+avg_recall_per_run = []
+avg_f1_per_run = []
 create_final_model = True
 # run only final model an nto kfold
-run_final_train_only = True
+run_final_train_only = False
 
 # load data
 train_labels = []
@@ -107,22 +119,20 @@ word_embeddings_path = ''
 if use_mg_train_corpora:
     train_file = "corpora/multigenre_450_train.csv"
     test_file = "corpora/multigenre_450_test.csv"
-    word_embeddings_path = 'multi_embedding.pkl'
+    word_embeddings_path = 'custom_embedding/multi_embedding.pkl'
     sep = ';'
 else:
     train_file = "corpora/twitter_2000_train.csv"
     test_file = "corpora/twitter_2000_test.csv"
-    word_embeddings_path = 'multi_embedding.pkl'
+    word_embeddings_path = 'custom_embedding/multi_embedding.pkl'
     sep = '\t'
 
 train_texts, train_labels = load_corpora(train_file, sep=sep)
 test_texts, test_labels = load_corpora(test_file, sep=sep)
 
-# Load prepared Multigenre ensemble embedding
-
+# Load prepared custom ensemble embedding
 with open(word_embeddings_path, 'rb') as word_embeddings_file:
     embedding_info = pickle.load(word_embeddings_file)
-max_words = 10000
 
 # Embedding helper functions
 def is_active_vector_method(string):
@@ -179,17 +189,18 @@ EMBEDDING_DIM = len(get_unigram_embedding("glad", embedding_info[0], unigram_fea
 print("Embedding dimension:",EMBEDDING_DIM)
 
 
+tokenizer = Tokenizer(num_words=max_words, filters = '')
+
 # Create train an test data set
-def create_data(texts, labels, maxlen, max_words = 10000):
+def create_data(texts, labels, maxlen):
     ## Create one hot encoding
     #max_words = 10000
     #maxlen = 100 # max. number of words in sequences
-    tokenizer = Tokenizer(num_words=max_words, filters = '')
-    tokenizer.fit_on_texts(texts)
+    #tokenizer = Tokenizer(num_words=max_words, filters = '')
+    #tokenizer.fit_on_texts(texts)
     sequences = tokenizer.texts_to_sequences(texts)
 
-    word_i = tokenizer.word_index
-    print ('%s unique Tokens found.' % len(word_i))
+    #word_i = tokenizer.word_index
 
     data = pad_sequences(sequences, maxlen=maxlen)
 
@@ -207,14 +218,20 @@ def create_data(texts, labels, maxlen, max_words = 10000):
     # split in train and validate
     x_data = data
     y_data = labels_arr
-    return x_data, y_data, word_i
+    return x_data, y_data
+
+# fit tokenizer
+all_texts = train_texts.copy()
+all_texts.append(test_texts.copy())
+tokenizer.fit_on_texts(all_texts)
 
 # Train an word index for embedding enrichment
-x_train, y_train, word_index = create_data(train_texts, train_labels, maxlen)
+x_train, y_train = create_data(train_texts, train_labels, maxlen)
+x_test, y_test = create_data(test_texts, test_labels, maxlen)
+word_index = tokenizer.word_index
 x_train_copy = x_train.copy()
 y_train_copy = y_train.copy()
-x_test, y_test, test_word_index = create_data(test_texts, test_labels, maxlen)
-
+print ('%s unique Tokens found.' % len(word_index))
 
 # Build Matrix
 word_embedding_matrix = list()
@@ -272,7 +289,7 @@ if not run_final_train_only:
             model.layers[0].trainable = False
 
             # Train and Evaluate
-            model.compile(optimizer='adam',
+            model.compile(optimizer=optimizer,
                         loss='sparse_categorical_crossentropy',
                         metrics=['acc'])
             print('------------------------------------------------------------------------')
@@ -280,7 +297,7 @@ if not run_final_train_only:
 
             history = model.fit(x_train[train_ind], y_train[train_ind],
                                 epochs=epochs,
-                                batch_size=32,
+                                batch_size=64,
                                 verbose=1,
                                 validation_data=(x_train[val_ind], y_train[val_ind]))
 
@@ -291,8 +308,18 @@ if not run_final_train_only:
             acc_per_fold.append(scores[1]*100)
             loss_per_fold.append(scores[0])
 
-            fold_no += 1
+            # Evaluation metrics precison recall f1
+            y_pred = model.predict(x_train[val_ind], batch_size=64, verbose=1)
+            y_pred_bool = np.argmax(y_pred, axis=1)
+            precision, recall, f1, support = precision_recall_fscore_support(y_train[val_ind], y_pred_bool)
+            mean_precision = np.mean(precision)
+            mean_recall = np.mean(recall)
+            mean_f1 = np.mean(f1)
+            precision_per_fold.append(mean_precision)
+            recall_per_fold.append(mean_recall)
+            f1_per_fold.append(mean_f1)
 
+            fold_no += 1
 
         # == Provide average scores ==
         print('------------------------------------------------------------------------')
@@ -304,27 +331,40 @@ if not run_final_train_only:
         print('Average scores for all folds:')
         avg_acc_per_run.append(np.mean(acc_per_fold))
         avg_loss_per_run.append(np.mean(loss_per_fold))
+        avg_precision_per_run.append(np.mean(precision_per_fold))
+        avg_recall_per_run.append(np.mean(recall_per_fold))
+        avg_f1_per_run.append(np.mean(f1_per_fold))
+
         print(f'> Accuracy: {np.mean(acc_per_fold)} (+- {np.std(acc_per_fold)})')
         print(f'> Loss: {np.mean(loss_per_fold)}')
+        print(f'> Precision: {np.mean(precision_per_fold)}')
+        print(f'> Recall: {np.mean(recall_per_fold)}')
+        print(f'> F1: {np.mean(f1_per_fold)}')
         print('------------------------------------------------------------------------')
 
         # reset fold vars
         acc_per_fold = []
         loss_per_fold = []
+        precision_per_fold = []
+        recall_per_fold = []
+        f1_per_fold = []
         fold_no = 1
 
-# == Provide average scores ==
-print('------------------------------------------------------------------------')
-print('Score per fold')
-for i in range(0, len(avg_acc_per_run)):
+    # == Provide average scores ==
     print('------------------------------------------------------------------------')
-    print(f'> Run {i+1} Fold averages - Loss: {avg_loss_per_run[i]} - Accuracy: {avg_acc_per_run[i]}%')
-print('------------------------------------------------------------------------')
-print(f'Overall average scores for all {fold_runs} runs:')
-
-print(f'> Accuracy: {np.mean(avg_acc_per_run)} (+- {np.std(avg_acc_per_run)})')
-print(f'> Loss: {np.mean(avg_loss_per_run)}')
-print('------------------------------------------------------------------------')
+    print('Score for k-fold runs')
+    for i in range(0, len(avg_acc_per_run)):
+        print('------------------------------------------------------------------------')
+        print(f'> Run {i+1} Fold averages - Loss: {avg_loss_per_run[i]} - Accuracy: {avg_acc_per_run[i]}% ')
+        print(f'> Run {i+1} Fold averages - Precision: {avg_precision_per_run[i]} - Recall: {avg_recall_per_run[i]} F1: {avg_f1_per_run[i]}')
+    print('------------------------------------------------------------------------')
+    print(f'Overall average scores for all {fold_runs} runs:')
+    print(f'> Accuracy: {np.mean(avg_acc_per_run)} (+- {np.std(avg_acc_per_run)})')
+    print(f'> Loss: {np.mean(avg_loss_per_run)}')
+    print(f'> Precision: {np.mean(avg_precision_per_run)}')
+    print(f'> Recall: {np.mean(avg_recall_per_run)}')
+    print(f'> F1: {np.mean(avg_f1_per_run)}')
+    print('------------------------------------------------------------------------')
 
 # create final model #Todo sync with fold rund
 if create_final_model:
@@ -344,23 +384,24 @@ if create_final_model:
 
     history = model.fit(x_train_copy, y_train_copy,
                         epochs=epochs,
-                        batch_size=32,
+                        batch_size=64,
                         verbose=1,
                         validation_data=(x_test, y_test))
     # Save Model
     if use_mg_train_corpora:
         model.save('models/model_emotion_detection_multigenre.h5')
+        pickle.dump(tokenizer, open("models/tokenizer_multigenre.pkl", "wb"))
     else:
         model.save('models/model_emotion_detection_twitter.h5')
+        pickle.dump(tokenizer, open("models/tokenizer_twitter.pkl", "wb"))
 
     # Test final model
     print("Evaluate final model on test data")
     results = model.evaluate(x_test, y_test, batch_size=128)
     print("test loss, test acc:", results)
-   
+    # For Model evaluation metrics run evalModel
 
     # Plot performance
-    """"
     import matplotlib.pyplot as plt
 
     acc = history.history['acc']
@@ -383,7 +424,10 @@ if create_final_model:
     plt.legend()
 
     plt.show()
-"""
 
+
+   
+
+   
 
 
