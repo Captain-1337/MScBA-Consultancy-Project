@@ -1,7 +1,9 @@
 from keras.models import load_model
 from keras.preprocessing.text import Tokenizer
 from keras.preprocessing.sequence import pad_sequences
+#import tensorflow as tf
 from sklearn.preprocessing import scale
+from sklearn.metrics import classification_report, precision_recall_fscore_support
 import numpy as np
 from corpora_utils import CorporaHelper,CorporaDomains, CorporaProperties
 import os
@@ -136,3 +138,35 @@ x_test, y_test  = create_data(test_texts, test_labels, maxlen)
 print("Evaluate model on test data")
 results = model.evaluate(x_test, y_test, batch_size=64)
 print("test loss, test acc:", results)
+
+
+# Evaluation metrics
+y_pred = model.predict(x_test, batch_size=64, verbose=1)
+y_pred_bool = np.argmax(y_pred, axis=1)
+
+print(classification_report(y_test, y_pred_bool, [0,  1, 2, 3],['anger',  'fear', 'joy', 'sadness']))
+precision, recall, f1, support = precision_recall_fscore_support(y_test, y_pred_bool)
+mean_precision = np.mean(precision)
+mean_recall = np.mean(recall)
+mean_f1 = np.mean(f1)
+print("Precision overall: ", mean_precision)
+print("Recall overall: ", mean_recall)
+print("F1 overall: ", mean_f1)
+print("--------------------------------------")
+
+# Create confusion matrix
+from mlxtend.plotting import plot_confusion_matrix
+from sklearn.metrics import confusion_matrix, accuracy_score
+import matplotlib
+import matplotlib.pyplot as plt
+
+y_pred = model.predict_classes(x_test)
+accuracy_score(y_test, y_pred)
+matplotlib.rcParams.update(matplotlib.rcParamsDefault)
+plt.rc('font', family = 'Serif')
+
+mat = confusion_matrix(y_test, y_pred)
+fig, ax = plot_confusion_matrix(conf_mat=mat, figsize=(6,6), class_names = ['anger', 'fear', 'joy', 'sadness'], show_normed=False)
+plt.tight_layout()
+fig.savefig('cm.png')
+plt.show()
