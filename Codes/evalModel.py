@@ -5,20 +5,25 @@ from sklearn.preprocessing import scale
 import numpy as np
 from corpora_utils import CorporaHelper,CorporaDomains, CorporaProperties
 import os
+import pickle
 
 MULTIGENRE = True
 TWITTER = False
 
 # set wich corpora to use Multigenre or twitter
-use_mg_model = TWITTER
+use_mg_model = MULTIGENRE
 
-use_mg_coprora = TWITTER
+use_mg_coprora = MULTIGENRE
+
+tokenizer = None
 
 if use_mg_model:
     model = load_model('models/model_emotion_detection_multigenre.h5')
+    tokenizer = pickle.load(open('models/tokenizer_multigenre.pkl', 'rb'))
+    
 else:
     model = load_model('models/model_emotion_detection_twitter.h5')
-
+    tokenizer = pickle.load(open('models/tokenizer_twitter.pkl', 'rb'))
 
 def load_corpora(filepath, sep=';'):
     print('Load: ', filepath)
@@ -95,12 +100,12 @@ else:
 test_texts, test_labels = load_corpora(test_file, sep=sep)
 
  # Create train an test data set
-def create_data(texts, labels, maxlen, max_words = 10000):
+def create_data(texts, labels, maxlen):
     ## Create one hot encoding
     #max_words = 10000
     #maxlen = 100 # max. number of words in sequences
-    tokenizer = Tokenizer(num_words=max_words, filters = '')
-    tokenizer.fit_on_texts(texts)
+    #tokenizer = Tokenizer(num_words=max_words, filters = '')
+    #tokenizer.fit_on_texts(texts)
     sequences = tokenizer.texts_to_sequences(texts)
 
     word_i = tokenizer.word_index
@@ -122,10 +127,10 @@ def create_data(texts, labels, maxlen, max_words = 10000):
     # split in train and validate
     x_data = data
     y_data = labels_arr
-    return x_data, y_data, word_i
+    return x_data, y_data
 
 # Test data
-x_test, y_test, test_word_index = create_data(test_texts, test_labels, maxlen)
+x_test, y_test  = create_data(test_texts, test_labels, maxlen)
 
 # Test final model
 print("Evaluate model on test data")
