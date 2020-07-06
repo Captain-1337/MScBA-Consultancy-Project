@@ -22,7 +22,7 @@ tokenizer = None
 
 if use_mg_model == MULTIGENRE:
     model = load_model('models/model_emotion_detection_multigenre.h5')
-    tokenizer = pickel.load(open('models/tokenizer_multigenre.pkl', 'rb'))
+    tokenizer = pickle.load(open('models/tokenizer_multigenre.pkl', 'rb'))
     print("Use MULTIGENRE model")
     
 elif use_mg_model == TWITTER:
