@@ -9,23 +9,30 @@ from corpora_utils import CorporaHelper,CorporaDomains, CorporaProperties
 import os
 import pickle
 
-MULTIGENRE = True
-TWITTER = False
+MULTIGENRE = 'muligenre'
+TWITTER = 'twitter'
+MG_AND_TWITTER = 'gm_and_twitter'
 
 # set wich corpora to use Multigenre or twitter
-use_mg_model = MULTIGENRE
+use_mg_model = MG_AND_TWITTER
 
-use_mg_coprora = MULTIGENRE
+use_mg_coprora = TWITTER
 
 tokenizer = None
 
-if use_mg_model:
+if use_mg_model == MULTIGENRE:
     model = load_model('models/model_emotion_detection_multigenre.h5')
-    tokenizer = pickle.load(open('models/tokenizer_multigenre.pkl', 'rb'))
+    tokenizer = pickel.load(open('models/tokenizer_multigenre.pkl', 'rb'))
+    print("Use MULTIGENRE model")
     
-else:
+elif use_mg_model == TWITTER:
     model = load_model('models/model_emotion_detection_twitter.h5')
     tokenizer = pickle.load(open('models/tokenizer_twitter.pkl', 'rb'))
+    print("Use TWITTER model")
+else:
+    model = load_model('models/model_emotion_detection_multigenre_twitter.h5')
+    tokenizer = pickle.load(open('models/tokenizer_multigenre_twitter.pkl', 'rb'))
+    print("Use TWITTER and MULTIGENRE model")
 
 def load_corpora(filepath, sep=';'):
     print('Load: ', filepath)
@@ -90,14 +97,21 @@ def load_corpora(filepath, sep=';'):
 test_file = ""
 sep = ';'
 word_embeddings_path = ''
-if use_mg_coprora:
+if use_mg_coprora == MULTIGENRE:
     test_file = "corpora/multigenre_450_test.csv"
     sep = ';'
     maxlen = 100
-else:
+    print("Use MULTIGENRE test corpora")
+elif use_mg_coprora == TWITTER:
     test_file = "corpora/twitter_2000_test.csv"
     sep = '\t'
     maxlen = 100
+    print("Use TWITTER test corpora")
+else:
+    test_file = "corpora/twitter_2000_mg_450_test.csv"
+    sep = '\t'
+    maxlen = 100
+    print("Use TWITTER and MULTIGENRE test corpora")
 
 test_texts, test_labels = load_corpora(test_file, sep=sep)
 

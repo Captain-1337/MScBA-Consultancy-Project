@@ -16,21 +16,26 @@ import pickle
 Deep learning with multigenre corpus and 4 emotions
 """
 # K-Fold variables
-num_folds = 3 # 10
+num_folds = 2 # 10
 fold_runs = 1 # 3
 fold_no = 1
 
-MULTIGENRE = True
-TWITTER = False
+MULTIGENRE = 'muligenre'
+TWITTER = 'twitter'
+MG_AND_TWITTER = 'gm_and_twitter'
 
 # set wich corpora to use Multigenre or twitter
-use_mg_train_corpora = MULTIGENRE
+use_mg_train_corpora = MG_AND_TWITTER
 
 # train
-epochs = 3
+epochs = 15
 max_words = 10000
+# max. different words:
+# Multigerne: 5140  => 10000 or 3000 or 1000 ?
+# Twitter: 17580 => 20000 or 10000 ?
+# MG and Twitter: 20073 => evtl. 20000?
 #optimizer = keras.optimizers.Adam(learning_rate=0.01)
-optimizer = Adam(learning_rate=0.0001) # default
+optimizer = Adam(learning_rate=0.0001) # default 0.001
 skfold = StratifiedKFold(n_splits = num_folds, random_state = 7, shuffle = True)
 acc_per_fold = []
 loss_per_fold = []
@@ -43,8 +48,8 @@ avg_precision_per_run = []
 avg_recall_per_run = []
 avg_f1_per_run = []
 create_final_model = True
-# run only final model an nto kfold
-run_final_train_only = False
+# run only final model without kfold
+run_final_train_only = True
 
 # load data
 train_labels = []
@@ -116,16 +121,24 @@ train_file = ""
 test_file = ""
 sep = ';'
 word_embeddings_path = ''
-if use_mg_train_corpora:
+if use_mg_train_corpora == MULTIGENRE:
     train_file = "corpora/multigenre_450_train.csv"
     test_file = "corpora/multigenre_450_test.csv"
     word_embeddings_path = 'custom_embedding/multi_embedding.pkl'
     sep = ';'
-else:
+    print("Use MULTIGENRE train corpora")
+elif use_mg_train_corpora == TWITTER:
     train_file = "corpora/twitter_2000_train.csv"
     test_file = "corpora/twitter_2000_test.csv"
     word_embeddings_path = 'custom_embedding/multi_embedding.pkl'
     sep = '\t'
+    print("Use TWITTER train corpora")
+else:
+    train_file = "corpora/twitter_2000_mg_450_train.csv"
+    test_file = "corpora/twitter_2000_mg_450_test.csv"
+    word_embeddings_path = 'custom_embedding/multi_embedding.pkl'
+    sep = '\t'
+    print("Use TWITTER and MULTIGENRE train corpora")
 
 train_texts, train_labels = load_corpora(train_file, sep=sep)
 test_texts, test_labels = load_corpora(test_file, sep=sep)
@@ -155,12 +168,16 @@ def get_unigram_embedding(word, word_embedding_dict, bin_string):
 # 
 #unigram_feature_string = "1111111111111111"
 # selecting relevant embeddings for multigenre
-if use_mg_train_corpora:
+if use_mg_train_corpora == MULTIGENRE:
     # Multigenre
     unigram_feature_string = "1001111111111101"
-else:
+elif use_mg_train_corpora == TWITTER:
     # Twitter
     unigram_feature_string = "0110001111111101"
+    unigram_feature_string = "1111111111111111"
+else:
+    # Twitter and Multigenre
+    unigram_feature_string = "1111111111111111"
 #1 Google news pretrained vectors : GoogleNews-vectors-negative300.bin.gz  
 #2 Twitter pretrained vectors: word2vec_twitter_model.bin
 #3  glove.twitter.27B.200d.txt
@@ -388,12 +405,15 @@ if create_final_model:
                         verbose=1,
                         validation_data=(x_test, y_test))
     # Save Model
-    if use_mg_train_corpora:
+    if use_mg_train_corpora == MULTIGENRE:
         model.save('models/model_emotion_detection_multigenre.h5')
         pickle.dump(tokenizer, open("models/tokenizer_multigenre.pkl", "wb"))
-    else:
+    elif use_mg_train_corpora == TWITTER:
         model.save('models/model_emotion_detection_twitter.h5')
         pickle.dump(tokenizer, open("models/tokenizer_twitter.pkl", "wb"))
+    else:
+        model.save('models/model_emotion_detection_multigenre_twitter.h5')
+        pickle.dump(tokenizer, open("models/tokenizer_multigenre_twitter.pkl", "wb"))
 
     # Test final model
     print("Evaluate final model on test data")
