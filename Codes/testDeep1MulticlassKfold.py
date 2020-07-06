@@ -22,7 +22,7 @@ fold_no = 1
 
 MULTIGENRE = 'muligenre'
 TWITTER = 'twitter'
-MG_AND_TWITTER = 'gm_and_twitter'
+MG_AND_TWITTER = 'mg_and_twitter'
 
 # set wich corpora to use Multigenre or twitter
 use_mg_train_corpora = MG_AND_TWITTER
