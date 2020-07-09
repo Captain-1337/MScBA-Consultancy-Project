@@ -63,7 +63,8 @@ def load_corpora(filepath, sep=';'):
 
     #corpora_helper.spell_correction()
     corpora_helper.add_space_at_special_chars()
-    corpora_helper.translate_to_lower()
+    corpora_helper.add_space_at_special_chars(regexlist = r"([#])")
+    #corpora_helper.translate_to_lower()
 
     # 0 anger
     # 1 fear
@@ -146,6 +147,7 @@ def create_data(texts, labels, maxlen):
     return x_data, y_data
 
 # Test data
+#tokenizer.fit_on_texts(test_texts)
 x_test, y_test  = create_data(test_texts, test_labels, maxlen)
 
 # Test final model
