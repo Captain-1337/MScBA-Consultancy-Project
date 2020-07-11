@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """ 
 Source: https://github.com/cjhutto/vaderSentiment/
+added some Adverbs as hardly, barely, scarcely @roger
 """
 
 NEGATE = \
@@ -11,4 +12,5 @@ NEGATE = \
      "neednt", "needn't", "never", "no", "none", "nope", "nor", "not", "nothing", "nowhere",
      "oughtnt", "shant", "shouldnt", "uhuh", "wasnt", "werent",
      "oughtn't", "shan't", "shouldn't", "uh-uh", "wasn't", "weren't",
-     "without", "wont", "wouldnt", "won't", "wouldn't", "rarely", "seldom", "despite"]
+     "hardly", "wont", "wouldnt", "won't", "wouldn't", "rarely", "seldom", "despite", "hardly",
+     "barely", "scarcely"]

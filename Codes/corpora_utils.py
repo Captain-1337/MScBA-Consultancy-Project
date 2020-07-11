@@ -100,6 +100,23 @@ class CorporaHelper():
     def get_emotion_data(self, emotion):
         return self._data[self._data[CorporaProperties.EMOTION.value].str.match(emotion)]
 
+    def get_emotions_goldlabel(self):
+        """
+        Obtain a list of all emotion gold labels
+        
+        :returns: List of emotion gold labels
+        """
+        return self._data[CorporaProperties.EMOTION.value].tolist()
+
+    def get_emotions_calculated(self):
+        """
+        Obtain a list of all calculated emotions
+        
+        :returns: List of calculated emotions
+        """
+        return self._data[CorporaProperties.CALCULATED_EMOTION.value].tolist()
+
+
     def remove_duplicate_coprus(self):
         """
         Removes duplicate corpus
@@ -218,11 +235,21 @@ class CorporaHelper():
             self._data.at[corpus_id, CorporaProperties.CORRECT.value] = 'true'
 
     def set_calc_emotion_details(self, corpus_id, emotion_details:str):
-        # Set calculated emotion details
+        """
+        Sets the calculated emotion details
+
+        :params corpus_id: id of the corpus entry
+        :params emotion_details: emotion details to be assigned
+        """
         self._data.at[corpus_id, CorporaProperties.EMOTION_DETAILS.value] = emotion_details
 
     def set_calc_emotion_result(self, corpus_id, emotion_result:str):
-        # Set calculated emotion details
+        """
+        Sets calculated emotion result
+
+        :params corpus_id: id of the corpus entry
+        :params emotion_result: emotion result to be assigned
+        """
         self._data.at[corpus_id, CorporaProperties.EMOTION_RESULT.value] = emotion_result
 
     def write_to_csv(self, path_or_buf ='', sep=';'):
@@ -610,24 +637,26 @@ class CorporaHelper():
         return word in stopword_list
 
     @staticmethod
-    def is_negated(text, include_nt=True) -> bool:
+    def is_negated(text_tokens, include_nt=True) -> bool:
         """
         Determine if input contains negation words.
         Function retrieved from NLTK VADER (see negates)
         """
-        text = [str(w).lower() for w in text]
+        # split by space an lowercase the tokens
+        tokens = [str(t).lower() for t in text_tokens]
         neg_words = []
         neg_words.extend(neg)
         for word in neg_words:
-            if word in text:
+            #print(text)
+            if word in tokens:
                 return True
         if include_nt:
-            for word in text:
+            for word in tokens:
                 if "n't" in word:
                     return True
-        '''if "least" in text:
-            i = text.index("least")
-            if i > 0 and text[i - 1] != "at":
+        '''if "least" in tokens:
+            i = tokens.index("least")
+            if i > 0 and tokens[i - 1] != "at":
                 return True'''
         return False
     
@@ -635,9 +664,10 @@ class CorporaHelper():
     def allcap_differential(words):
         """
         Check whether just some words in the input are ALL CAPS
+        Function retrieved from NLTK VADER 
+
         :param list words: The words to inspect
         :returns: `True` if some but not all items in `words` are ALL CAPS
-        Function retrieved from NLTK VADER 
         """
         is_different = False
         allcap_words = 0
@@ -686,7 +716,6 @@ class CorporaHelper():
             index += 1 
             result.append(pos)
         return result
-
 
 class CorporaDomains(Enum):
     """

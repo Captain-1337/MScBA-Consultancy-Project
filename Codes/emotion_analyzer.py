@@ -6,6 +6,26 @@ from nltk.tokenize import sent_tokenize, word_tokenize, RegexpTokenizer
 from nltk import pos_tag
 from itertools import combinations, permutations
 import gensim.downloader as api
+from adverb_class_list import ADVERBS_STRONG_INT, ADVERBS_WEAK_INT, ADVERBS_DOUBT
+
+
+class EmotionAnalyzerRules:
+    """
+    Class for rule enabled of the EmotionAnalyzer
+    """
+    adverb_strong_modifier = True
+    adverb_weak_modifier = True
+    negation_shift = True
+    negation_ratio = False
+    noun_modifier = True
+    #modifier = True
+    #amplifier = True
+    #adversatives = True
+    #firstperson = True
+
+    #def __init__(self):
+       
+
 
 class EmotionAnalyzer:
     """
@@ -17,20 +37,25 @@ class EmotionAnalyzer:
     _emotion = ''
     _lexicon = SenticNetHelper()
     _word_pos = []
+    _org_word_pos = []
     _correction = None
     # properties for similarity (experimental)
     _use_similar_words_lookup = False
     _similarity_level = 0.5
     _similarity_lookup_topn = 10
     _word_vector = None
+    _rules = EmotionAnalyzerRules()
 
-    def __init__(self, corpus = '', lexicon = None, mockup = False):
+    def __init__(self, corpus = '', lexicon = None, mockup = False, rules = EmotionAnalyzerRules()):
         self._corpus = corpus
         self._emotions = []
         self._mockup = mockup
         # Default Senticnet Lexicon
         if lexicon is not None:
             self._lexicon = lexicon
+        
+        if rules is not None:
+            self._rules = rules
 
     def enabel_similarity_lookup(self, simalirity_level = 0.5 ,topn = 10):
         """
@@ -120,8 +145,12 @@ class EmotionAnalyzer:
                         # Add order of word and named entity label
                         word_pos = CorporaHelper.build_ordered_pos(pos_tags, add_ne_label = True)
                         self._word_pos = word_pos # TODO fix no need as class variable
-                        # get a negatation flag
-                        negatation_flag = CorporaHelper.is_negated(clause)
+                        self._org_word_pos = word_pos.copy() # TODO save of the origin word pos list
+                        
+                        # get a negatation flag                        
+                        negatation_flag = CorporaHelper.is_negated(word_tokens)
+                        #print("negatation_flag",negatation_flag)
+
                         # search for concept phrasen through all word in the sentence
                         # combinations of 4 
                         # - permutations of 4
@@ -141,16 +170,20 @@ class EmotionAnalyzer:
                         for x in range(range_from, range_to):
                             
                             # Combinations
-                            emotions = self._lookup_combinations(word_pos,abs(x))
+                            combs = combinations(word_pos, r=abs(x))
+                            emotions = self._lookup_word_combinations(combs, abs(x))
                             clause_emotions.extend(emotions)
                             # Permutations
-                            emotions = self._lookup_permutations(word_pos,abs(x))
+                            combs = permutations(word_pos, r=abs(x))
+                            emotions = self._lookup_word_combinations(combs, abs(x))                       
                             clause_emotions.extend(emotions)
                             # Lemmatized combinations
-                            emotions = self._lookup_combinations(word_pos,abs(x),lemma=True)
+                            combs = combinations(word_pos, r=abs(x))
+                            emotions = self._lookup_word_combinations(combs, abs(x), lemma=True)
                             clause_emotions.extend(emotions)
                             # Lemmatized permutations
-                            emotions = self._lookup_permutations(word_pos,abs(x),lemma=True)
+                            combs = permutations(word_pos, r=abs(x))
+                            emotions = self._lookup_word_combinations(combs, abs(x), lemma=True)
                             clause_emotions.extend(emotions)
                         
                         # lookup for single word only if not a stopword           
@@ -159,25 +192,98 @@ class EmotionAnalyzer:
                                 
                                 emotion = self._lexicon.get_emotion(word["word"],word)
                                 if EmotionResult.is_neutral_emotion(emotion.get_emotion()):
-                                    # try lemmatized
+                                    # no emotion found try lemmatized
                                     emotion = self._lexicon.get_emotion(CorporaHelper.lemmatize_token(word["word"],word["pos"]))
+
                                 if not EmotionResult.is_neutral_emotion(emotion.get_emotion()):
+                                    emotion.add_token(word)
                                     clause_emotions.append(emotion)
                             # remove word from word_tokens -> cannot remove of a looping list
                             #self._word_pos.remove(word)
+                        
+                        # Linguistic rules some semantic features
 
-                        # check for instensity TODO
-                        # check for Negatation
-                        if negatation_flag:
-                            # TODO negate clause emotions.
-                            pass
+                        # Adverb - Adjektive
+                        # Strong modifier
+                        if self._rules.adverb_strong_modifier:
+                            weight = 0.5
+                            for token in self._org_word_pos:
+                                if token['pos'].startswith('R'):
+                                    # Adverb
+                                    adv_order = token['order']
+                                    # look ahead for adjective or adverb with emotion
+                                    emo = EmotionResult.get_emotion_by_order(clause_emotions, adv_order + 1)
+                                    if emo is not None and ( emo.is_from_adjectiv() or emo.is_from_adverb()):
+                                        if token['word'] in ADVERBS_STRONG_INT:
+                                            # APS Scoring
+                                            adv_intensity = 1 # for all adverb the same value
+                                            emo.raise_emotion_by_value(weight * adv_intensity)
+                                            e = EmotionResult.get_emotion_by_order(clause_emotions, adv_order)
+                                            # get emotion of the token and remove the adverb from result
+                                            if e is not None:
+                                                clause_emotions.remove(e)
 
-                        # Add clause to total emotion            
+                        # Weak modifier
+                        if self._rules.adverb_weak_modifier:
+                            weight = 0.5
+                            for token in self._org_word_pos:
+                                if token['pos'].startswith('R'):
+                                    # Adverb
+                                    adv_order = token['order']
+                                    # look ahead for adjective or adverb with emotion
+                                    emo = EmotionResult.get_emotion_by_order(clause_emotions, adv_order + 1)
+                                    if emo is not None and (emo.is_from_adjectiv() or emo.is_from_adverb()):
+                                        if token['word'] in ADVERBS_WEAK_INT or token['word'] in ADVERBS_DOUBT:
+                                            # APS Scoring
+                                            adv_intensity = 1 # for all adverb the same value
+                                            emo.reduce_emotion_by_value(weight * adv_intensity)
+                                            e = EmotionResult.get_emotion_by_order(clause_emotions, adv_order)
+                                            # get emotion of the token and remove the adverb from result
+                                            if e is not None:
+                                                clause_emotions.remove(e)
+
+                        # Adjectiv Modifier of nouns
+                        # for each adjective in word pos overwrites the noun emotion (if not a multiword)
+                        if self._rules.noun_modifier:
+                            for e in clause_emotions:
+                                if e.is_multiword():
+                                    # skip multiwords keep their emotions
+                                    continue
+                                else:
+                                    if e.is_from_adjectiv():
+                                        adj_order = e.get_word_order()
+                                        # look ahead
+                                        emo = EmotionResult.get_emotion_by_order(clause_emotions, adj_order + 1)
+                                        if emo is not None and emo.is_from_noun():
+                                            # Remove the noun emotion
+                                            e.add_remark(f'Noun emotion of "{emo.emotion_concept}" has been removed and was "overwritten" by this adjective')
+                                            clause_emotions.remove(emo)
+                        
+                        # Negation handling
+                        # reduce by a ration
+                        if self._rules.negation_ratio and negatation_flag:
+                            negation_ratio = 0.8
+                            #print("negation handling 1")
+                            for e in clause_emotions:
+                                e.reduce_emotion_by_ratio(negation_ratio)
+
+                        # alternative negation handling
+                        # shift by a fixed value on the dimension of the hourglass of emotions
+                        if self._rules.negation_shift and negatation_flag:
+                            negation_shift_value = 0.8
+                            #print("negation handling 2")
+                            for e in clause_emotions:
+                                e.reduce_emotion_in_dimension_by_value(negation_shift_value)
+
+                        #TODO Add more rules
+
+                        # Add clause to total emotion
                         self._emotions.extend(clause_emotions)                    
-                
                 
             elif method == 'sematic':
                 # TODO implement concept/phrase extraction
+                # create semantic tree
+
                 pass
 
 
@@ -197,12 +303,19 @@ class EmotionAnalyzer:
 
         return emotion
 
+    def get_adjectives_in_word_tokens(self, word_pos_tokens):
+        
+
+        pass
+
+
     def get_similar_words(self, word):
         """
-        Get similar word out of a word2vec embedding
+        Get similar word out of a word2vec embedding or wordnet 
         :param word:
         :returns: list of words
         """
+        #TODO
         pass
 
 
@@ -251,20 +364,18 @@ class EmotionAnalyzer:
 
         return ordered_pos_tags
 
-    def _lookup_combinations(self, ordered_pos_tags,r,lemma=False):
+    def _lookup_word_combinations(self, combinations ,r ,lemma=False):
         """
-        Lookup combination in the lexicon
+        Lookup combinations of ordered word pos tags in the lexicon
 
-        :param ordered_pos_tags:
+        :param combinations: combinations to lookup
         :param r: number of words to combine range
         :param lemma: for lemmatized lookup
         :returns: List of emotionResults or None
         """
         emotions = []
-        # TODO remove _word_ps or chacne ordered_pos_tag
-        combs = combinations(ordered_pos_tags, r=r)
         
-        for comb in combs:
+        for comb in combinations:
             skip = False
 
             # check if part of the comination not mached yet => skip if part of the combination has been mached yet.
@@ -296,71 +407,17 @@ class EmotionAnalyzer:
                 emotion = self._lexicon.get_emotion(concept,concept_pos)
                 if not EmotionResult.is_neutral_emotion(emotion.get_emotion()):
                     # remove tokens from word_tokens
-                    for i in range(0,r):
-                        self._word_pos.remove(comb[i])
+                    for token_pos in concept_pos:
+                        emotion.add_token(token_pos)
+                        self._word_pos.remove(token_pos)
   
-                    # emotion found return
+                    # emotion found return                    
                     emotions.append(emotion)
         if emotions.count == 0:
             return None
         else:
             return emotions
-
-    def _lookup_permutations(self, ordered_pos_tags,r,lemma=False):
-        """
-        Lookup permutations in the lexicon
-
-        :param ordered_pos_tags:
-        :param r: number of words for permutation
-        :param lemma: for lemmatized lookup
-        :returns: List of emotionResults or None
-        """
-        emotions = []
-        # TODO remove _word_ps or chacne ordered_pos_tag
-        combs = permutations(ordered_pos_tags, r=r)
-        for comb in combs:
-            skip = False
-
-            # check if part of the comination not mached yet => skip if part of the combination has been mached yet.
-            for i in range(0,r):
-                if comb[i] not in self._word_pos:
-                    skip = True
-                    continue
-
-            # check if distance is not twice as number of words
-            distance = self._get_ordered_pos_tag_distance(comb)
-            if distance > 2*r or skip:
-                # skip if distance is higher that twice as the number of words
-                skip = False
-                continue                  
-            else:
-                concept = ''
-                concept_pos = []
-
-                # build concept and concept pos
-                for i in range(0,r):
-                    if lemma:
-                        concept = concept + " " + CorporaHelper.lemmatize_token(comb[i]["word"], comb[i]["pos"])
-                    else:
-                        concept = concept + " " + comb[i]["word"]
-                    concept_pos.append(comb[i])
-                concept = concept.strip()
-
-                # lookup emotion
-                emotion = self._lexicon.get_emotion(concept,concept_pos)
-                if not EmotionResult.is_neutral_emotion(emotion.get_emotion()):
-                    # remove tokens from word_tokens
-                    for i in range(0,r):
-                        self._word_pos.remove(comb[i])
-    
-                    # emotion found return
-                    emotions.append(emotion)
-
-        if emotions.count == 0:
-            return None
-        else:
-            return emotions
-    
+ 
     def _summarize_emotions(self):
         """
         Summarize thes emotions in one EmotionResult vector

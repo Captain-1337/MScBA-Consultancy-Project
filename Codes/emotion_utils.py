@@ -3,7 +3,7 @@ from random import random
 
 class Emotions(Enum):
     """
-    Enumarations of Plutchnik's basic emotions
+    Enumarations of Plutchnik's basic emotions plus noemotion
     """
     ANGER = 'anger'
     FEAR = 'fear'
@@ -16,28 +16,281 @@ class Emotions(Enum):
     # For no Emotion
     NEUTRAL = 'noemotion'
 
+    @staticmethod
+    def get_emotion_number(emotion):
+        """
+        Gets a number representation of the emotion
+        :param emotion: String of the emotion
+        """
+        if emotion == Emotions.ANGER.value:
+            return 0
+        elif emotion == Emotions.FEAR.value:
+            return 1
+        elif emotion == Emotions.JOY.value:
+            return 2
+        elif emotion == Emotions.SADNESS.value:
+            return 3
+        elif emotion == Emotions.TRUST.value:
+            return 4
+        elif emotion == Emotions.DISGUST.value:
+            return 5
+        elif emotion == Emotions.ANTICIPATION.value:
+            return 6
+        elif emotion == Emotions.SURPRISE.value:
+            return 7
+        elif emotion == Emotions.NEUTRAL.value:
+            return 9
+        else:
+            return 9999
+
+    @staticmethod
+    def translate_emotionlist_to_intlist(emotionlist):
+        """
+        Translates a list of emotions into a list of coded integers
+
+        :param emotion_number: String of the emotion
+        """
+        result = list()
+        # translate into integers
+        for e in emotionlist:
+            result.append(Emotions.get_emotion_number(e))
+        
+        return result
+
+        
+    @staticmethod
+    def get_emotion_text(emotion_number):
+        """
+        Gets a text representation of the emotion
+        :param emotion_number: String of the emotion
+        """
+        if emotion_number == 0:
+            return Emotions.ANGER.value
+        elif emotion_number == 1:
+            return Emotions.FEAR.value
+        elif emotion_number == 2:
+            return Emotions.JOY.value
+        elif emotion_number == 3:
+            return Emotions.SADNESS.value
+        elif emotion_number == 4:
+            return Emotions.TRUST.value
+        elif emotion_number == 5:
+            return Emotions.DISGUST.value
+        elif emotion_number == 6:
+            return Emotions.ANTICIPATION.value
+        elif emotion_number == 7:
+            return Emotions.SURPRISE.value
+        elif emotion_number == 9:
+            return Emotions.NEUTRAL.value
+        else:
+            return 'undefined'
+
 class EmotionResult():
     _emotion_result = {}
-    emotion_context = ''
+    emotion_concept = ''
+    _remarks = list()
+    _tokens = list()
 
-    def __init__(self, emotion = None, context = ''):
+    def __init__(self, emotion = None, concept = ''):
         """
         Constructor
 
         :param emotion: emotion to init the result
-        :param context: Assign a context of the emotion to the result
+        :param concept: Assign a concept of the emotion to the result
         """
         if emotion == None:
             emotion = EmotionResult.create_emotion()
         self._emotion_result = emotion
-        self.emotion_context = context
+        self.emotion_concept = concept
+        self._remarks = list()
+        self._tokens = list()
 
-    def set_context(self, context):
+    def set_concept(self, concept):
         """
-        Sets a context to the result
-        :param context: context of the result
+        Sets a concept to the result
+
+        :param concept: concept of the result
         """
-        self.emotion_context = context
+        self.emotion_concept = concept
+
+    def add_remark(self,remark):
+        """
+        Adds a remark to the result
+
+        :param remark: String as remark
+        """
+        self._remarks.append(remark)
+
+    def add_token(self,token):
+        """
+        Adds a "word pos order" token to the result
+
+        :param token: word with pos and order number
+        """
+        self._tokens.append(token)
+
+    def get_tokens(self):
+        return self._tokens
+
+    def is_multiword(self):
+        """
+        Checks if the emotion is of a multiword concept
+        """
+        return len(self.get_tokens()) > 1
+
+    def is_from_adjectiv(self):
+        result = False
+        if not self.is_multiword() and str(self.get_tokens()[0]["pos"]).startswith('J'):
+            result = True
+        return result
+
+    def get_word_order(self):
+        result = 0
+        if not self.is_multiword():
+            result = int(self.get_tokens()[0]["order"])
+        return result
+
+    def raise_emotion_by_value(self, value:float):
+        """
+        Raise the main emotion by a value between 0 an 1. The max value of 1 will not be exceeded
+        the other emotiosn are raised by the same ratio
+        :param value: Value between 0 an 1 to raise
+        """
+        main_emo = EmotionResult.get_primary_emotion(self._emotion_result, noemotion_threshold = 0)
+        main_emo_value = self._emotion_result.get(main_emo)
+        max_raise = 1 - main_emo_value
+        raise_value = min(max_raise, value)
+        raise_ratio = (raise_value / main_emo_value) + 1
+
+        
+        for e in self._emotion_result:
+            self._emotion_result[e] = self._emotion_result[e] * raise_ratio
+        self.add_remark(f'emotion has been raised by ratio {raise_ratio}')
+
+    def reduce_emotion_by_value(self, value:float):
+        """
+        Reduce the main emotion by a value between 0 an 1. The min value  will not fall below 0
+        the other emotions are reduced by the same ratio
+
+        :param value: Value between 0 an 1 to raise
+        """
+        main_emo = EmotionResult.get_primary_emotion(self._emotion_result, noemotion_threshold = 0)
+        main_emo_value = self._emotion_result.get(main_emo)
+
+        reduce_ratio = min(float(value / main_emo_value), 1)
+
+        for e in self._emotion_result:
+            self._emotion_result[e] = self._emotion_result[e] * (1 - reduce_ratio)
+        self.add_remark(f'emotion has been reduced by ratio {reduce_ratio}')
+
+    def reduce_emotion_by_ratio(self, ratio:float):
+        """
+        Reduce all emotions by a ratio between 0 an 1. 
+
+        :param ratio: Ratio between 0 an 1 to raise e.g. 0.8 means reduce by 80%
+        """
+        for e in self._emotion_result:
+            self._emotion_result[e] = self._emotion_result[e] * (1 - ratio)
+        self.add_remark(f'emotion has been reduced by ratio {ratio}')
+
+    def reduce_emotion_in_dimension_by_value(self, value:float):
+        """
+        Reduce/shift all emotions by a fixed value on the same dimension
+        of the hourglass of emotions into the oposite emotions
+
+        :param value: Value to reduce on the dimension
+        """
+        anger_shiftet = False
+        joy_shiftet = False
+        trust_shiftet = False
+        anticipation_shiftet = False
+        for e in self._emotion_result:
+            if e == Emotions.ANGER.value and float(self._emotion_result[e]) > 0:                
+                self._emotion_result[e] = self._emotion_result[e] - value
+                anger_shiftet = True
+                if float(self._emotion_result[e]) < 0:
+                    # if < 0 then move to fear
+                    self._emotion_result[Emotions.FEAR.value] = abs(self._emotion_result[e])
+                    self._emotion_result[e] = 0
+                    
+            elif e == Emotions.FEAR.value and float(self._emotion_result[e]) > 0 and not anger_shiftet: 
+                self._emotion_result[e] = self._emotion_result[e] - value
+                if float(self._emotion_result[e]) < 0:
+                    # if < 0 then move to anger
+                    self._emotion_result[Emotions.ANGER.value] = abs(self._emotion_result[e])
+                    self._emotion_result[e] = 0
+
+            elif e == Emotions.JOY.value and float(self._emotion_result[e]) > 0: 
+                self._emotion_result[e] = self._emotion_result[e] - value
+                joy_shiftet = True
+                if float(self._emotion_result[e]) < 0:
+                    # if < 0 then move to sadness
+                    self._emotion_result[Emotions.SADNESS.value] = abs(self._emotion_result[e])
+                    self._emotion_result[e] = 0
+            elif e == Emotions.SADNESS.value and float(self._emotion_result[e]) > 0 and not joy_shiftet: 
+                self._emotion_result[e] = self._emotion_result[e] - value
+                if float(self._emotion_result[e]) < 0:
+                    # if < 0 then move to joy
+                    self._emotion_result[Emotions.JOY.value] = abs(self._emotion_result[e])
+                    self._emotion_result[e] = 0
+
+            elif e == Emotions.TRUST.value and float(self._emotion_result[e]) > 0: 
+                self._emotion_result[e] = self._emotion_result[e] - value
+                trust_shiftet = True
+                if float(self._emotion_result[e]) < 0:
+                    # if < 0 then move to disgust
+                    self._emotion_result[Emotions.DISGUST.value] = abs(self._emotion_result[e])
+                    self._emotion_result[e] = 0
+            elif e == Emotions.DISGUST.value and float(self._emotion_result[e]) > 0 and not trust_shiftet: 
+                self._emotion_result[e] = self._emotion_result[e] - value
+                if float(self._emotion_result[e]) < 0:
+                    # if < 0 then move to trust
+                    self._emotion_result[Emotions.TRUST.value] = abs(self._emotion_result[e])
+                    self._emotion_result[e] = 0
+
+            elif e == Emotions.ANTICIPATION.value and float(self._emotion_result[e]) > 0: 
+                self._emotion_result[e] = self._emotion_result[e] - value
+                anticipation_shiftet = True
+                if float(self._emotion_result[e]) < 0:
+                    # if < 0 then move to surprise
+                    self._emotion_result[Emotions.SURPRISE.value] = abs(self._emotion_result[e])
+                    self._emotion_result[e] = 0
+            elif e == Emotions.SURPRISE.value and float(self._emotion_result[e]) > 0 and not anticipation_shiftet: 
+                self._emotion_result[e] = self._emotion_result[e] - value
+                if float(self._emotion_result[e]) < 0:
+                    # if < 0 then move to anticipation
+                    self._emotion_result[Emotions.ANTICIPATION.value] = abs(self._emotion_result[e])
+                    self._emotion_result[e] = 0
+
+        self.add_remark(f'emotions shifted by value {value}')
+
+
+    @staticmethod
+    def get_emotion_by_order(emotion_results, order):
+        """
+        Obtains an emotion result with the desired order id from the emotion result list
+
+        :param emotion_results: emotion Result
+        :param order: Number of the order
+        :returns: Single emotion result or None
+        """
+        result = None
+        for e in emotion_results:
+            if not e.is_multiword() and e.get_tokens()[0]["order"] == order:
+                result = e
+        return result
+
+    def is_from_noun(self):
+        result = False
+        if not self.is_multiword() and str(self.get_tokens()[0]["pos"]).startswith('N'):
+            result = True
+        return result
+
+    def is_from_adverb(self):
+        result = False
+        if not self.is_multiword() and str(self.get_tokens()[0]["pos"]).startswith('R'):
+            result = True
+        return result
 
     def get_emotion(self):
         """
@@ -72,14 +325,37 @@ class EmotionResult():
         return self._emotion_result[Emotions.SURPRISE.value]
     
     def print(self):
-        print(self.emotion_context)
+        print(self.emotion_concept)
         print(self._emotion_result)   
 
     def to_string(self):
-        result = self.emotion_context + " = "
-        result = result + str(self._emotion_result)
+        result = self.emotion_concept + " = "
+        result = result + str(self._emotion_result)+ '; ' + self.tokens_to_string() + '; ' +  self.remarks_to_string() 
         return result
 
+    def remarks_to_string(self):
+        """
+        Return remarks as string
+        :returns: Remarks
+        """
+        result = ''
+        for remark in self._remarks:
+            if result != '':
+                result = result + '; '
+            result = result + str(remark)
+        return result
+
+    def tokens_to_string(self):
+        """
+        Return tokens as string
+        :returns: Tokendetails
+        """
+        result = ''
+        for token in self._tokens:
+            if result != '':
+                result = result + '; '
+            result = result + str(token)
+        return result
         
     @staticmethod
     def create_emotion(anger = 0, fear = 0, sadness = 0, disgust = 0, joy = 0, trust = 0, anticipation = 0, surprise = 0):
@@ -92,9 +368,9 @@ class EmotionResult():
            Emotions.SADNESS.value: sadness,
            Emotions.DISGUST.value: disgust,
            Emotions.JOY.value: joy,
-           Emotions.TRUST.value:trust,
-           Emotions.ANTICIPATION.value:anticipation,  
-           Emotions.SURPRISE.value:surprise,
+           Emotions.TRUST.value: trust,
+           Emotions.ANTICIPATION.value: anticipation,  
+           Emotions.SURPRISE.value: surprise,
         }
         return emotion
 
@@ -119,7 +395,7 @@ class EmotionResult():
         return emotion
     
     @staticmethod
-    def get_primary_emotion(emotion, noemotion_threshold = 0.1, considered_emotions = [Emotions.ANGER.value,Emotions.FEAR.value,Emotions.SADNESS.value,Emotions.DISGUST.value,Emotions.JOY.value,Emotions.TRUST.value,Emotions.SURPRISE.value,Emotions.ANTICIPATION.value]):
+    def get_primary_emotion(emotion, noemotion_threshold = 0.0, considered_emotions = [Emotions.ANGER.value,Emotions.FEAR.value,Emotions.SADNESS.value,Emotions.DISGUST.value,Emotions.JOY.value,Emotions.TRUST.value,Emotions.SURPRISE.value,Emotions.ANTICIPATION.value]):
         """
         Get the primary emotion out of an EmotionResult
 
@@ -128,7 +404,7 @@ class EmotionResult():
         :param considered_emotions: list of the basic emotions to be considered for the output. By default all 8 emotions are considered.
         :returns: result emotion as a string
         """
-        result_emotion =''
+        result_emotion = ''
         emotion_intensity = 0.0
 
         if emotion is None: 
