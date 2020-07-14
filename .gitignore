@@ -4,7 +4,7 @@
 /testscripts/
 /testnotebooks/
 /.idea/
-#/corpora/
+/corpora/
 /.vscode/
 Codes/__pycache__
 glove.6B
