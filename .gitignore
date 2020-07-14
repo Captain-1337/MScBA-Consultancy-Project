@@ -11,4 +11,6 @@ glove.6B
 test*.csv
 emoint_corpus
 /Archive/
-/custom_embedding/
+Codes/custom_embedding/
+Codes/roger/
+Codes/corpora/
