@@ -16,8 +16,8 @@ from random import random
 
 # run over the whole corpora
 
-corpora_helper = CorporaHelper("dev_corpus.csv")
-#corpora_helper = CorporaHelper("multigenre.csv")
+corpora_helper = CorporaHelper("corpora/dev_corpus.csv")
+#corpora_helper = CorporaHelper("corpora/multigenre.csv")
 starttime = time.time()
 corpora_helper.remove_emotion('other')
 #corpora_helper.remove_domain('moviereview')
