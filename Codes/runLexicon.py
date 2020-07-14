@@ -32,7 +32,7 @@ result_file_name = 'lexicon_result'
 
 starttime = time.time()
 # remove domain
-corpora_helper.remove_domain('blog')
+#corpora_helper.remove_domain('blog')
 # remove emotions
 corpora_helper.remove_emotion('other')
 corpora_helper.remove_emotion('noemotion')
@@ -68,7 +68,7 @@ corpora_helper.add_space_at_special_chars(regexlist = r"([#])")
 # rules for combine
 rules = EmotionAnalyzerRules()
 rules.adverb_strong_modifier = False
-rules.adverb_weak_modifier = False
+rules.adverb_weak_modifier = True
 rules.negation_shift = False
 rules.negation_ratio = False
 rules.noun_modifier = False

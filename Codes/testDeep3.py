@@ -19,23 +19,36 @@ labels = []
 texts = []
 corpora_helper = CorporaHelper("multigenre.csv")
 count_joy = 0
-count_disgust = 0
+count_sadness = 0
+count_anger = 0
+count_fear = 0
 
 for index, corpus in corpora_helper.get_data().iterrows():
     # only moviereviews
-    if corpus[CorporaProperties.DOMAIN.value] == CorporaDomains.MOVIEREVIEW.value:
+    if True or corpus[CorporaProperties.DOMAIN.value] == CorporaDomains.MOVIEREVIEW.value:
         # only joy
         # only disgust
-        if corpus[CorporaProperties.EMOTION.value] == 'disgust':
+        if corpus[CorporaProperties.EMOTION.value] == 'sadness':
             labels.append(0)
             texts.append(corpus[CorporaProperties.CLEANED_CORPUS.value])
-            count_joy += 1
+            count_sadness += 1
         elif corpus[CorporaProperties.EMOTION.value] == 'joy':
             labels.append(1)
             texts.append(corpus[CorporaProperties.CLEANED_CORPUS.value])
-            count_disgust += 1
+            count_joy += 1
+        elif corpus[CorporaProperties.EMOTION.value] == 'anger':
+            labels.append(1)
+            texts.append(corpus[CorporaProperties.CLEANED_CORPUS.value])
+            count_anger += 1
+        elif corpus[CorporaProperties.EMOTION.value] == 'fear':
+            labels.append(1)
+            texts.append(corpus[CorporaProperties.CLEANED_CORPUS.value])
+            count_fear += 1
+print('number of anger labels: ',count_anger)
+print('number of fear labels: ', count_fear)
 print('number of joy labels: ',count_joy)
-print('number of disgust labels: ', count_disgust)
+print('number of sadness labels: ', count_sadness)
+
 
 ## Create one hot encoding
 maxlen = 100 # max. number of words in sequences

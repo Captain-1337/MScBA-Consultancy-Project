@@ -26,16 +26,32 @@ corpora_helper.remove_duplicate_coprus()
 # Preprocess corpora
 # depends on the corpora which functions to use
 
-corpora_helper.translate_contractions()
-corpora_helper.translate_urls() 
+
+corpora_helper.translate_urls()
 corpora_helper.translate_emoticons()
 corpora_helper.translate_emojis()
+corpora_helper.translate_email()
+#corpora_helper.translate_mention()
 corpora_helper.translate_html_tags()
 corpora_helper.translate_camel_case()
-corpora_helper.translate_contractions() # problem space before '
 corpora_helper.translate_underscore()
+
+corpora_helper.translate_string('-LRB-','(')
+corpora_helper.translate_string('-RRB-',')')
+corpora_helper.translate_string('`',"'") # ` to '
+corpora_helper.translate_string("''",'"') # double '' to "
+corpora_helper.translate_contractions()
+corpora_helper.translate_string("'","") # remove '
+corpora_helper.translate_string("\\n"," ") # replace new lines with space
+
+#corpora_helper.spell_correction() # not accurate
+
 corpora_helper.add_space_at_special_chars()
-corpora_helper.spell_correction()
+corpora_helper.add_space_at_special_chars(regexlist = r"([#])")
+#corpora_helper.translate_to_lower()
+
+
+print(corpora_helper.get_data())
 
 # abbr
 # slang
