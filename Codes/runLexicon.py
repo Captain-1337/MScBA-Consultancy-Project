@@ -16,19 +16,21 @@ import numpy as np
 
 # run over the whole corpora
 
-#corpora_helper = CorporaHelper("corpora/test_mg_moviereview.csv")
+#corpora_helper = CorporaHelper("corpora/test_mg_moviereview.csv")  
 #corpora_helper = CorporaHelper("corpora/mg_strong_adv.csv", separator='\t')
-corpora_helper = CorporaHelper("corpora/mg_weak_adv.csv", separator='\t')
+#corpora_helper = CorporaHelper("corpora/mg_weak_adv.csv", separator='\t')
 #corpora_helper = CorporaHelper("corpora/mg_negation.csv", separator='\t')
 #corpora_helper = CorporaHelper("corpora/mg_mv_annot_testset.csv", separator='\t')
 #corpora_helper = CorporaHelper("corpora/twitter_2000_test.csv", separator='\t')
 #corpora_helper = CorporaHelper("corpora/multigenre_450_test.csv")
 #corpora_helper = CorporaHelper("corpora/twitter_2000_test.csv", separator='\t')
 #corpora_helper = CorporaHelper("corpora/twitter_2000_mg_450_test.csv", separator='\t')
-#corpora_helper = CorporaHelper("corpora/multigenre.csv")
-#corpora_helper = CorporaHelper("corpora/twitter_all.csv")
+corpora_helper = CorporaHelper("corpora/multigenre.csv")
+#corpora_helper = CorporaHelper("corpora/twitter_all.csv", separator='\t')
 
 result_file_name = 'lexicon_result'
+# flag for all 8 emotions or just anger, fear, joy and sadness
+all_emotions = False
 
 starttime = time.time()
 # remove domain
@@ -36,10 +38,12 @@ starttime = time.time()
 # remove emotions
 corpora_helper.remove_emotion('other')
 corpora_helper.remove_emotion('noemotion')
-#corpora_helper.remove_emotion('trust')
-#corpora_helper.remove_emotion('disgust')
-#corpora_helper.remove_emotion('anticipation')
-#corpora_helper.remove_emotion('surprise')
+
+if not all_emotions:
+    corpora_helper.remove_emotion('trust')
+    corpora_helper.remove_emotion('disgust')
+    corpora_helper.remove_emotion('anticipation')
+    corpora_helper.remove_emotion('surprise')
 
 # Preprocess corpora 
 corpora_helper.translate_urls()
@@ -67,15 +71,15 @@ corpora_helper.add_space_at_special_chars(regexlist = r"([#])")
 # Init analyzer
 # rules for combine
 rules = EmotionAnalyzerRules()
-rules.adverb_strong_modifier = False
+rules.adverb_strong_modifier = True
 rules.adverb_weak_modifier = True
 rules.negation_shift = False
-rules.negation_ratio = False
+rules.negation_ratio = True
 rules.noun_modifier = False
 
-#lexicon = EmoLexHelper()
+lexicon = EmoLexHelper()
 #lexicon = DepecheMoodHelper() # not implemented
-lexicon = SenticNetHelper()
+#lexicon = SenticNetHelper()
 analyzer = EmotionAnalyzer('',lexicon, mockup=False, rules=rules)
 
 #method = 'simple'
@@ -89,8 +93,10 @@ for index, corpus in corpora_helper.get_data().iterrows():
     #analyzer = EmotionAnalyzer()
     emotion = analyzer.get_emotion(corpus[CorporaProperties.CLEANED_CORPUS.value], method=method)
     # Extract primary emotiom
-    primary_emotion = EmotionResult.get_primary_emotion(emotion)
-    #primary_emotion = EmotionResult.get_primary_emotion(emotion, considered_emotions=['anger','fear','joy','sadness'])
+    if all_emotions:
+        primary_emotion = EmotionResult.get_primary_emotion(emotion)
+    else:
+        primary_emotion = EmotionResult.get_primary_emotion(emotion, considered_emotions=['anger','fear','joy','sadness'])
     # Set Result
     corpora_helper.set_calc_emotion(index, primary_emotion)
     corpora_helper.set_calc_emotion_details(index, analyzer.get_emotion_results_as_string())
@@ -121,7 +127,10 @@ corpora_helper.write_to_csv(result_file_name + '.csv')
 emo_gold = Emotions.translate_emotionlist_to_intlist(corpora_helper.get_emotions_goldlabel())
 emo_calc = Emotions.translate_emotionlist_to_intlist(corpora_helper.get_emotions_calculated())
 
-print(classification_report(emo_gold, emo_calc, [0, 1, 2, 3, 4, 5, 6, 7],['anger',  'fear', 'joy', 'sadness','trust','disgust','anticipation','surprise']))
+if all_emotions:    
+    print(classification_report(emo_gold, emo_calc, [0, 1, 2, 3, 4, 5, 6, 7],['anger',  'fear', 'joy', 'sadness','trust','disgust','anticipation','surprise']))
+else:    
+    print(classification_report(emo_gold, emo_calc, [0, 1, 2, 3],['anger',  'fear', 'joy', 'sadness']))
 precision, recall, f1, support = precision_recall_fscore_support(emo_gold, emo_calc)
 mean_precision = np.mean(precision)
 mean_recall = np.mean(recall)
