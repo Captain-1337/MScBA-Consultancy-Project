@@ -5,7 +5,7 @@ from corpora_utils import CorporaHelper
 from nltk.tokenize import sent_tokenize, word_tokenize, RegexpTokenizer
 from nltk import pos_tag
 from itertools import combinations, permutations
-import gensim.downloader as api
+import gensim.downloader as api # expirimental use
 from adverb_class_list import ADVERBS_STRONG_INT, ADVERBS_WEAK_INT, ADVERBS_DOUBT
 
 
@@ -22,9 +22,7 @@ class EmotionAnalyzerRules:
     #amplifier = True
     #adversatives = True
     #firstperson = True
-
-    #def __init__(self):
-       
+     
 
 
 class EmotionAnalyzer:
@@ -303,11 +301,6 @@ class EmotionAnalyzer:
 
         return emotion
 
-    def get_adjectives_in_word_tokens(self, word_pos_tokens):
-        
-
-        pass
-
 
     def get_similar_words(self, word):
         """
@@ -317,7 +310,6 @@ class EmotionAnalyzer:
         """
         #TODO
         pass
-
 
     def get_sum_emotion_result(self):
         #TODO
@@ -351,7 +343,7 @@ class EmotionAnalyzer:
 
     def _reduce_ordered_pos_tags(self,ordered_pos_tags, reduce_pos_tags):
         """
-        Reduces the ordered pos tags by 
+        Reduces the ordered pos tags by a list of pos tags
 
         :param ordered_pos_tags: the pos tag list to be reduced
         :param pos_tags: the pos tags to reduce
@@ -478,12 +470,8 @@ class EmotionAnalyzer:
         return word
 
 
-
 # TODO negataion of words
 # TODO Check intesitiy happy vs. HAPPY
-"""
-move to emotion_analyzer.py when ready
-"""
 """
     def intensity_capital(self):
         # TODO VERY => intensity increased compared to very
