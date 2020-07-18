@@ -604,6 +604,8 @@ class CorporaHelper():
 
         expanded_text = contractions_pattern.sub(expand_match, text)
         expanded_text = re.sub("in' ", "ing ", expanded_text)
+        expanded_text = re.sub("Im ", "I am ", expanded_text)
+        expanded_text = re.sub(" im ", " I am ", expanded_text)
 
         return expanded_text
 
