@@ -271,7 +271,7 @@ class EmotionAnalyzer:
                             negation_shift_value = 0.8
                             #print("negation handling 2")
                             for e in clause_emotions:
-                                e.reduce_emotion_in_dimension_by_value(negation_shift_value)
+                                e.reduce_emotion_in_dimension_by_value(negation_shift_value, primary_emotion_only = True)
 
                         #TODO Add more rules
 

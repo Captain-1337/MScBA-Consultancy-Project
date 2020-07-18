@@ -193,74 +193,79 @@ class EmotionResult():
             self._emotion_result[e] = self._emotion_result[e] * (1 - ratio)
         self.add_remark(f'emotion has been reduced by ratio {ratio}')
 
-    def reduce_emotion_in_dimension_by_value(self, value:float):
+    def reduce_emotion_in_dimension_by_value(self, value:float , primary_emotion_only: False):
         """
         Reduce/shift all emotions by a fixed value on the same dimension
         of the hourglass of emotions into the oposite emotions
 
         :param value: Value to reduce on the dimension
+        :param primary_emotion_only: Reduce the primary emotion only set others to 0 (expirimental parameter)
         """
         anger_shiftet = False
         joy_shiftet = False
         trust_shiftet = False
         anticipation_shiftet = False
+        primary_emotion = EmotionResult.get_primary_emotion(self._emotion_result, noemotion_threshold = 0)
         for e in self._emotion_result:
-            if e == Emotions.ANGER.value and float(self._emotion_result[e]) > 0:                
-                self._emotion_result[e] = self._emotion_result[e] - value
-                anger_shiftet = True
-                if float(self._emotion_result[e]) < 0:
-                    # if < 0 then move to fear
-                    self._emotion_result[Emotions.FEAR.value] = abs(self._emotion_result[e])
-                    self._emotion_result[e] = 0
-                    
-            elif e == Emotions.FEAR.value and float(self._emotion_result[e]) > 0 and not anger_shiftet: 
-                self._emotion_result[e] = self._emotion_result[e] - value
-                if float(self._emotion_result[e]) < 0:
-                    # if < 0 then move to anger
-                    self._emotion_result[Emotions.ANGER.value] = abs(self._emotion_result[e])
-                    self._emotion_result[e] = 0
+            if e == primary_emotion:
+                if e == Emotions.ANGER.value and float(self._emotion_result[e]) > 0:                
+                    self._emotion_result[e] = self._emotion_result[e] - value
+                    anger_shiftet = True
+                    if float(self._emotion_result[e]) < 0:
+                        # if < 0 then move to fear
+                        self._emotion_result[Emotions.FEAR.value] = abs(self._emotion_result[e])
+                        self._emotion_result[e] = 0
+                        
+                elif e == Emotions.FEAR.value and float(self._emotion_result[e]) > 0 and not anger_shiftet: 
+                    self._emotion_result[e] = self._emotion_result[e] - value
+                    if float(self._emotion_result[e]) < 0:
+                        # if < 0 then move to anger
+                        self._emotion_result[Emotions.ANGER.value] = abs(self._emotion_result[e])
+                        self._emotion_result[e] = 0
 
-            elif e == Emotions.JOY.value and float(self._emotion_result[e]) > 0: 
-                self._emotion_result[e] = self._emotion_result[e] - value
-                joy_shiftet = True
-                if float(self._emotion_result[e]) < 0:
-                    # if < 0 then move to sadness
-                    self._emotion_result[Emotions.SADNESS.value] = abs(self._emotion_result[e])
-                    self._emotion_result[e] = 0
-            elif e == Emotions.SADNESS.value and float(self._emotion_result[e]) > 0 and not joy_shiftet: 
-                self._emotion_result[e] = self._emotion_result[e] - value
-                if float(self._emotion_result[e]) < 0:
-                    # if < 0 then move to joy
-                    self._emotion_result[Emotions.JOY.value] = abs(self._emotion_result[e])
-                    self._emotion_result[e] = 0
+                elif e == Emotions.JOY.value and float(self._emotion_result[e]) > 0: 
+                    self._emotion_result[e] = self._emotion_result[e] - value
+                    joy_shiftet = True
+                    if float(self._emotion_result[e]) < 0:
+                        # if < 0 then move to sadness
+                        self._emotion_result[Emotions.SADNESS.value] = abs(self._emotion_result[e])
+                        self._emotion_result[e] = 0
+                elif e == Emotions.SADNESS.value and float(self._emotion_result[e]) > 0 and not joy_shiftet: 
+                    self._emotion_result[e] = self._emotion_result[e] - value
+                    if float(self._emotion_result[e]) < 0:
+                        # if < 0 then move to joy
+                        self._emotion_result[Emotions.JOY.value] = abs(self._emotion_result[e])
+                        self._emotion_result[e] = 0
 
-            elif e == Emotions.TRUST.value and float(self._emotion_result[e]) > 0: 
-                self._emotion_result[e] = self._emotion_result[e] - value
-                trust_shiftet = True
-                if float(self._emotion_result[e]) < 0:
-                    # if < 0 then move to disgust
-                    self._emotion_result[Emotions.DISGUST.value] = abs(self._emotion_result[e])
-                    self._emotion_result[e] = 0
-            elif e == Emotions.DISGUST.value and float(self._emotion_result[e]) > 0 and not trust_shiftet: 
-                self._emotion_result[e] = self._emotion_result[e] - value
-                if float(self._emotion_result[e]) < 0:
-                    # if < 0 then move to trust
-                    self._emotion_result[Emotions.TRUST.value] = abs(self._emotion_result[e])
-                    self._emotion_result[e] = 0
+                elif e == Emotions.TRUST.value and float(self._emotion_result[e]) > 0: 
+                    self._emotion_result[e] = self._emotion_result[e] - value
+                    trust_shiftet = True
+                    if float(self._emotion_result[e]) < 0:
+                        # if < 0 then move to disgust
+                        self._emotion_result[Emotions.DISGUST.value] = abs(self._emotion_result[e])
+                        self._emotion_result[e] = 0
+                elif e == Emotions.DISGUST.value and float(self._emotion_result[e]) > 0 and not trust_shiftet: 
+                    self._emotion_result[e] = self._emotion_result[e] - value
+                    if float(self._emotion_result[e]) < 0:
+                        # if < 0 then move to trust
+                        self._emotion_result[Emotions.TRUST.value] = abs(self._emotion_result[e])
+                        self._emotion_result[e] = 0
 
-            elif e == Emotions.ANTICIPATION.value and float(self._emotion_result[e]) > 0: 
-                self._emotion_result[e] = self._emotion_result[e] - value
-                anticipation_shiftet = True
-                if float(self._emotion_result[e]) < 0:
-                    # if < 0 then move to surprise
-                    self._emotion_result[Emotions.SURPRISE.value] = abs(self._emotion_result[e])
-                    self._emotion_result[e] = 0
-            elif e == Emotions.SURPRISE.value and float(self._emotion_result[e]) > 0 and not anticipation_shiftet: 
-                self._emotion_result[e] = self._emotion_result[e] - value
-                if float(self._emotion_result[e]) < 0:
-                    # if < 0 then move to anticipation
-                    self._emotion_result[Emotions.ANTICIPATION.value] = abs(self._emotion_result[e])
-                    self._emotion_result[e] = 0
+                elif e == Emotions.ANTICIPATION.value and float(self._emotion_result[e]) > 0: 
+                    self._emotion_result[e] = self._emotion_result[e] - value
+                    anticipation_shiftet = True
+                    if float(self._emotion_result[e]) < 0:
+                        # if < 0 then move to surprise
+                        self._emotion_result[Emotions.SURPRISE.value] = abs(self._emotion_result[e])
+                        self._emotion_result[e] = 0
+                elif e == Emotions.SURPRISE.value and float(self._emotion_result[e]) > 0 and not anticipation_shiftet: 
+                    self._emotion_result[e] = self._emotion_result[e] - value
+                    if float(self._emotion_result[e]) < 0:
+                        # if < 0 then move to anticipation
+                        self._emotion_result[Emotions.ANTICIPATION.value] = abs(self._emotion_result[e])
+                        self._emotion_result[e] = 0
+            else:
+                self._emotion_result[e] = 0
 
         self.add_remark(f'emotions shifted by value {value}')
 
