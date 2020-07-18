@@ -28,8 +28,8 @@ MG_AND_TWITTER = 'mg_and_twitter'
 use_mg_train_corpora = MG_AND_TWITTER
 
 # train
-epochs = 12
-max_words = 20000
+epochs = 5
+max_words = 10000
 # max. different words:
 # Multigerne: 5140  => 10000 or 3000 or 1000 ? 5000
 # Twitter: 17580 => 20000 or 10000 ?
@@ -180,7 +180,7 @@ elif use_mg_train_corpora == TWITTER:
     unigram_feature_string = "1110010000000000"
 else:
     # Twitter and Multigenre
-    unigram_feature_string = "1110010000000001"
+    unigram_feature_string = "1110010000000000"
 #1 Google news pretrained vectors : GoogleNews-vectors-negative300.bin.gz  
 #2 Twitter pretrained vectors: word2vec_twitter_model.bin
 #3  glove.twitter.27B.200d.txt
@@ -284,12 +284,22 @@ def create_model():
     model.add(Dense(4, activation='softmax'))
     #model.summary()
     """
+    """
     model = Sequential()
     model.add(embedding)
     model.add(Conv1D(32,5, activation='relu'))
     model.add(layers.Bidirectional(layers.LSTM(32,dropout=0.4, recurrent_dropout=0.4)))
     #model.add(Dense(8, activation='relu'))
     #model.add(Dense(32, activation='relu'))
+    model.add(Dense(4, activation='softmax'))
+    """
+    model = Sequential()
+    model.add(embedding)
+        
+    model.add(Bidirectional(LSTM(32, dropout=0.4, recurrent_dropout=0.4, return_sequences=True)))
+    
+    model.add(Dense(16, activation='relu'))
+    model.add(layers.GlobalMaxPooling1D())
     model.add(Dense(4, activation='softmax'))
 
     return model
