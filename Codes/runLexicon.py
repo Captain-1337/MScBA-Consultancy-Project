@@ -14,8 +14,9 @@ from nrc_emolex_utils import EmoLexHelper
 from sklearn.metrics import classification_report, precision_recall_fscore_support
 import numpy as np
 
-# run over the whole corpora
-
+# run over the whole desired corpora
+#
+# Select corpora:
 #corpora_helper = CorporaHelper("corpora/test_mg_moviereview.csv")  
 #corpora_helper = CorporaHelper("corpora/mg_strong_adv.csv", separator='\t')
 #corpora_helper = CorporaHelper("corpora/mg_weak_adv.csv", separator='\t')
@@ -29,8 +30,8 @@ corpora_helper = CorporaHelper("corpora/multigenre.csv")
 #corpora_helper = CorporaHelper("corpora/twitter_all.csv", separator='\t')
 
 result_file_name = 'lexicon_result'
-# flag for all 8 emotions or just anger, fear, joy and sadness
-all_emotions = False
+# flag for all 8 emotions or just anger, fear, joy and sadness!
+all_emotions = True
 
 starttime = time.time()
 # remove domain
@@ -73,15 +74,16 @@ corpora_helper.add_space_at_special_chars(regexlist = r"([#])")
 rules = EmotionAnalyzerRules()
 rules.adverb_strong_modifier = True
 rules.adverb_weak_modifier = True
-rules.negation_shift = False
-rules.negation_ratio = True
-rules.noun_modifier = False
+rules.negation_shift = True
+rules.negation_ratio = False
+rules.noun_modifier = True
 
-lexicon = EmoLexHelper()
-#lexicon = DepecheMoodHelper() # not implemented
-#lexicon = SenticNetHelper()
+# Select lexicon
+#lexicon = EmoLexHelper()
+lexicon = SenticNetHelper()
 analyzer = EmotionAnalyzer('',lexicon, mockup=False, rules=rules)
 
+# Select method
 #method = 'simple'
 method = 'combine'
 
@@ -149,7 +151,3 @@ endtime = time.time()
 duration = endtime - starttime
 print("Number of copora: ", corpora_helper.get_data().shape[0])
 print("Duration: ",duration,"[s]", "-",duration/60,"[min]")
-
-#corpora_helper = CorporaHelper()
-#corpora_helper.load_corpora_from_csv(file="test.csv",sep=',')
-#corpora_helper.evaluate_accurancy("test_eval_total.csv")
