@@ -6,17 +6,22 @@ from sklearn.preprocessing import scale
 from sklearn.metrics import classification_report, precision_recall_fscore_support
 import numpy as np
 from corpora_utils import CorporaHelper,CorporaDomains, CorporaProperties
+from emotion_utils import Emotions
 import os
 import pickle
 
 MULTIGENRE = 'muligenre'
 TWITTER = 'twitter'
 MG_AND_TWITTER = 'mg_and_twitter'
+OTHER = 'other'
+
+result_file_name = 'deep_predict_result'
+create_output_file = False
 
 # set wich corpora to use Multigenre or twitter
 use_mg_model = MG_AND_TWITTER
 
-use_mg_coprora = TWITTER
+use_mg_corpora = MG_AND_TWITTER
 
 tokenizer = None
 
@@ -34,8 +39,11 @@ else:
     tokenizer = pickle.load(open('models/tokenizer_multigenre_twitter.pkl', 'rb'))
     print("Use TWITTER and MULTIGENRE model")
 
+corpora_helper = None
+
 def load_corpora(filepath, sep=';'):
     print('Load: ', filepath)
+    global corpora_helper 
     corpora_helper = CorporaHelper(filepath, separator=sep)
     count_joy = 0
     count_sadness = 0
@@ -98,21 +106,26 @@ def load_corpora(filepath, sep=';'):
 test_file = ""
 sep = ';'
 word_embeddings_path = ''
-if use_mg_coprora == MULTIGENRE:
+if use_mg_corpora == MULTIGENRE:
     test_file = "corpora/multigenre_450_test.csv"
     sep = ';'
     maxlen = 100
     print("Use MULTIGENRE test corpora")
-elif use_mg_coprora == TWITTER:
+elif use_mg_corpora == TWITTER:
     test_file = "corpora/twitter_2000_test.csv"
     sep = '\t'
     maxlen = 100
     print("Use TWITTER test corpora")
-else:
+elif use_mg_corpora == MG_AND_TWITTER:
     test_file = "corpora/twitter_2000_mg_450_test.csv"
     sep = '\t'
     maxlen = 100
     print("Use TWITTER and MULTIGENRE test corpora")
+else: 
+    test_file = "corpora/mg_mv_annot_testset.csv"
+    sep = '\t'
+    maxlen = 100
+    print("Use Custom test corpora")
 
 test_texts, test_labels = load_corpora(test_file, sep=sep)
 
@@ -155,7 +168,6 @@ print("Evaluate model on test data")
 results = model.evaluate(x_test, y_test, batch_size=64)
 print("test loss, test acc:", results)
 
-
 # Evaluation metrics
 y_pred = model.predict(x_test, batch_size=64, verbose=1)
 y_pred_bool = np.argmax(y_pred, axis=1)
@@ -186,3 +198,31 @@ fig, ax = plot_confusion_matrix(conf_mat=mat, figsize=(6,6), class_names = ['ang
 plt.tight_layout()
 fig.savefig('cm.png')
 plt.show()
+
+
+# Run again an predict one by one
+if create_output_file:
+    print('Run predict for file...')
+    for index, corpus in corpora_helper.get_data().iterrows():
+
+        # Tokenize
+        sequences = tokenizer.texts_to_sequences([corpus[CorporaProperties.CLEANED_CORPUS.value]])
+
+        word_i = tokenizer.word_index
+        data = pad_sequences(sequences, maxlen=maxlen)
+        pred = model.predict(data)
+
+        pred_ind = np.argmax(pred[0])
+        emotion = Emotions.get_emotion_text(pred_ind)
+        #print(pred_ind,emotion)
+
+        # Set Result
+        corpora_helper.set_calc_emotion(index, emotion)
+
+        #print(counter)
+        #counter += 1
+    
+    # Store file
+    corpora_helper.write_to_csv(result_file_name + '.csv')
+    print(f'saved as {result_file_name}.csv...Done')
+

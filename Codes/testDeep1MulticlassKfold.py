@@ -16,8 +16,8 @@ import pickle
 Deep learning with multigenre corpus and 4 emotions
 """
 # K-Fold variables
-num_folds = 2 # 10
-fold_runs = 1 # 3
+num_folds = 10 # 10
+fold_runs = 3 # 3
 fold_no = 1
 
 MULTIGENRE = 'muligenre'
@@ -28,10 +28,10 @@ MG_AND_TWITTER = 'mg_and_twitter'
 use_mg_train_corpora = MG_AND_TWITTER
 
 # train
-epochs = 15
+epochs = 5
 max_words = 10000
 # max. different words:
-# Multigerne: 5140  => 10000 or 3000 or 1000 ?
+# Multigerne: 5140  => 10000 or 3000 or 1000 ? 5000
 # Twitter: 17580 => 20000 or 10000 ?
 # MG and Twitter: 20073 => evtl. 20000?
 #optimizer = keras.optimizers.Adam(learning_rate=0.01)
@@ -86,7 +86,8 @@ def load_corpora(filepath, sep=';'):
 
     #corpora_helper.spell_correction()
     corpora_helper.add_space_at_special_chars()
-    corpora_helper.translate_to_lower()
+    corpora_helper.add_space_at_special_chars(regexlist = r"([#])")
+    #corpora_helper.translate_to_lower()
 
     # 0 anger
     # 1 fear
@@ -170,14 +171,16 @@ def get_unigram_embedding(word, word_embedding_dict, bin_string):
 # selecting relevant embeddings for multigenre
 if use_mg_train_corpora == MULTIGENRE:
     # Multigenre
-    unigram_feature_string = "1001111111111101"
+    #unigram_feature_string = "1001111111111101"
+    unigram_feature_string = "1110010000000001"
 elif use_mg_train_corpora == TWITTER:
     # Twitter
-    unigram_feature_string = "0110001111111101"
-    unigram_feature_string = "1111111111111111"
+    #unigram_feature_string = "0110001111111101"
+    #unigram_feature_string = "1111111111111111"
+    unigram_feature_string = "1110010000000000"
 else:
     # Twitter and Multigenre
-    unigram_feature_string = "1111111111111111"
+    unigram_feature_string = "1110010000000000"
 #1 Google news pretrained vectors : GoogleNews-vectors-negative300.bin.gz  
 #2 Twitter pretrained vectors: word2vec_twitter_model.bin
 #3  glove.twitter.27B.200d.txt
@@ -186,15 +189,14 @@ else:
 #6  glove.840B.300d.txt
 #7 NRC Emotion Intensity Lexicon
 #8 senti word net
-#9 NRC Sentiment lexicon: NRC-Emotion-Lexicon-Wordlevel-v0.92.txt
-#10 lexicons/Emoticon-unigrams.txt
-#11 lexicons/Emoticon-AFFLEX-NEGLEX-unigrams.txt
-#12 NRC Hashtag Lexica: NRC-Emotion-Lexicon-Wordlevel-v0.92.txt
-#13 HS-unigrams.txtNRC-Hashtag-Emotion-Lexicon-v0.2.txt
-#14 HS-AFFLEX-NEGLEX-unigrams.txt
+#9 NRC Sentiment lexicon: NRC-Emotion-Lexicon-Wordlevel-v0.92.txt get_sentiment_emotion_feature
+#10 lexicons/Emoticon-unigrams.txt get_unigram_sentiment_emoticon_lexicon_vector
+#11 lexicons/Emoticon-AFFLEX-NEGLEX-unigrams.txt get_unigram_sentiment_emoticon_afflex_vector
+#12 NRC Hashtag Lexica: get_hashtag_emotion_vector 
+#13 HS-unigrams.txtNRC-Hashtag-Emotion-Lexicon-v0.2.txt get_unigram_sentiment_hash_sent_lex_vector
+#14 HS-AFFLEX-NEGLEX-unigrams.txt get_unigram_sentiment_hashtag_affneglex_vector
 #15 Emoji Polarities
 #16 Depeche mood
-
 pre_padding = 0
 embeddings_index = embedding_info[0]
 MAX_SEQUENCE_LENGTH = embedding_info[1]
@@ -282,12 +284,22 @@ def create_model():
     model.add(Dense(4, activation='softmax'))
     #model.summary()
     """
+    """
     model = Sequential()
     model.add(embedding)
     model.add(Conv1D(32,5, activation='relu'))
-    model.add(layers.Bidirectional(layers.LSTM(32,dropout=0.4, recurrent_dropout=0.4,)))
+    model.add(layers.Bidirectional(layers.LSTM(32,dropout=0.4, recurrent_dropout=0.4)))
     #model.add(Dense(8, activation='relu'))
     #model.add(Dense(32, activation='relu'))
+    model.add(Dense(4, activation='softmax'))
+    """
+    model = Sequential()
+    model.add(embedding)
+        
+    model.add(Bidirectional(LSTM(32, dropout=0.4, recurrent_dropout=0.4, return_sequences=True)))
+    
+    model.add(Dense(16, activation='relu'))
+    model.add(layers.GlobalMaxPooling1D())
     model.add(Dense(4, activation='softmax'))
 
     return model

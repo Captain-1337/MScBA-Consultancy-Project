@@ -1,4 +1,4 @@
-﻿;corpus;emotion;domain
+﻿id;corpus;emotion;domain
 993;Francophiles will snicker knowingly and you 'll want to slap them .Roger's rabbit was n't very ugly. I've ;anger;moviereview
 1;Add space for special chars and convert camelCase!?. #loveRabbitRoger. @;disgust;moviereview
 2;Roger helps me to remove html tags.<html> </html> <div> smile </div>.  ;joy;moviereview
@@ -9,4 +9,15 @@
 7;My url is : http://rogers.li #joy;joy;moviereview
 8;My_underscore_is_very_nice !;joy;moviereview
 9;I lov u verry much;joy;moviereview
-
+10;Im am very angry and im sad as well;joy;moviereview
+11;I 'm n'n crazy and n'n anry;joy;moviereview
+12;"I lov u verry much and thinkin good becuase ...";joy;moviereview
+13;@RogerBarras how are you?;joy;blog
+14;"-LRB- Jack -RRB- is crazy";joy;blog
+15;Roger said: ''hello`` and n`t bye; joy;blog
+19;MArk said: baye``  and n`t bye; joy;blog
+16;Roger \n"BABA" is his name #goodJob;joy;blog
+17;frickin' @RogerBlaBlub ;fear;blog
+18;Peter's car is nice; joy;blog
+20;My address I'm is roger@sdfs.com Im crazy, I don't like this; joy;blog
+21;What's up name is Jeff, IM 25 years old. I don't like it when I'm bored; joy;blog

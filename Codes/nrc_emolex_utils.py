@@ -59,7 +59,7 @@ class EmoLexHelper(EmotionLexicon):
         """
         return 1
 
-    def get_emotion(self, concept, word_pos_list=None):
+    def get_emotion(self, concept:str, word_pos_list=None):
         """
         Abtract function for an Lexicon to implement.
         Gets from a word or word concept an EmotionResult dictionary
@@ -69,6 +69,8 @@ class EmoLexHelper(EmotionLexicon):
         """
         # for lookup we remove the space inbeween the words
         concept = concept.replace(" ", "")
+        # only lower case in lexicon
+        concept = concept.lower()
 
         if concept in self._emolex.keys():      
             emotion = self._emolex[concept]

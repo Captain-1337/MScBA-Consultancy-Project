@@ -1,14 +1,16 @@
 from keras.preprocessing.text import Tokenizer
 from keras.preprocessing.sequence import pad_sequences
-from keras.models import Sequential
+from keras.models import Sequential, load_model
 from keras.layers import Embedding, Flatten, Dense, Conv1D
+from keras import layers
 from sklearn.preprocessing import scale
+from sklearn.model_selection import KFold, StratifiedKFold
 from corpora_utils import CorporaHelper,CorporaDomains, CorporaProperties
 import numpy as np
 import os
 import pickle
 """
-Binary simple NN with two layers and 2 emotions
+Binary simple NN with two layers and 4 emotions
 """
 
 #corpus = 'All this not sleeping has a terrible way of playing with your memory.' # fear => test
@@ -25,6 +27,7 @@ count_fear = 0
 number_of_classes: 4
 max_per_emotion = 240
 max_data = 4*240
+
 
 # preprocessing corpora
 corpora_helper.translate_contractions() # problem space before '
@@ -72,6 +75,14 @@ max_data = count_anger + count_fear + count_joy + count_sadness
 # 1 fear
 # 2 joy
 # 3 sadness
+maxlen = 100 # max. number of words in sequences
+
+# K-Fold variables
+num_folds = 10
+fold_no = 1
+skfold = StratifiedKFold(n_splits = num_folds, random_state = 7, shuffle = True)
+acc_per_fold = []
+loss_per_fold = []
 
 
 ## Create one hot encoding
@@ -109,17 +120,17 @@ for word, i in word_index.items():
             # Words not found in embedding index will be all-zeros.
             word_embedding_matrix[i] = embedding_vector
 embedding = Embedding(max_words, embedding_dim, input_length=maxlen)
-"""
 
+"""
 # Load prepared Multigenre embedding
 
 word_embeddings_path = 'multigenre_embedding_final_new.pkl'
 with open(word_embeddings_path, 'rb') as word_embeddings_file:
     embedding_info = pickle.load(word_embeddings_file)
 
-word_indicies_path = 'word_indices.pickle'
-with open(word_indicies_path, 'rb') as word_indicies_file:
-    word_indices = pickle.load(word_indicies_file)
+#word_indicies_path = 'word_indices.pickle'
+#with open(word_indicies_path, 'rb') as word_indicies_file:
+#    word_indices = pickle.load(word_indicies_file)
 
 
 #helper functions
@@ -143,7 +154,7 @@ def get_unigram_embedding(word, word_embedding_dict, bin_string):
 # 
 unigram_feature_string = "1111111111111111"
 #unigram_feature_string = "0000000000000000"
-word_indices_len = len(word_indices)
+#word_indices_len = len(word_indices)
 pre_padding = 0
 embeddings_index = embedding_info[0]
 MAX_SEQUENCE_LENGTH = embedding_info[1]
@@ -170,7 +181,7 @@ for word, i in word_index.items(): # sorted(word_indices, key=word_indices.get):
 word_embedding_matrix = np.asarray(word_embedding_matrix, dtype='f')
 word_embedding_matrix = scale(word_embedding_matrix)
 
-print('word_indices_len',word_indices_len)
+#print('word_indices_len',word_indices_len)
 print('EMBEDDING_DIM',EMBEDDING_DIM)
 print('input_length', MAX_SEQUENCE_LENGTH + pre_padding)
 embedding = Embedding(max_words, EMBEDDING_DIM, input_length=maxlen, trainable=False)
@@ -180,8 +191,8 @@ embedding = Embedding(max_words, EMBEDDING_DIM, input_length=maxlen, trainable=F
 # Prepare data
 #maxlen = 100 # max. number of words in sequences
 
-training_samples = int(max_data * 0.7) #672  70% of 960
-validation_samples = int(max_data * 0.2) # 192 20% of 960
+training_samples = int(max_data * 0.9) #672  70% of 960
+validation_samples = int(max_data * 0) # 192 20% of 960
 test_samples = int(max_data * 0.1) #96  10% of 960
 
 data = pad_sequences(sequences, maxlen=maxlen)
@@ -205,53 +216,75 @@ x_test = data[training_samples + validation_samples: training_samples + validati
 y_test = labels[training_samples + validation_samples: training_samples + validation_samples + test_samples]
 
 
-# Create model
-model = Sequential()
-model.add(embedding)
-model.add(Conv1D(32,5, activation='relu'))
-model.add(Flatten()) #3D to 2D
-model.add(Dense(32, activation='relu'))
-model.add(Dense(4, activation='softmax'))
-model.summary()
+for train_ind, val_ind in skfold.split(x_train,y_train):
 
-# Load GloVe embedding
-model.layers[0].set_weights([word_embedding_matrix])
-model.layers[0].trainable = False
+    # Create model
+    model = Sequential()
+    model.add(embedding)
+    model.add(Conv1D(64,5, activation='relu'))
+    model.add(layers.Bidirectional(layers.LSTM(64,dropout=0.4, recurrent_dropout=0.4,)))
+    #model.add(Dense(8, activation='relu'))
+    model.add(Dense(32, activation='relu'))
+    model.add(Dense(4, activation='softmax'))
+    #model.summary()
 
-# Train and Evaluate
-model.compile(optimizer='adam',
-              loss='sparse_categorical_crossentropy',
-              metrics=['acc'])
-history = model.fit(x_train, y_train,
-                    epochs=10,
-                    batch_size=32,
-                    validation_data=(x_val, y_val))
-model.save_weights('pre_trained_glove_model.h5')
+    # Load GloVe embedding
+    model.layers[0].set_weights([word_embedding_matrix])
+    model.layers[0].trainable = False
 
-# Test model
-print("Evaluate on test data")
-model.load_weights('pre_trained_glove_model.h5')
-results = model.evaluate(x_test, y_test, batch_size=128)
-print("test loss, test acc:", results)
+    # Train and Evaluate
+    model.compile(optimizer='adam',
+                loss='sparse_categorical_crossentropy',
+                metrics=['acc'])
+    print('------------------------------------------------------------------------')
+    print(f'Training for fold {fold_no} ...')
 
-model.save('emotion_deep1.h5')
+    history = model.fit(x_train[train_ind], y_train[train_ind],
+                        epochs=10,
+                        batch_size=64,
+                        verbose=1,
+                        validation_data=(x_train[val_ind], y_train[val_ind]))
 
-## Example use of the model!
-test_corpora = ['I hate you bastard ! Go away !', 'This is a lovely film , but it makes me sad .','That is because - damn it !']
-test_corpora.append('Die bitch ! You make me angry .')
-test_corpora.append('My son died .')
-test_corpora.append('I am afraid because of this horror .')
-for text in test_corpora:
-    textarray = [text]
-    tokenizer = Tokenizer(num_words=max_words)
-    tokenizer.fit_on_texts(textarray)
-    sequences = tokenizer.texts_to_sequences(textarray)
-    data = pad_sequences(sequences, maxlen=maxlen)
-    print(text)
-    pred = model.predict(data)
-    print("prediction:", pred)
+    # metrics
+    scores = model.evaluate(x_train[val_ind], y_train[val_ind], batch_size=128)
+    #print(f'Score for fold {fold_no}: {model.metrics_name[0]} of {scores[0]}; {model.metrics_name[1]} of {scores[1]*100}%')
+    print(f'Score for fold {fold_no}: Loss of {scores[0]}; Accuracy of {scores[1]*100}%')
+    acc_per_fold.append(scores[1]*100)
+    loss_per_fold.append(scores[0])
+
+    # Save model
+    #model.save(f'emotion_deep_foldno_{fold_no}.h5')
+
+    fold_no += 1
+
+
+# == Provide average scores ==
+print('------------------------------------------------------------------------')
+print('Score per fold')
+best_fold = 0
+best_acc = 0
+for i in range(0, len(acc_per_fold)):
+  print('------------------------------------------------------------------------')
+  print(f'> Fold {i+1} - Loss: {loss_per_fold[i]} - Accuracy: {acc_per_fold[i]}%')
+  if acc_per_fold[i] > best_acc:
+      best_acc = acc_per_fold[i]
+      best_fold = i+1
+print('------------------------------------------------------------------------')
+print('Average scores for all folds:')
+print(f'> Accuracy: {np.mean(acc_per_fold)} (+- {np.std(acc_per_fold)})')
+print(f'> Loss: {np.mean(loss_per_fold)}')
+print('------------------------------------------------------------------------')
+
+
+# Test final model
+#print(f"Evaluate best model number {best_fold} on test data")
+#model = load_model(f'emotion_deep_foldno_{best_fold}.h5')
+#results = model.evaluate(x_test, y_test, batch_size=128)
+#print("test loss, test acc:", results)
+#model.save('emotion_deep1.h5')
 
 # Plot performance
+"""
 import matplotlib.pyplot as plt
 
 acc = history.history['acc']
@@ -274,6 +307,7 @@ plt.title('Training and validation loss')
 plt.legend()
 
 plt.show()
+"""
 
 
 
