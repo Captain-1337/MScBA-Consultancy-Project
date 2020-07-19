@@ -94,7 +94,7 @@ for index, corpus in corpora_helper.get_data().iterrows():
     # Analyse
     #analyzer = EmotionAnalyzer()
     emotion = analyzer.get_emotion(corpus[CorporaProperties.CLEANED_CORPUS.value], method=method)
-    # Extract primary emotiom
+    # Extract primary emotion
     if all_emotions:
         primary_emotion = EmotionResult.get_primary_emotion(emotion)
     else:
@@ -125,7 +125,7 @@ for index, corpus in corpora_helper.get_data().iterrows():
 #corpora_helper.write_to_csv('test_mg_mv_combine.csv')
 corpora_helper.write_to_csv(result_file_name + '.csv')
 
-# Calculate Metrics PRecision Recall and F1
+# Calculate Metrics Precision Recall and F1
 emo_gold = Emotions.translate_emotionlist_to_intlist(corpora_helper.get_emotions_goldlabel())
 emo_calc = Emotions.translate_emotionlist_to_intlist(corpora_helper.get_emotions_calculated())
 
