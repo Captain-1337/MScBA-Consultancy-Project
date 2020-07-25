@@ -27,7 +27,7 @@ emotional content in text documents, by researching:
 ### interrater
     Folder of raw data for our sample of the inter-rater reliability check
 ### results
-    Folder of results
+    Folder of results includes some file of the lexicon based calculation
 
 ## Corpora
 For our emotion detection we are using primary the multigenre corpra from https://github.com/shabnamt/jointMultitaskEmo/tree/master/data/emo_multigenre
