@@ -7,8 +7,10 @@
     Annot_Himmet.xlsx
 
 # Result lexicon based approach learning
+With NRC Emotion lexicon:
     Annot_lexicon_emolex_result.xlsx
-    Annot_lexicon_emolex_result.xlsx
+With SenticNet5 lexicon:
+    Annot_lexicon_senticnet_result.xlsx
 
 # Result deep learning approach
     Annot_deep_predict_result.xlsx
