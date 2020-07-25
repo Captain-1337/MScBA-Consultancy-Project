@@ -14,7 +14,7 @@ corpus = 'If you sometimes like to go to the movies to have fun , Wasabi is a go
 # load data
 labels = []
 texts = []
-corpora_helper = CorporaHelper("multigenre.csv")
+corpora_helper = CorporaHelper("corpora/multigenre.csv")
 count_joy = 0
 count_disgust = 0
 
